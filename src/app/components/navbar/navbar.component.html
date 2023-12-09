@@ -2,9 +2,9 @@
 
 <div class="container-fluid mt-4">
     <div class="d-flex justify-content-between">
-        <div class="button-with-image">
+        <button class="button-with-image" (click)="navigateTo('inicio')">
             <img src="./assets/images/gocupon-logo.png" alt="logo">
-        </div>
+        </button>
         <div class="d-flex align-items-center">
             <button class="btn btn-primary" (click)="navigateTo('register')">
                 <i class="bi bi-person"></i> Registrarse
@@ -16,14 +16,15 @@
     </div>
 
     <div class="d-flex justify-content-between mt-4">
-        <button class="btn btn-primary" (click)="navigateTo('gastronomia')">Gastronomía</button>
-        <button class="btn btn-primary" (click)="navigateTo('supermercado')">Supermercado</button>
-        <button class="btn btn-primary" (click)="navigateTo('escapadas')">Escapadas y Hoteles</button>
-        <button class="btn btn-primary" (click)="navigateTo('cine')">Cine</button>
-        <button class="btn btn-primary" (click)="navigateTo('vehiculos')">Vehículos</button>
-        <button class="btn btn-primary" (click)="navigateTo('teatro')">Teatro</button>
-        <button class="btn btn-primary" (click)="navigateTo('salud')">Salud</button>
-        <button class="btn btn-primary" (click)="navigateTo('estetica')">Estética</button>
-        <button class="btn btn-primary" (click)="navigateTo('entretenimiento')">Entretenimiento</button>
+        <button class="btn btn-primary" (click)="navigateTo('detalles-categoria', 1)">Gastronomía</button>
+        <button class="btn btn-primary" (click)="navigateTo('detalles-categoria', 2)">Supermercado</button>
+        <button class="btn btn-primary" (click)="navigateTo('detalles-categoria', 3)">Escapadas y Hoteles</button>
+        <button class="btn btn-primary" (click)="navigateTo('detalles-categoria', 4)">Cine</button>
+        <button class="btn btn-primary" (click)="navigateTo('detalles-categoria', 5)">Vehículos</button>
+        <button class="btn btn-primary" (click)="navigateTo('detalles-categoria', 6)">Teatro</button>
+        <button class="btn btn-primary" (click)="navigateTo('detalles-categoria', 7)">Salud</button>
+        <button class="btn btn-primary" (click)="navigateTo('detalles-categoria', 8)">Estética</button>
+        <button class="btn btn-primary" (click)="navigateTo('detalles-categoria', 9)">Entretenimiento</button>
     </div>
+    
 </div>

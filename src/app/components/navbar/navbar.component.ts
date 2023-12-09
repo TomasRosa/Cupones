@@ -1,17 +1,20 @@
 import { Component } from '@angular/core';
-import { CategoriaComponent } from '../categoria/categoria.component';
-import {Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
-  standalone: true,
-  imports: [CategoriaComponent],
+  standalone:true,
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.css'
+  styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent {
-  constructor(private route: Router) {}
-  navigateTo(route: string) {
-    this.route.navigate([`/${route}`]);
+  constructor(private router: Router) {}
+
+  navigateTo(route: string, categoriaId?: number) {
+    if (categoriaId !== undefined) {
+      this.router.navigate([`/detalles-categoria/${categoriaId}`]);
+    } else {
+      this.router.navigate([`/${route}`]);
+    }
   }
 }
