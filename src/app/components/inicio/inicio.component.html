@@ -11,7 +11,7 @@
           </div>
           <div class="col-md-6">
             <div class="content-container p-4">
-                <div #myCarousel class="carousel slide" (slid.bs.carousel)="actualizarParrafoDesdeCarousel($event)">
+                <div class="carousel slide" #myCarousel (slid.bs.carousel)="actualizarContenido()">
                     <div class="carousel-inner">
                   <div class="carousel-item active">
                     <img class="d-block w-100" src="./assets/images/images-cine/cinemacenter.jpg" alt="Primera imagen">
@@ -41,10 +41,10 @@
                     <img class="d-block w-100" src="./assets/images/images-vehiculos/motos-consecionaria.JPG" alt="Novena imagen">
                   </div>
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev" (click)="actualizarParrafoDesdeCarousel($event)">
+                <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
                   <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next" (click)="actualizarParrafoDesdeCarousel($event)">
+                <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
                   <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 </button>
               </div>
