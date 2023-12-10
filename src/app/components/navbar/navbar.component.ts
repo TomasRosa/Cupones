@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigateToService } from '../../services/navigate-to.service';
 
 @Component({
   selector: 'app-navbar',
@@ -8,13 +8,9 @@ import { Router } from '@angular/router';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent {
-  constructor(private router: Router) {}
+  constructor(private navigateTo: NavigateToService) {}
 
-  navigateTo(route: string, categoriaId?: number) {
-    if (categoriaId !== undefined) {
-      this.router.navigate([`/detalles-categoria/${categoriaId}`]);
-    } else {
-      this.router.navigate([`/${route}`]);
-    }
+  navigateTos(route: string) {
+    this.navigateTo.navigateTo(route);
   }
 }
