@@ -4,15 +4,15 @@
         <div class="row">
           <div class="col-md-6">
             <div class="content-container">
-              <h2>PASO A PASO</h2>
+              <h2>{{nombreActual}}</h2>
               <p>{{parrafoActual}}</p>
-              <button class="btn btn-primary btn-sm mt-2 float-end">+info</button>
+              <button class="btn btn-primary">+info</button>
             </div>
           </div>
           <div class="col-md-6">
             <div class="content-container p-4">
-              <div id="myCarousel" class="carousel slide" (slid)="cambiarParrafo()">
-                <div class="carousel-inner">
+                <div #myCarousel class="carousel slide" (slid.bs.carousel)="actualizarParrafoDesdeCarousel($event)">
+                    <div class="carousel-inner">
                   <div class="carousel-item active">
                     <img class="d-block w-100" src="./assets/images/images-cine/cinemacenter.jpg" alt="Primera imagen">
                   </div>
@@ -41,13 +41,11 @@
                     <img class="d-block w-100" src="./assets/images/images-vehiculos/motos-consecionaria.JPG" alt="Novena imagen">
                   </div>
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+                <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev" (click)="actualizarParrafoDesdeCarousel($event)">
                   <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                  <span class="visually-hidden">Anterior</span>
                 </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+                <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next" (click)="actualizarParrafoDesdeCarousel($event)">
                   <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                  <span class="visually-hidden">Siguiente</span>
                 </button>
               </div>
             </div>
