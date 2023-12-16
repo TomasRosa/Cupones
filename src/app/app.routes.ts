@@ -11,6 +11,7 @@ import { TeatroComponent } from './components/categorias/teatro/teatro.component
 import { SaludComponent } from './components/categorias/salud/salud.component';
 import { EsteticaComponent } from './components/categorias/estetica/estetica.component';
 import { EntretenimientoComponent } from './components/categorias/entretenimiento/entretenimiento.component';
+import { CommonModule } from '@angular/common';
 
 export const routes: Routes = [{path:'', title: 'Inicio',component: InicioComponent},
 {path:'inicio', title: 'Inicio',component: InicioComponent},

@@ -1,17 +1,22 @@
-import { Component, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { NavigateToService } from '../../services/navigate-to.service';
-import { NgFor, NgIf } from '@angular/common';
-import { NgbCarousel, NgbSlideEvent } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCarousel } from '@ng-bootstrap/ng-bootstrap';
+import { ChangeDetectorRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-inicio',
   standalone: true,
-  imports: [NgFor, NgIf],
   templateUrl: './inicio.component.html',
-  styleUrl: './inicio.component.css',
+  styleUrls: ['./inicio.component.css'],
+  imports: [CommonModule],
 })
-export class InicioComponent implements AfterViewInit {
-  constructor(private navigateTo: NavigateToService) {}
+export class InicioComponent {
+  constructor(
+    private navigateTo: NavigateToService,
+    private cdr: ChangeDetectorRef
+  ) {}
+
   @ViewChild('myCarousel') myCarousel!: NgbCarousel;
 
   imagenes: any[] = [
@@ -72,34 +77,53 @@ export class InicioComponent implements AfterViewInit {
   ];
   parrafoActual: string = this.imagenes[0].parrafo;
   nombreActual: string = this.imagenes[0].nombre;
-  activeIndex: number = 0;
-  ngAfterViewInit() {
-    if (this.myCarousel) {
-      this.myCarousel.slide?.subscribe((event: NgbSlideEvent | number | Event) => {
-        if (this.esNgbSlideEvent(event)) {
-          const indexAsNumber = Number((event as NgbSlideEvent).current);
-          this.actualizarContenido();
-        }
-      });
+  currentIndex: number = 0;
+
+  public actualizarContenido(event: any) {
+    console.log('Entre');
+    const direction = event.direction;
+
+    if (direction === 'left' || direction === 'right') {
+      this.currentIndex = this.getNewIndex(direction, event);
+      console.log('Actualizando contenido para el índice:', this.currentIndex);
+
+      if (
+        !isNaN(this.currentIndex) &&
+        this.currentIndex >= 0 &&
+        this.currentIndex < this.imagenes.length
+      ) {
+        console.log(
+          'Actualizando contenido para el índice dentro de if:',
+          this.currentIndex
+        );
+        this.parrafoActual = this.imagenes[this.currentIndex].parrafo;
+        this.nombreActual = this.imagenes[this.currentIndex].nombre;
+        this.cdr.markForCheck();
+      } else {
+        console.error(
+          'Índice fuera de rango o no es un número válido:',
+          this.currentIndex
+        );
+      }
     }
   }
-  
-  private esNgbSlideEvent(event: NgbSlideEvent | number | Event): event is NgbSlideEvent {
-    return typeof event === 'object' && 'current' in event && 'direction' in event;
-  }
-  
-  public actualizarContenido() 
-  {
-    console.log('Hi');
-    if (this.myCarousel) 
-    {
-      const index: number = +this.myCarousel.activeId; // Use the '+' operator to convert the string to a number
-      this.parrafoActual = this.imagenes[index].parrafo;
-      this.nombreActual = this.imagenes[index].nombre;
+
+  private getNewIndex(direction: string, event: any): number {
+    const items = this.imagenes.length;
+
+    if (direction === 'right') {
+      return this.currentIndex - 1 < 0 ? items - 1 : this.currentIndex - 1;
+    } else if (direction === 'left') {
+      // Si currentIndex es -1, significa que es la primera vez que cambias a la derecha
+      return this.currentIndex === -1
+        ? 1
+        : this.currentIndex + 1 >= items
+        ? 0
+        : this.currentIndex + 1;
     }
+
+    return this.currentIndex;
   }
-  
-  
 
   destacados: any[] = [
     {

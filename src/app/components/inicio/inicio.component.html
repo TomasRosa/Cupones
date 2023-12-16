@@ -11,9 +11,9 @@
           </div>
           <div class="col-md-6">
             <div class="content-container p-4">
-                <div class="carousel slide" #myCarousel (slid.bs.carousel)="actualizarContenido()">
-                    <div class="carousel-inner">
-                  <div class="carousel-item active">
+              <div class="carousel slide" id="myCarousel" (slide.bs.carousel)="actualizarContenido($event)">
+                <div class="carousel-inner">
+                  <div class="carousel-item active" >
                     <img class="d-block w-100" src="./assets/images/images-cine/cinemacenter.jpg" alt="Primera imagen">
                   </div>
                   <div class="carousel-item">
