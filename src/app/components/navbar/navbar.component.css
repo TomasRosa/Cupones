@@ -17,3 +17,6 @@ body
   object-fit: contain;
   transition: transform 0.3s ease;
 }
+.user-buttons {
+  text-align: right;
+}

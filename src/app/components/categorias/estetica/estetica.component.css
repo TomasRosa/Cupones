@@ -1,0 +1,11 @@
+.card-img-top {
+    height: 150px; /* Puedes ajustar la altura según tus necesidades */
+    object-fit: cover; /* Esto ayuda a cubrir el espacio asignado manteniendo la proporción de la imagen */
+  }
+  .star-rating {
+    color: gold; /* Puedes ajustar el color aquí */
+    font-size: 24px; /* Puedes ajustar el tamaño aquí */
+  }
+  .star-filled::before {
+    content: "\2605"; /* Carácter Unicode para la estrella rellena */
+  }

@@ -1,29 +1,69 @@
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.17.0/dist/css/bootstrap-icons.min.css" rel="stylesheet">
-
 <div class="container-fluid mt-4">
-    <div class="d-flex justify-content-between">
-        <button class="button-with-image" (click)="navigateTos('inicio')">
-            <img src="./assets/images/gocupon-logo.png" alt="logo">
-        </button>
-        <div class="d-flex align-items-center">
-            <button class="btn btn-primary" (click)="navigateTos('register')">
-                <i class="bi bi-person"></i> Registrarse
-            </button>
-            <button class="btn btn-primary ms-1" (click)="navigateTos('login')">
-                <i class="bi bi-door-open"></i> Iniciar Sesión
+    <div class="row align-items-center">
+        <!-- Logo y botón de inicio -->
+        <div class="col-md-2 logo-container">
+            <button class="button-with-image" (click)="navigateTos('inicio')">
+                <img src="./assets/images/gocupon-logo.png" alt="logo" />
             </button>
         </div>
+        <!-- Barra de navegación -->
+        <div class="col-md-10">
+            <div class="row">
+                <!-- Barra de búsqueda -->
+                <div class="col-md-6 offset-md-1 search-bar text-center">
+                    <input
+                        type="text"
+                        class="form-control text-center"
+                        placeholder="Buscar cupones..."
+                    />
+                </div>
+                <!-- Botones de usuario -->
+                <div class="col-md-5 d-flex justify-content-end">
+                    <button
+                        class="btn btn-success me-2"
+                        (click)="navigateTos('register')"
+                    >
+                        <i class="bi bi-person"></i> Registrarse
+                    </button>
+                    <button class="btn btn-success" (click)="navigateTos('login')">
+                        <i class="bi bi-door-open"></i> Iniciar Sesión
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <div class="d-flex justify-content-between mt-4">
-        <button class="btn btn-primary" (click)="navigateTos('gastronomia')">Gastronomía</button>
-        <button class="btn btn-primary" (click)="navigateTos('supermercado')">Supermercado</button>
-        <button class="btn btn-primary" (click)="navigateTos('escapadas')">Escapadas y Hoteles</button>
-        <button class="btn btn-primary" (click)="navigateTos('cine')">Cine</button>
-        <button class="btn btn-primary" (click)="navigateTos('vehiculos')">Vehículos</button>
-        <button class="btn btn-primary" (click)="navigateTos('teatro')">Teatro</button>
-        <button class="btn btn-primary" (click)="navigateTos('salud')">Salud</button>
-        <button class="btn btn-primary" (click)="navigateTos('estetica')">Estética</button>
-        <button class="btn btn-primary" (click)="navigateTos('entretenimiento')">Entretenimiento</button>
+    <!-- Botones de categorías -->
+    <div class="row mt-2 category-buttons">
+      <div class="col-md-12">
+        <div class="d-flex justify-content-between">
+          <button class="btn btn-primary" (click)="navigateTos('gastronomia')">
+            Gastronomía
+          </button>
+          <button class="btn btn-primary" (click)="navigateTos('supermercado')">
+            Supermercado
+          </button>
+          <button class="btn btn-primary" (click)="navigateTos('cine')">
+            Cine
+          </button>
+          <button class="btn btn-primary" (click)="navigateTos('vehiculos')">
+            Vehículos
+          </button>
+          <button class="btn btn-primary" (click)="navigateTos('teatro')">
+            Teatro
+          </button>
+          <button class="btn btn-primary" (click)="navigateTos('escapadas')">
+            Escapadas y Hoteles
+          </button>
+          <button class="btn btn-primary" (click)="navigateTos('salud')">
+            Salud
+          </button>
+          <button class="btn btn-primary" (click)="navigateTos('estetica')">
+            Estética
+          </button>
+          <button class="btn btn-primary" (click)="navigateTos('entretenimiento')">
+            Entretenimiento
+          </button>
+        </div>
+      </div>
     </div>
-    
+  </div>
