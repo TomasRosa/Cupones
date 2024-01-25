@@ -1,1 +1,71 @@
-<p>register works!</p>
+<!--Agregar onSubmit-->
+<form class="needs-validation" [formGroup]="userForm">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <form class="needs-validation" [formGroup]="userForm">
+              <h2 class="text-center mb-4">Regístrate en GoCupon</h2>
+      
+              <div class="mb-3">
+                <label for="firstName" class="form-label">Nombre</label>
+                <input type="text" class="form-control" id="firstName" name="firstName" formControlName="firstName" placeholder="Ingrese su nombre" value="" required>
+              </div>
+      
+              <div class="mb-3">
+                <label for="lastName" class="form-label">Apellido</label>
+                <input type="text" class="form-control" id="lastName" name="lastName" formControlName="lastName" placeholder="Ingrese su apellido" value="" required>
+              </div>
+      
+              <div class="mb-3">
+                <label for="DNI" class="form-label">DNI</label>
+                <input type="text" class="form-control" id="DNI" name="DNI" formControlName="DNI" placeholder="Ingrese su DNI" value="" required>
+              </div>
+      
+              <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" formControlName="email" placeholder="Ingrese su email" value="" required>
+              </div>
+      
+              <div class="mb-3">
+                <label for="password" class="form-label">Contraseña</label>
+                <input type="password" class="form-control" id="password" name="password" formControlName="password" placeholder="Ingrese su contraseña" value="" required>
+              </div>
+              <button type="submit" class="btn btn-primary" (click)="crearUsuario()" [disabled]="!userForm.valid">Registrarse</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+    <section id="alertName" class="alert alert-danger" *ngIf="firstName?.invalid && (firstName?.dirty || firstName?.touched)">
+          <div *ngIf="firstName?.hasError('required')">El nombre es requerido</div> <!-- L -->
+          <div *ngIf="firstName?.hasError('soloLetras')">El nombre debe contener solo letras</div> <!-- L -->
+    </section>
+
+    <section id="alertLastName" class="alert alert-danger" *ngIf="lastName?.invalid && (lastName?.dirty || lastName?.touched)">
+          <div *ngIf="lastName?.hasError('required')">El apellido es requerido</div> <!-- L -->
+          <div *ngIf="lastName?.hasError('soloLetras')">El apellido debe contener solo letras</div> <!-- L -->
+    </section>
+
+    <section id="alertDNI" class="alert alert-danger" *ngIf="dni?.invalid && (dni?.dirty || dni?.touched)">
+          <div *ngIf="dni?.hasError('required')">El DNI es requerido</div>  <!-- L -->
+          <div *ngIf="dni?.hasError('soloNumeros')">El DNI debe contener solo números</div>  <!-- L -->
+          <div *ngIf="dni?.hasError('minlength') || dni?.hasError('maxlength')">El DNI debe contener 8 caracteres</div>  <!-- L -->
+    </section>
+
+    <section id="alertEmail">
+        <div *ngIf="email?.invalid && (email?.dirty || email?.touched)">
+          <div *ngIf="email?.hasError('required')">El email es requerido</div>  <!-- L -->
+          <div *ngIf="email?.hasError('email')">El formato del email es incorrecto</div>  <!-- L -->
+        </div>
+    </section>
+
+    <section id="alertPassword" class="alert alert-danger" *ngIf="password?.invalid && (password?.dirty || password?.touched)">
+      <div *ngIf="password?.hasError('required')">La contraseña es requerida</div> <!-- L -->
+      <div *ngIf="password?.hasError('minDosNumeros')">La contraseña debe contener mínimo 2 números</div> <!-- L -->
+      <div *ngIf="password?.hasError('minlength')">La contraseña debe contener mínimo 6 caracteres</div> <!-- L -->
+    </section>
+
+    <section id="registroCorrectoONo">
+      {{mensajeRegistro}}
+    </section>
+</form>

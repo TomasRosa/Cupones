@@ -80,22 +80,14 @@ export class InicioComponent {
   currentIndex: number = 0;
 
   public actualizarContenido(event: any) {
-    console.log('Entre');
     const direction = event.direction;
-
     if (direction === 'left' || direction === 'right') {
       this.currentIndex = this.getNewIndex(direction, event);
-      console.log('Actualizando contenido para el índice:', this.currentIndex);
-
       if (
         !isNaN(this.currentIndex) &&
         this.currentIndex >= 0 &&
         this.currentIndex < this.imagenes.length
       ) {
-        console.log(
-          'Actualizando contenido para el índice dentro de if:',
-          this.currentIndex
-        );
         this.parrafoActual = this.imagenes[this.currentIndex].parrafo;
         this.nombreActual = this.imagenes[this.currentIndex].nombre;
         this.cdr.markForCheck();

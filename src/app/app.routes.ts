@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { RegisterComponent } from './components/register/register.component';
-import { LoginComponent } from './components/login/login.component';
 import { InicioComponent } from './components/inicio/inicio.component';
 import { GastronomiaComponent } from './components/categorias/gastronomia/gastronomia.component';
 import { SupermercadoComponent } from './components/categorias/supermercado/supermercado.component';
@@ -11,12 +10,10 @@ import { TeatroComponent } from './components/categorias/teatro/teatro.component
 import { SaludComponent } from './components/categorias/salud/salud.component';
 import { EsteticaComponent } from './components/categorias/estetica/estetica.component';
 import { EntretenimientoComponent } from './components/categorias/entretenimiento/entretenimiento.component';
-import { CommonModule } from '@angular/common';
 
 export const routes: Routes = [{path:'', title: 'Inicio',component: InicioComponent},
 {path:'inicio', title: 'Inicio',component: InicioComponent},
 {path:'register', title: 'Registrarse',component: RegisterComponent},
-{path: 'login', title: 'Iniciar Sesión', component: LoginComponent},
 {path:'gastronomia',title:'Gastronomia',component: GastronomiaComponent},
 {path:'supermercado',title:'Supermercado',component: SupermercadoComponent},
 {path:'escapadas',title:'Escapadas y Hoteles',component: EscapadasComponent},

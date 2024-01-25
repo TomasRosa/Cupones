@@ -1,0 +1,41 @@
+<!-- popup.component.html -->
+<!--Hacer funcionar las validaciones-->
+<div *ngIf="popupService.isOpen$ | async as openCount" class="backdrop" [class.open]="openCount > 0" (click)="closePopup()">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="popup-rectangle">
+                <button type="button" class="btn-close" (click)="closePopup()" aria-label="Close"></button>
+            <div class="modal-body">
+                <!-- Agrega formGroup al formulario -->
+                <form [formGroup]="loginForm">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <!-- Agrega formControlName a los input -->
+                        <input type="text" class="form-control" id="email" name="email" formControlName="email" required>
+                        <div class="invalid-feedback">
+                            <div *ngIf="email?.hasError('required')">El email es requerido</div>
+                            <div *ngIf="email?.hasError('email')">El formato del email es incorrecto</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Contraseña</label>
+                        <!-- Agrega formControlName a los input -->
+                        <input type="password" class="form-control mb-2" id="password" name="password" formControlName="password" required>
+                        <div class="invalid-feedback">
+                            <div *ngIf="password?.hasError('required')">La contraseña es requerida</div>
+                            <div *ngIf="password?.hasError('minlength')">La contraseña debe contener mínimo 6 caracteres</div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-success mb-2">Ingresar</button>
+                    <button class="btn btn-primary">Ingresar con Facebook</button>
+                    <div class="mt-2">
+                        <a href="#">¿Olvidaste tu contraseña?</a>
+                    </div>
+                </form>
+                <hr />
+                <p>Aun no tienes cuenta? <a href ='register'>Regístrate</a></p>
+            </div>
+        </div>
+    </div>
+</div>
