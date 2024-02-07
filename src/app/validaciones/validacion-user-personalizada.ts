@@ -31,4 +31,17 @@ export class ValidacionUserPersonalizada
       return numerosEncontrados >= 2 ? null : { minDosNumeros: true };
     };
   }
+
+  static coincideCampo(nombreCampo: string): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      const campoOriginal = control.root.get(nombreCampo);
+      const campoActual = control.value;
+
+      // Verificar si el campo actual coincide con el campo original
+      if (campoOriginal && campoActual !== campoOriginal.value) {
+        return { coincideCampo: true };
+      }
+      return null;
+    };
+  }
 }

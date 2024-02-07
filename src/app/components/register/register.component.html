@@ -1,41 +1,61 @@
-<!--Agregar onSubmit-->
 <form class="needs-validation" [formGroup]="userForm">
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-          <div class="col-md-6">
+  <div class="mt-6">
+    <div class="row justify-content-start">
+        <div class="col-md-6" style="margin-left: 14px;">
             <form class="needs-validation" [formGroup]="userForm">
-              <h2 class="text-center mb-4">Regístrate en GoCupon</h2>
-      
-              <div class="mb-3">
-                <label for="firstName" class="form-label">Nombre</label>
-                <input type="text" class="form-control" id="firstName" name="firstName" formControlName="firstName" placeholder="Ingrese su nombre" value="" required>
-              </div>
-      
-              <div class="mb-3">
-                <label for="lastName" class="form-label">Apellido</label>
-                <input type="text" class="form-control" id="lastName" name="lastName" formControlName="lastName" placeholder="Ingrese su apellido" value="" required>
-              </div>
-      
-              <div class="mb-3">
-                <label for="DNI" class="form-label">DNI</label>
-                <input type="text" class="form-control" id="DNI" name="DNI" formControlName="DNI" placeholder="Ingrese su DNI" value="" required>
-              </div>
-      
-              <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" name="email" formControlName="email" placeholder="Ingrese su email" value="" required>
-              </div>
-      
-              <div class="mb-3">
-                <label for="password" class="form-label">Contraseña</label>
-                <input type="password" class="form-control" id="password" name="password" formControlName="password" placeholder="Ingrese su contraseña" value="" required>
-              </div>
-              <button type="submit" class="btn btn-primary" (click)="crearUsuario()" [disabled]="!userForm.valid">Registrarse</button>
-            </form>
-          </div>
-        </div>
-      </div>
+                <h2 class="mb-4 mt-3 justify-content-start">REGISTRARSE</h2>
+                <p class = "mt-1" style="color: #888;">Lorem ipsum dolor sit amet, 
+                  consectetur adipiscing elit. Vestibulum ante ipsum primis in faucibus 
+                  orci luctus et ultrices posuere cubilia </p>
+                <div class="row mb-3">
+                    <div class="col">
+                        <label for="firstName" class="form-label">NOMBRE</label>
+                        <input type="text" class="form-control" id="firstName" name="firstName" formControlName="firstName" placeholder="Ingrese su nombre" value="" required>
+                    </div>
+                    <div class="col">
+                        <label for="lastName" class="form-label">APELLIDO</label>
+                        <input type="text" class="form-control" id="lastName" name="lastName" formControlName="lastName" placeholder="Ingrese su apellido" value="" required>
+                    </div>
+                </div>
 
+                <div class="row mb-3">
+                    <div class="col">
+                        <label for="email" class="form-label">CORREO</label>
+                        <input type="email" class="form-control" id="email" name="email" formControlName="email" placeholder="Ingrese su email" value="" required>
+                    </div>
+                    <div class="col">
+                        <label for="email-confirm" class="form-label">CONFIRMAR CORREO</label>
+                        <input type="email" class="form-control" id="email-confirm" name="email-confirm" formControlName="confirmEmail" placeholder="Confirme su email" value="" required>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col">
+                        <label for="password" class="form-label">CONTRASEÑA</label>
+                        <input type="password" class="form-control" id="password" name="password" formControlName="password" placeholder="Ingrese su contraseña" value="" required>
+                    </div>
+                    <div class="col">
+                        <label for="passwordConfirm" class="form-label">CONFIRMAR CONTRASEÑA</label>
+                        <input type="password" class="form-control" id="password-confirm" name="password-confirm" formControlName="confirmPassword" placeholder="Confirme su contraseña" value="" required>
+                    </div>
+                </div>
+                <!--Agregar section de captcha required.-->
+                <re-captcha formControlName="recaptcha" siteKey="{{ environment.recaptchaSiteKey }}"></re-captcha>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary" (click)="crearUsuario()" [disabled]="!userForm.valid" style="width: 100%;">REGISTRARSE</button>
+                    <br>
+                    <button type="submit" class="btn btn-primary mt-3" style="background-color: #3b5998; width: 100%;">REGISTRARSE CON FACEBOOK</button>
+                    <h6 style="color: blue; cursor: pointer; text-align: center;">Al registrarse acepta <u>Terminos y Condiciones</u></h6>
+                </div>
+                <!--Aca poner que terminos y condiciones esten en azul y al hacer click se abra unos terminos y condiciones.-->
+            </form>
+            <br>
+        </div>
+    </div>
+</div>
+
+      <!--SECTION DE VALIDACIONES, AGREGAR LAS COMENTADAS DE ARRIBA. -->
     <section id="alertName" class="alert alert-danger" *ngIf="firstName?.invalid && (firstName?.dirty || firstName?.touched)">
           <div *ngIf="firstName?.hasError('required')">El nombre es requerido</div> <!-- L -->
           <div *ngIf="firstName?.hasError('soloLetras')">El nombre debe contener solo letras</div> <!-- L -->
@@ -45,27 +65,25 @@
           <div *ngIf="lastName?.hasError('required')">El apellido es requerido</div> <!-- L -->
           <div *ngIf="lastName?.hasError('soloLetras')">El apellido debe contener solo letras</div> <!-- L -->
     </section>
-
-    <section id="alertDNI" class="alert alert-danger" *ngIf="dni?.invalid && (dni?.dirty || dni?.touched)">
-          <div *ngIf="dni?.hasError('required')">El DNI es requerido</div>  <!-- L -->
-          <div *ngIf="dni?.hasError('soloNumeros')">El DNI debe contener solo números</div>  <!-- L -->
-          <div *ngIf="dni?.hasError('minlength') || dni?.hasError('maxlength')">El DNI debe contener 8 caracteres</div>  <!-- L -->
+    
+    <section id="alertEmail" class="alert alert-danger" *ngIf="email?.invalid && (email?.dirty || email?.touched)">
+        <div *ngIf="email?.hasError('required')">El email es requerido</div>  <!-- L -->
+        <div *ngIf="email?.hasError('email')">El formato del email es incorrecto</div>  <!-- L -->
     </section>
 
-    <section id="alertEmail">
-        <div *ngIf="email?.invalid && (email?.dirty || email?.touched)">
-          <div *ngIf="email?.hasError('required')">El email es requerido</div>  <!-- L -->
-          <div *ngIf="email?.hasError('email')">El formato del email es incorrecto</div>  <!-- L -->
-        </div>
+    <section id="alertConfirmPassword" class="alert alert-danger" *ngIf="userForm.get('confirmPassword')?.errors && (userForm.get('confirmPassword')?.dirty || userForm.get('confirmPassword')?.touched)">
+      <div *ngIf="userForm.get('confirmPassword')?.hasError('required')">La confirmación de contraseña es requerida</div> 
+      <div *ngIf="confirmPassword?.hasError('coincideCampo')">Las contraseñas no coinciden.</div>
+    </section>
+
+    <section id="alertConfirmEmail" class="alert alert-danger" *ngIf="userForm.get('confirmEmail')?.errors && (userForm.get('confirmEmail')?.dirty || userForm.get('confirmEmail')?.touched)">
+      <div *ngIf="userForm.get('confirmEmail')?.hasError('required')">La confirmacion de email es requerida</div>  
+      <div *ngIf="confirmEmail?.hasError('coincideCampo')">Los emails no coinciden.</div>
     </section>
 
     <section id="alertPassword" class="alert alert-danger" *ngIf="password?.invalid && (password?.dirty || password?.touched)">
       <div *ngIf="password?.hasError('required')">La contraseña es requerida</div> <!-- L -->
       <div *ngIf="password?.hasError('minDosNumeros')">La contraseña debe contener mínimo 2 números</div> <!-- L -->
       <div *ngIf="password?.hasError('minlength')">La contraseña debe contener mínimo 6 caracteres</div> <!-- L -->
-    </section>
-
-    <section id="registroCorrectoONo">
-      {{mensajeRegistro}}
     </section>
 </form>

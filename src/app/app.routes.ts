@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { environment } from './environments/environment.development';
 import { RegisterComponent } from './components/register/register.component';
 import { InicioComponent } from './components/inicio/inicio.component';
 import { GastronomiaComponent } from './components/categorias/gastronomia/gastronomia.component';
