@@ -20,3 +20,37 @@ body
 .user-buttons {
   text-align: right;
 }
+.search-bar {
+  position: relative; /* Para establecer un contexto de posición */
+}
+
+.search-results {
+  position: absolute; /* Cambiado a absolute para posicionar de forma absoluta en relación con el contenedor padre */
+  top: calc(100% + 5px); /* Posiciona el contenedor justo debajo de la barra de búsqueda, con un espacio de 5px */
+  left: 0;
+  width: 100%; /* Ajusta el ancho al 100% */
+  max-height: 20rem; /* Establece una altura máxima para el contenedor */
+  overflow-y: auto; /* Agrega desplazamiento vertical si hay muchos resultados */
+  background-color: #fff; /* Fondo blanco para los resultados */
+  border: 1px solid #ccc; /* Borde del contenedor */
+  border-top: none; /* Elimina el borde superior para que no se vea doble */
+  z-index: 1000; /* Asegura que el contenedor esté en la parte superior */
+}
+.search-result {
+  display: flex; /* Usa flexbox para alinear los elementos */
+  padding: 5px; /* Espaciado interno reducido */
+  border-bottom: 1px solid #ced4da; /* Borde inferior entre resultados */
+}
+
+.search-result-image {
+  margin-right: 10px; /* Espacio entre la imagen y el nombre */
+}
+
+.search-result-details {
+  flex-grow: 1; /* Hace que el nombre del lugar ocupe todo el espacio disponible */
+}
+
+.resultado-imagen {
+  max-width: 50px; /* Ancho máximo de la imagen */
+  height: auto; /* Altura automática para mantener la proporción */
+}

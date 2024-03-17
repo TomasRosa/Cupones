@@ -2,7 +2,7 @@
     <div class="row justify-content-center">
       <div class="col-md-4 col-10 mb-3" *ngFor="let lugar of vehiculos">
         <div class="card h-100">
-          <img class="card-img-top img-fluid" src="{{ lugar.imagen }}" alt="{{ lugar.nombre }}">
+          <img class="card-img-top img-fluid" src="{{ lugar.ruta }}" alt="{{ lugar.nombre }}">
           <div class="card-body d-flex flex-column justify-content-between">
             <h5 class="card-title text-center">{{ lugar.nombre }}</h5>
             <div class="d-flex justify-content-center align-items-center flex-grow-1 star-container">
@@ -15,10 +15,6 @@
               </div>
             </div>
             <p class="card-text text-center">{{ lugar.descripcion }}</p>
-            <div class="d-flex justify-content-start align-items-center me-2">
-              <span class="text-decoration-line-through">$1000</span>
-            </div>
-            <p class="card-text text-center">Precio: {{ lugar.precio }}</p>
             <button class="btn btn-primary align-self-center mb-2">Ver oferta</button>
           </div>
         </div>

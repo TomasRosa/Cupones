@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { Lugar } from '../interfaces/lugar';
 
 @Injectable({
@@ -10,21 +10,23 @@ import { Lugar } from '../interfaces/lugar';
 export class ShareDataService {
   
   URL = environment.urlApi;
-
+  
   constructor(private http: HttpClient) {}
   
-//   obtenerDatosSegunId(idCategoria: number): any[] {
-//     return this.lugares.filter((lugar) => lugar.idCategoria === idCategoria);
-//   }
-//   filtrarPorLugares(consulta: string): any {
-//     return this.lugares.filter(lugar =>
-//         lugar.nombre.toLowerCase().includes(consulta.toLowerCase()) || // Buscar por nombre del lugar
-//         lugar.nombreCategoria.toLowerCase().includes(consulta.toLowerCase()) // Buscar por nombre de categoría
-//     );
-// }
- getLugares(): Observable<Lugar[]>
- {
-    return this.http.get<Lugar[]>(`${this.URL}/lugares`);
- }
+  obtenerDatosSegunId(idCategoria: number): Observable<Lugar[]> {
+    return this.http.get<Lugar[]>(`${this.URL}/lugares/${idCategoria}`);
+  }
+  
+  filtrarPorLugares(consulta: string): Observable<Lugar[]> {
+    return this.getLugares().pipe(
+      map((lugares: any[]) => lugares.filter(lugar =>
+        lugar.nombre.toLowerCase().includes(consulta.toLowerCase()) ||
+        lugar.nombreCategoria.toLowerCase().includes(consulta.toLowerCase())
+      ))
+    );
+  }
 
+  getLugares(): Observable<Lugar[]> {
+    return this.http.get<Lugar[]>(`${this.URL}/lugares`);
+  }
 }

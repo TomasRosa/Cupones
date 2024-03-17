@@ -1,84 +1,60 @@
 <div class="container-fluid mt-4">
-    <div class="row align-items-center">
-      <div class="col-md-12">
-        <div class="row">
-          <div class="col-md-6">
-            <div class="content-container">
-              <h2>{{nombreActual}}</h2>
-              <p>{{parrafoActual}}</p>
-              <button class="btn btn-primary">+info</button>
-            </div>
+  <div class="row align-items-center">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="content-container">
+            <h2>{{ nombreActual }}</h2>
+            <p>{{ parrafoActual }}</p>
+            <button class="btn btn-primary">+info</button>
           </div>
-          <div class="col-md-6">
-            <div class="content-container p-4">
-              <div class="carousel slide" id="myCarousel" (slide.bs.carousel)="actualizarContenido($event)">
-                <div class="carousel-inner">
-                  <div class="carousel-item active" >
-                    <img class="d-block w-100" src="./assets/images/images-cine/cinemacenter.jpg" alt="Primera imagen">
-                  </div>
-                  <div class="carousel-item">
-                    <img class="d-block w-100" src="./assets/images/images-entretenimiento/foot-golf-tandil.jpg" alt="Segunda imagen">
-                  </div>
-                  <div class="carousel-item">
-                    <img class="d-block w-100" src="./assets/images/images-escapadas/hotel-francia.webp" alt="Tercera imagen">
-                  </div>
-                  <div class="carousel-item">
-                    <img class="d-block w-100" src="./assets/images/images-estetica/estetica-avenlinas.jpg" alt="Cuarta imagen">
-                  </div>
-                  <div class="carousel-item">
-                    <img class="d-block w-100" src="./assets/images/images-gastronomia/el-molino-tandil.jpg" alt="Quinta imagen">
-                  </div>
-                  <div class="carousel-item">
-                    <img class="d-block w-100" src="./assets/images/images-salud/farmacia-bufor.jpg" alt="Sexta imagen">
-                  </div>
-                  <div class="carousel-item">
-                    <img class="d-block w-100" src="./assets/images/images-supermercado/supermercado-monarca.jpg" alt="Septima imagen">
-                  </div>
-                  <div class="carousel-item">
-                    <img class="d-block w-100" src="./assets/images/images-teatro/teatro-bajo-suelo.jpg" alt="Octava imagen">
-                  </div>
-                  <div class="carousel-item">
-                    <img class="d-block w-100" src="./assets/images/images-vehiculos/motos-consecionaria.JPG" alt="Novena imagen">
-                  </div>
+        </div>
+        <div class="col-md-6">
+          <div class="content-container p-4">
+            <div class="carousel slide" id="myCarousel" (slide.bs.carousel)="actualizarContenido($event)">
+              <div class="carousel-inner">
+                <!-- Utiliza *ngFor para recorrer el arreglo imagenes y mostrar las imágenes del carrusel -->
+                <div class="carousel-item" *ngFor="let imagen of imagenes; let i = index" [class.active]="i === 0">
+                  <!-- Aquí establece la ruta de la imagen dinámicamente -->
+                  <img class="d-block w-100" [src]="imagen.ruta" [alt]="'Imagen ' + (i + 1)">
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
-                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
-                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                </button>
               </div>
+              <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              </button>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="row mt-4">
-        <h3 class="w-100 text-left mb-4">DESTACADOS</h3>
-        <!-- <div class="col-md-2 col-12" *ngFor="let lugar of destacados">
-          <div class="card h-100">
-            <img class="card-img-top img-fluid" src="{{ lugar.imagen }}" alt="{{ lugar.nombre }}">
+  </div>
+  <div class="row mt-4">
+    <h3 class="w-100 text-left mb-4">DESTACADOS</h3>
+    <!-- Utiliza ngFor para recorrer los últimos 5 lugares del arreglo lugares -->
+    <div class="col-md-3 col-sm-6 col-12 mb-4" *ngFor="let lugar of imagenes.slice(-4)">
+        <div class="card h-100">
+            <img class="card-img-top img-fluid" [src]="lugar.ruta" [alt]="lugar.nombre">
             <div class="card-body d-flex flex-column justify-content-between">
-              <h5 class="card-title text-center">{{ lugar.nombre }}</h5>
-              <div class="d-flex justify-content-center align-items-center flex-grow-1 star-container">
-                <div class="star-rating">
-                  <span class="star-filled"></span>
-                  <span class="star-filled"></span>
-                  <span class="star-filled"></span>
-                  <span class="star-filled"></span>
-                  <span class="star-filled"></span>
+                <h5 class="card-title text-center">{{ lugar.nombre }}</h5>
+                <div class="d-flex justify-content-center align-items-center flex-grow-1 star-container">
+                    <div class="star-rating">
+                        <span class="star-filled"></span>
+                        <span class="star-filled"></span>
+                        <span class="star-filled"></span>
+                        <span class="star-filled"></span>
+                        <span class="star-filled"></span>
+                    </div>
                 </div>
-              </div>
-              <p class="card-text text-center">{{ lugar.descripcion }}</p>
-              <div class="d-flex justify-content-start align-items-center me-2">
-                <span class="text-decoration-line-through">$1000</span>
-              </div>
-              <p class="card-text text-center">Precio: {{ lugar.precio }}</p>
-              <button class="btn btn-primary align-self-center mb-2">Ver oferta</button>
+                <div class="d-flex justify-content-start align-items-center me-2">
+                    <span class="text-decoration-line-through">$1000</span>
+                </div>
+                <p class="card-text text-center">Precio: {{ lugar.precio }}</p>
+                <button class="btn btn-primary align-self-center mb-2">Ver oferta</button>
             </div>
-          </div>
-        </div> -->
-      </div>                         
+        </div>
+    </div>
 </div>
-
-  
+</div>                       

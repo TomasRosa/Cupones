@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ShareDataService } from '../../../services/share-data.service';
 
 @Component({
   selector: 'app-escapadas',
@@ -9,24 +10,13 @@ import { CommonModule } from '@angular/common';
   styleUrl: './escapadas.component.css'
 })
 export class EscapadasComponent {
-  escapadas: any [] = [
-    {
-      nombre: 'Hotel Francia',
-      descripcion: 'Lorem ipsum, dolor sit amet consectetur',
-      imagen: 'assets/images/images-escapadas/hotel-francia.webp',
-      precio: '$500',
-    },
-    {
-      nombre: 'Hotel Nuevos Horizontes',
-      descripcion: 'Lorem ipsum, dolor sit amet consectetur',
-      imagen: 'assets/images/images-escapadas/hotel-nuevos-horizontes.webp',
-      precio: '$500',
-    },
-    {
-      nombre: 'Hotel Paraiso de la Sierra',
-      descripcion: 'Lorem ipsum, dolor sit amet consectetur',
-      imagen: 'assets/images/images-escapadas/hotel-paraiso-de-la-sierra.webp',
-      precio: '$500'
-    }
-  ]
+  escapadas: any [] = [];
+
+  constructor(private shareData: ShareDataService)
+  {
+    // Llamar al método obtenerDatosSegunId con el ID 1
+    this.shareData.obtenerDatosSegunId(3).subscribe((data) =>{
+      this.escapadas = data;
+    })
+  }
 }

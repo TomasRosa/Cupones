@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ShareDataService } from '../../../services/share-data.service';
 
 @Component({
   selector: 'app-supermercado',
@@ -9,24 +10,13 @@ import { CommonModule } from '@angular/common';
   styleUrl: './supermercado.component.css'
 })
 export class SupermercadoComponent {
-  supermercado: any [] = [
-    {
-      nombre: 'SuperMercado El Rodo',
-      descripcion: 'Lorem ipsum, dolor sit amet consectetur',
-      imagen: 'assets/images/images-supermercado/supermercado-el-rodo.png',
-      precio: '$500',
-    },
-    {
-      nombre: 'SuperMercado Monarca',
-      descripcion: 'Lorem ipsum, dolor sit amet consectetur',
-      imagen: 'assets/images/images-supermercado/supermercado-monarca.jpg',
-      precio: '$500',
-    },
-    {
-      nombre: 'SuperMercado Oriente',
-      descripcion: 'Lorem ipsum, dolor sit amet consectetur',
-      imagen: 'assets/images/images-supermercado/supermercado-oriente.jpg',
-      precio: '$500'
-    }
-  ]
+  supermercado: any [] = [];
+
+  constructor(private shareData: ShareDataService)
+  {
+    // Llamar al método obtenerDatosSegunId con el ID 1
+    this.shareData.obtenerDatosSegunId(7).subscribe((data) =>{
+      this.supermercado = data;
+    })
+  }
 }

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ShareDataService } from '../../../services/share-data.service';
 
 @Component({
   selector: 'app-salud',
@@ -9,24 +10,13 @@ import { CommonModule } from '@angular/common';
   styleUrl: './salud.component.css'
 })
 export class SaludComponent {
-  salud: any [] = [
-    {
-      nombre: 'Farmacia Bufor',
-      descripcion: 'Lorem ipsum, dolor sit amet consectetur',
-      imagen: 'assets/images/images-salud/farmacia-bufor.jpg',
-      precio: '$500',
-    },
-    {
-      nombre: 'Farmacia Tandil',
-      descripcion: 'Lorem ipsum, dolor sit amet consectetur',
-      imagen: 'assets/images/images-salud/farmacia-tandil.jpg',
-      precio: '$500',
-    },
-    {
-      nombre: 'Farmacia Vera',
-      descripcion: 'Lorem ipsum, dolor sit amet consectetur',
-      imagen: 'assets/images/images-salud/farmacia-vera.jpg',
-      precio: '$500'
-    }
-  ]
+  salud: any [] = [];
+
+  constructor(private shareData: ShareDataService)
+  {
+    // Llamar al método obtenerDatosSegunId con el ID 1
+    this.shareData.obtenerDatosSegunId(6).subscribe((data) =>{
+      this.salud = data;
+    })
+  }
 }

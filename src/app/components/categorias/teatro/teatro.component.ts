@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ShareDataService } from '../../../services/share-data.service';
 
 @Component({
   selector: 'app-teatro',
@@ -9,24 +10,13 @@ import { CommonModule } from '@angular/common';
   styleUrl: './teatro.component.css'
 })
 export class TeatroComponent {
-  teatro: any [] = [
-    {
-      nombre: 'Teatro Bajo Suelo',
-      descripcion: 'Lorem ipsum, dolor sit amet consectetur',
-      imagen: 'assets/images/images-teatro/teatro-bajo-suelo.jpg',
-      precio: '$500',
-    },
-    {
-      nombre: 'Teatro Confraternidad',
-      descripcion: 'Lorem ipsum, dolor sit amet consectetur',
-      imagen: 'assets/images/images-teatro/teatro-confraternidad.jpg',
-      precio: '$500',
-    },
-    {
-      nombre: 'Teatro Del Fuerte',
-      descripcion: 'Lorem ipsum, dolor sit amet consectetur',
-      imagen: 'assets/images/images-teatro/teatro-del-fuerte.jpg',
-      precio: '$500'
-    }
-  ]
+  teatro: any [] = [];
+
+  constructor(private shareData: ShareDataService)
+  {
+    // Llamar al método obtenerDatosSegunId con el ID 1
+    this.shareData.obtenerDatosSegunId(8).subscribe((data) =>{
+      this.teatro = data;
+    })
+  }
 }

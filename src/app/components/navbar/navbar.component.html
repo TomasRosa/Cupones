@@ -12,11 +12,25 @@
             <div class="row">
                 <!-- Barra de búsqueda -->
                 <div class="col-md-6 offset-md-1 search-bar text-center">
-                    <input
-                        type="text"
-                        class="form-control text-center"
-                        placeholder="Buscar cupones..."
-                    />
+                  <input
+                    type="text"
+                    class="form-control text-center"
+                    placeholder="Buscar cupones..."
+                    [(ngModel)]="terminoBusqueda"
+                    (input)="filtrarLugares()"
+                  />
+                  <div class="search-results" *ngIf="resultadosBusqueda.length > 0">
+                    <div *ngFor="let lugar of resultadosBusqueda" class="search-result">
+                      <!-- Imagen del lugar -->
+                      <div class="search-result-image">
+                        <img src="{{ lugar.ruta }}" alt="{{ lugar.nombre }}" class="img-fluid resultado-imagen">
+                      </div>
+                      <!-- Nombre del lugar -->
+                      <div class="search-result-details">
+                        <p>{{ lugar.nombre }}</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <!-- Botones de usuario -->
                 <div class="col-md-5 d-flex justify-content-end">
