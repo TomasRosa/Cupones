@@ -6,7 +6,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NavigateToService } from '../../services/navigate-to.service';
 import { PopupService } from '../../services/pop-up-service.service';
 
-
 @Component({
   selector: 'app-popup',
   standalone: true,

@@ -1,12 +1,9 @@
-import { environment } from '../../environments/environment';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators,ReactiveFormsModule } from '@angular/forms';
 import { ValidacionUserPersonalizada } from '../../validaciones/validacion-user-personalizada';
 import { User } from '../../models/user';
 import { CommonModule } from '@angular/common';
 import { RecaptchaModule} from 'ng-recaptcha';
-import { ReCaptchaV3Service } from 'ng-recaptcha';
-import { AppEnvironment } from '../../AppEnvironment/AppEnvironment'//nuevo
 
 @Component({
   selector: 'app-register',
@@ -18,16 +15,7 @@ import { AppEnvironment } from '../../AppEnvironment/AppEnvironment'//nuevo
 export class RegisterComponent {
   mensajeRegistro: string = '';
   
-  constructor(private recaptchaV3Service: ReCaptchaV3Service) {}
-
-  environment: AppEnvironment = environment; //nuevo
-
-  async onSubmit() 
-  {
-    const recaptchaToken = await this.recaptchaV3Service.execute('action');
-  
-    // Envía recaptchaToken junto con otros datos al servidor para la verificación.
-  }
+  constructor() {}
 
   userForm = new FormGroup({
     firstName: new FormControl('', [
@@ -52,9 +40,6 @@ export class RegisterComponent {
     confirmPassword: new FormControl('',[
       Validators.required,
       ValidacionUserPersonalizada.coincideCampo('password')]),
-    recaptcha: new FormControl('',[
-      Validators.required
-    ]) 
   });
 
   get firstName() {

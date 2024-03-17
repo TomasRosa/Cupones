@@ -1,59 +1,67 @@
-<form class="needs-validation" [formGroup]="userForm">
-  <div class="mt-6">
-    <div class="row justify-content-start">
-        <div class="col-md-6" style="margin-left: 14px;">
+<div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-body">
+            <h2 class="card-title mb-4 mt-3 text-center">REGISTRARSE</h2>
             <form class="needs-validation" [formGroup]="userForm">
-                <h2 class="mb-4 mt-3 justify-content-start">REGISTRARSE</h2>
-                <p class = "mt-1" style="color: #888;">Lorem ipsum dolor sit amet, 
-                  consectetur adipiscing elit. Vestibulum ante ipsum primis in faucibus 
-                  orci luctus et ultrices posuere cubilia </p>
-                <div class="row mb-3">
-                    <div class="col">
-                        <label for="firstName" class="form-label">NOMBRE</label>
-                        <input type="text" class="form-control" id="firstName" name="firstName" formControlName="firstName" placeholder="Ingrese su nombre" value="" required>
-                    </div>
-                    <div class="col">
-                        <label for="lastName" class="form-label">APELLIDO</label>
-                        <input type="text" class="form-control" id="lastName" name="lastName" formControlName="lastName" placeholder="Ingrese su apellido" value="" required>
-                    </div>
+              <div class="mb-3 row">
+                <div class="col-6">
+                  <label for="firstName" class="form-label">Nombre</label>
+                  <input type="text" class="form-control" id="firstName" name="firstName" formControlName="firstName" placeholder="Ingrese su nombre" value="" required>
                 </div>
-
-                <div class="row mb-3">
-                    <div class="col">
-                        <label for="email" class="form-label">CORREO</label>
-                        <input type="email" class="form-control" id="email" name="email" formControlName="email" placeholder="Ingrese su email" value="" required>
-                    </div>
-                    <div class="col">
-                        <label for="email-confirm" class="form-label">CONFIRMAR CORREO</label>
-                        <input type="email" class="form-control" id="email-confirm" name="email-confirm" formControlName="confirmEmail" placeholder="Confirme su email" value="" required>
-                    </div>
+                <div class="col-6">
+                  <label for="lastName" class="form-label">Apellido</label>
+                  <input type="text" class="form-control" id="lastName" name="lastName" formControlName="lastName" placeholder="Ingrese su apellido" value="" required>
                 </div>
-
-                <div class="row mb-3">
-                    <div class="col">
-                        <label for="password" class="form-label">CONTRASEÑA</label>
-                        <input type="password" class="form-control" id="password" name="password" formControlName="password" placeholder="Ingrese su contraseña" value="" required>
-                    </div>
-                    <div class="col">
-                        <label for="passwordConfirm" class="form-label">CONFIRMAR CONTRASEÑA</label>
-                        <input type="password" class="form-control" id="password-confirm" name="password-confirm" formControlName="confirmPassword" placeholder="Confirme su contraseña" value="" required>
-                    </div>
+              </div>
+  
+              <div class="mb-3 row">
+                <div class="col-6">
+                  <label for="email" class="form-label">Correo</label>
+                  <input type="email" class="form-control" id="email" name="email" formControlName="email" placeholder="Ingrese su email" value="" required>
                 </div>
-                <!--Agregar section de captcha required.-->
-                <re-captcha formControlName="recaptcha" siteKey="{{ environment.recaptchaSiteKey }}"></re-captcha>
-
-                <div class="text-center">
-                    <button type="submit" class="btn btn-primary" (click)="crearUsuario()" [disabled]="!userForm.valid" style="width: 100%;">REGISTRARSE</button>
-                    <br>
-                    <button type="submit" class="btn btn-primary mt-3" style="background-color: #3b5998; width: 100%;">REGISTRARSE CON FACEBOOK</button>
-                    <h6 style="color: blue; cursor: pointer; text-align: center;">Al registrarse acepta <u>Terminos y Condiciones</u></h6>
+                <div class="col-6">
+                  <label for="email-confirm" class="form-label">Confirmar Correo</label>
+                  <input type="email" class="form-control" id="email-confirm" name="email-confirm" formControlName="confirmEmail" placeholder="Confirme su email" value="" required>
                 </div>
-                <!--Aca poner que terminos y condiciones esten en azul y al hacer click se abra unos terminos y condiciones.-->
+              </div>
+  
+              <div class="mb-3 row">
+                <div class="col">
+                  <label for="password" class="form-label">Contraseña</label>
+                  <input type="password" class="form-control" id="password" name="password" formControlName="password" placeholder="Ingrese su contraseña" value="" required>
+                </div>
+              </div>
+  
+              <div class="mb-3 row">
+                <div class="col">
+                  <label for="passwordConfirm" class="form-label">Confirmar Contraseña</label>
+                  <input type="password" class="form-control" id="password-confirm" name="password-confirm" formControlName="confirmPassword" placeholder="Confirme su contraseña" value="" required>
+                </div>
+              </div>
+  
+              <div class="text-center mb-3">
+                <button type="submit" class="btn btn-primary" (click)="crearUsuario()" [disabled]="!userForm.valid" style="width: 100%;">REGISTRARSE</button>
+              </div>
+  
+              <div class="text-center mb-3">
+                <button type="submit" class="btn btn-primary google-btn">REGISTRARSE CON GOOGLE</button>
+              </div>
+  
+              <hr>
+  
+              <div class="text-center">
+                <p>Al registrarse acepta <u style="cursor: pointer;">Terminos y Condiciones</u></p>
+            </div>
+            
+  
             </form>
-            <br>
+          </div>
         </div>
+      </div>
     </div>
-</div>
+  </div>
 
       <!--SECTION DE VALIDACIONES, AGREGAR LAS COMENTADAS DE ARRIBA. -->
     <section id="alertName" class="alert alert-danger" *ngIf="firstName?.invalid && (firstName?.dirty || firstName?.touched)">
@@ -86,4 +94,3 @@
       <div *ngIf="password?.hasError('minDosNumeros')">La contraseña debe contener mínimo 2 números</div> <!-- L -->
       <div *ngIf="password?.hasError('minlength')">La contraseña debe contener mínimo 6 caracteres</div> <!-- L -->
     </section>
-</form>

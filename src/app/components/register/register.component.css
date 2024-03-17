@@ -1,0 +1,28 @@
+.blue-text {
+    color: blue;
+  }
+  
+  .google-btn {
+    background-color: #db4a39;
+    width: 100%;
+  }
+  
+  .google-btn:hover {
+    background-color: darken(#db4a39, 10%);
+  }
+  .card {
+    padding: 20px;
+  }
+  
+  .form-label {
+    font-weight: bold;
+  }
+  
+  .row {
+    margin-bottom: 10px;
+  }
+  
+  .btn {
+    margin-top: 10px;
+  }
+  

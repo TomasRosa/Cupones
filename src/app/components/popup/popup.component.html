@@ -29,13 +29,13 @@
                             </div>
                             <!-- Botón para iniciar sesión -->
                             <div class="text-center">
-                                <button type="button" class="btn btn-primary mt-2" style="width: 100%;">INGRESAR</button>
-                                <button type="submit" class="btn btn-primary mt-3" style="background-color: #3b5998; width: 100%;">INICIAR SESION CON FACEBOOK</button>
+                                <button type="button" class="btn btn-primary mt-2" style="width: 100%;">INICIAR SESION</button>
+                                <button type="submit" class="btn btn-primary mt-3 google-btn">INICIAR SESION CON GOOGLE</button>
                             </div>
                         </form>
                         <!-- Enlace para restablecer contraseña -->
                         <div class="text-center mt-3">
-                            <a href="#">¿Olvidaste tu contraseña?</a>
+                            <a class="forgot-password-link" (click)="navigateTos('forgot-password')">¿Olvidaste tu contraseña?</a>
                         </div>
                         <!-- Enlace para registrarse -->
                         <hr>

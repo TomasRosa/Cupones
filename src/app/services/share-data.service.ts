@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../enviroments/environment';
+import { environment } from '../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Lugar } from '../interfaces/lugar';
@@ -10,6 +10,7 @@ import { Lugar } from '../interfaces/lugar';
 export class ShareDataService {
   
   URL = environment.urlApi;
+
   constructor(private http: HttpClient) {}
   
 //   obtenerDatosSegunId(idCategoria: number): any[] {

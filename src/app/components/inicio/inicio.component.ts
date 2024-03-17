@@ -99,7 +99,6 @@ export class InicioComponent {
       }
     }
   }
-
   private getNewIndex(direction: string, event: any): number {
     const items = this.imagenes.length;
 
@@ -116,46 +115,7 @@ export class InicioComponent {
 
     return this.currentIndex;
   }
-
-  destacados: any[] = [
-    {
-      nombre: 'Cine Espacio Inca',
-      descripcion: 'Lorem ipsum, dolor sit amet consectetur',
-      imagen: 'assets/images/images-cine/espacio-incaa.jpeg',
-      precio: '$500',
-    },
-    {
-      nombre: 'Foot-Golf Tandil',
-      descripcion: 'Lorem ipsum, dolor sit amet consectetur',
-      imagen: 'assets/images/images-entretenimiento/foot-golf-tandil.jpg',
-      precio: '$500',
-    },
-    {
-      nombre: 'Estetica Ana Paula',
-      descripcion: 'Lorem ipsum, dolor sit amet consectetur',
-      imagen: 'assets/images/images-estetica/estetica-ana-paula.JPG',
-      precio: '$500',
-    },
-    {
-      nombre: 'Restaurante La Cuadra',
-      descripcion: 'Lorem ipsum, dolor sit amet consectetur',
-      imagen: 'assets/images/images-gastronomia/la-cuadra-tandil.jpg',
-      precio: '$500',
-    },
-    {
-      nombre: 'Concesionaria San Jorge',
-      descripcion: 'Lorem ipsum, dolor sit amet consectetur',
-      imagen: 'assets/images/images-vehiculos/san-jorge-consecionarias.jpg',
-      precio: '$500',
-    },
-    {
-      nombre: 'Hotel Nuevos Horizontes',
-      descripcion: 'Lorem ipsum, dolor sit amet consectetur',
-      imagen: 'assets/images/images-escapadas/hotel-nuevos-horizontes.webp',
-      precio: '$500',
-    },
-  ];
-
+///Para los destacados voy a elegir los primeros 5 de la peticion . 
   navigateTos(route: string) {
     this.navigateTo.navigateTo(route);
   }

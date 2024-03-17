@@ -37,7 +37,23 @@
     margin-bottom: 10px;
 }
   /* Estilos para el fondo difuminado abierto */
-  .backdrop.open {
+.backdrop.open {
     display: block;
-  }
-  
+}
+.google-btn {
+  background-color: #db4a39;
+  width: 100%;
+}
+
+.google-btn:hover {
+  background-color: darken(#db4a39, 10%);
+}
+
+.forgot-password-link {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.forgot-password-link:hover {
+  text-decoration: underline;
+}

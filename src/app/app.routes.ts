@@ -11,6 +11,7 @@ import { TeatroComponent } from './components/categorias/teatro/teatro.component
 import { SaludComponent } from './components/categorias/salud/salud.component';
 import { EsteticaComponent } from './components/categorias/estetica/estetica.component';
 import { EntretenimientoComponent } from './components/categorias/entretenimiento/entretenimiento.component';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 
 export const routes: Routes = [{path:'', title: 'Inicio',component: InicioComponent},
 {path:'inicio', title: 'Inicio',component: InicioComponent},
@@ -23,4 +24,5 @@ export const routes: Routes = [{path:'', title: 'Inicio',component: InicioCompon
 {path:'teatro',title:'Teatro',component: TeatroComponent},
 {path:'salud',title:'Salud',component: SaludComponent},
 {path:'estetica',title:'Estética',component: EsteticaComponent},
-{path:'entretenimiento',title:'Entretenimiento',component: EntretenimientoComponent}];
+{path:'entretenimiento',title:'Entretenimiento',component: EntretenimientoComponent},
+{path: 'forgot-password', title:'Recuperar Contraseña', component:ForgotPasswordComponent}];
