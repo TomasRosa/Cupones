@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ShareDataService } from '../../../services/share-data.service';
+import { VerDetallesService } from '../../../services/ver-detalles.service';
+import { NavigateToService } from '../../../services/navigate-to.service';
 
 
 @Component({
@@ -13,11 +15,19 @@ import { ShareDataService } from '../../../services/share-data.service';
 export class VehiculosComponent {
   vehiculos: any [] = [];
 
-  constructor(private shareData: ShareDataService)
+  constructor(private shareData: ShareDataService,
+  private verDetalle: VerDetallesService,
+  private navigateTos: NavigateToService
+  )
   {
     // Llamar al método obtenerDatosSegunId con el ID 1
-    this.shareData.obtenerDatosSegunId(9).subscribe((data) =>{
+    this.shareData.obtenerDatosSegunIdCategoria(9).subscribe((data) =>{
       this.vehiculos = data;
     })
+  }
+  verOferta(nombre: string, descripcion: string, precio: string, ruta: string) {
+    // Almacenar los detalles del producto en el servicio
+    this.verDetalle.setDetallesProducto({ nombre, descripcion, precio, ruta });
+    this.navigateTos.navigateTo('/detalles');
   }
 }

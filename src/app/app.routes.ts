@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { environment } from './environments/environment.development';
 import { RegisterComponent } from './components/register/register.component';
 import { InicioComponent } from './components/inicio/inicio.component';
 import { GastronomiaComponent } from './components/categorias/gastronomia/gastronomia.component';
@@ -12,6 +11,7 @@ import { SaludComponent } from './components/categorias/salud/salud.component';
 import { EsteticaComponent } from './components/categorias/estetica/estetica.component';
 import { EntretenimientoComponent } from './components/categorias/entretenimiento/entretenimiento.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { DetallesComponent } from './components/detalles/detalles.component';
 
 export const routes: Routes = [{path:'', title: 'Inicio',component: InicioComponent},
 {path:'inicio', title: 'Inicio',component: InicioComponent},
@@ -25,4 +25,6 @@ export const routes: Routes = [{path:'', title: 'Inicio',component: InicioCompon
 {path:'salud',title:'Salud',component: SaludComponent},
 {path:'estetica',title:'Estética',component: EsteticaComponent},
 {path:'entretenimiento',title:'Entretenimiento',component: EntretenimientoComponent},
-{path: 'forgot-password', title:'Recuperar Contraseña', component:ForgotPasswordComponent}];
+{path: 'forgot-password', title:'Recuperar Contraseña', component:ForgotPasswordComponent},
+{path: 'detalles', title:'Detalles', component: DetallesComponent},
+{path: 'detalles/:id', title:'Detalles', component: DetallesComponent}];

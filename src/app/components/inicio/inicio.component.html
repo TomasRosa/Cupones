@@ -6,7 +6,7 @@
           <div class="content-container">
             <h2>{{ nombreActual }}</h2>
             <p>{{ parrafoActual }}</p>
-            <button class="btn btn-primary">+info</button>
+            <button class="btn btn-primary" (click)="verOfertaCarousel(currentIndex)">+info</button>
           </div>
         </div>
         <div class="col-md-6">
@@ -52,7 +52,7 @@
                     <span class="text-decoration-line-through">$1000</span>
                 </div>
                 <p class="card-text text-center">Precio: {{ lugar.precio }}</p>
-                <button class="btn btn-primary align-self-center mb-2">Ver oferta</button>
+                <button class="btn btn-primary align-self-center mb-2" (click)="verOferta(lugar.nombre,lugar.descripcion,lugar.precio,lugar.ruta)">Ver oferta</button>
             </div>
         </div>
     </div>

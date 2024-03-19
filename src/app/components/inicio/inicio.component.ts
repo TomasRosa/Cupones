@@ -5,6 +5,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ShareDataService } from '../../services/share-data.service';
 import { Lugar } from '../../interfaces/lugar';
+import { VerDetallesService } from '../../services/ver-detalles.service';
 
 
 @Component({
@@ -21,11 +22,11 @@ export class InicioComponent {
   nombreActual: string = '';
   currentIndex: number = 0;
 
-
   constructor(
     private navigateTo: NavigateToService,
     private cdr: ChangeDetectorRef,
-    private shareData: ShareDataService
+    private shareData: ShareDataService,
+    private verDetalle: VerDetallesService
   ) 
   {
     this.shareData.getLugares().subscribe((data) =>{
@@ -77,4 +78,21 @@ export class InicioComponent {
   navigateTos(route: string) {
     this.navigateTo.navigateTo(route);
   }
+  verOferta(nombre: string, descripcion: string, precio: string, ruta: string) {
+    // Almacenar los detalles del producto en el servicio
+    this.verDetalle.setDetallesProducto({ nombre, descripcion, precio, ruta });
+    this.navigateTos('/detalles');
+  }
+  verOfertaCarousel(index: number) {
+    if (index >= 0 && index < this.imagenes.length) {
+      const cuponEnCarrusel = this.imagenes[index];
+      const { nombre, descripcion, precio, ruta } = cuponEnCarrusel;
+      console.log(cuponEnCarrusel);
+      // Almacenar los detalles del producto en el servicio
+      this.verDetalle.setDetallesProducto({ nombre, descripcion, precio, ruta });
+      this.navigateTos('/detalles');
+    } else {
+      console.error('Índice de imagen fuera de rango:', index);
+    }
+  }  
 }

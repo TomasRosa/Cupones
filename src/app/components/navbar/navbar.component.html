@@ -20,7 +20,7 @@
                     (input)="filtrarLugares()"
                   />
                   <div class="search-results" *ngIf="resultadosBusqueda.length > 0">
-                    <div *ngFor="let lugar of resultadosBusqueda" class="search-result">
+                    <div *ngFor="let lugar of resultadosBusqueda" class="search-result" (click)="verDetalles(lugar.id)">
                       <!-- Imagen del lugar -->
                       <div class="search-result-image">
                         <img src="{{ lugar.ruta }}" alt="{{ lugar.nombre }}" class="img-fluid resultado-imagen">

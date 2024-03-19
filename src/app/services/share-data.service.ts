@@ -13,8 +13,12 @@ export class ShareDataService {
   
   constructor(private http: HttpClient) {}
   
-  obtenerDatosSegunId(idCategoria: number): Observable<Lugar[]> {
+  obtenerDatosSegunIdCategoria(idCategoria: number): Observable<Lugar[]> {
     return this.http.get<Lugar[]>(`${this.URL}/lugares/${idCategoria}`);
+  }
+  obtenerDatosSegunId(idFront: number): Observable<Lugar>
+  {
+    return this.http.get<Lugar>(`${this.URL}/lugares/${idFront}`)
   }
   
   filtrarPorLugares(consulta: string): Observable<Lugar[]> {
@@ -25,7 +29,6 @@ export class ShareDataService {
       ))
     );
   }
-
   getLugares(): Observable<Lugar[]> {
     return this.http.get<Lugar[]>(`${this.URL}/lugares`);
   }

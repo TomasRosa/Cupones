@@ -1,0 +1,18 @@
+<div class="container mt-5" *ngIf="detallesProducto">
+    <div class="card">
+      <div class="row g-0">
+        <div class="col-md-4">
+          <img class="img-fluid rounded-start" [src]="detallesProducto.ruta" alt="{{ detallesProducto.nombre }}">
+        </div>
+        <div class="col-md-8">
+          <div class="card-body">
+            <h2 class="card-title">{{ detallesProducto.nombre }}</h2>
+            <p class="card-text">{{ detallesProducto.descripcion }}</p>
+            <p class="card-text fw-bold">Precio: {{ detallesProducto.precio }}</p>
+            <button class="btn btn-primary">Comprar ahora</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

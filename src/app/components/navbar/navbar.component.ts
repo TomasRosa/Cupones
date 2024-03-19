@@ -6,6 +6,7 @@ import { Lugar } from '../../interfaces/lugar';
 import { ShareDataService } from '../../services/share-data.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { VerDetallesService } from '../../services/ver-detalles.service';
 
 @Component({
     selector: 'app-navbar',
@@ -15,7 +16,10 @@ import { FormsModule } from '@angular/forms';
     imports: [PopupComponent,CommonModule,FormsModule]
 })
 export class NavbarComponent {
-  constructor(private navigateTo: NavigateToService, private popUpService: PopupService, private shareData: ShareDataService) {}
+  constructor(private navigateTo: NavigateToService, 
+    private popUpService: PopupService, 
+    private shareData: ShareDataService,
+    private verDetalle: VerDetallesService) {}
   
   terminoBusqueda: string = '';
   resultadosBusqueda: Lugar[] = [];
@@ -28,6 +32,19 @@ export class NavbarComponent {
     } else {
       this.resultadosBusqueda = [];
     }
+  }
+  verDetalles(id: number) {
+    const detalles = this.resultadosBusqueda.find(lugar => lugar.id === id);
+    if (detalles) {
+        this.verDetalle.setDetallesProducto(detalles); // Enviamos los detalles al servicio
+        this.navigateToDetalles(id);
+    }
+}
+  navigateToDetalles(id: number) {
+    // Aquí navegas al componente de detalles con los detalles del producto
+    this.navigateTos('/detalles/' + id);
+    this.resultadosBusqueda = [];
+    this.terminoBusqueda = '';
   }
   
   navigateTos(route: string) {

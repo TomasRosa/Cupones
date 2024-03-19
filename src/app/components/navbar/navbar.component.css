@@ -35,13 +35,18 @@ body
   border: 1px solid #ccc; /* Borde del contenedor */
   border-top: none; /* Elimina el borde superior para que no se vea doble */
   z-index: 1000; /* Asegura que el contenedor esté en la parte superior */
+  cursor: pointer; /* Cambia el cursor cuando pasa sobre el elemento */
+  padding: 10px; /* Espaciado interior para mejorar la apariencia */
+  border-bottom: 1px solid #ccc; /* Línea divisoria entre resultados */
 }
 .search-result {
   display: flex; /* Usa flexbox para alinear los elementos */
   padding: 5px; /* Espaciado interno reducido */
   border-bottom: 1px solid #ced4da; /* Borde inferior entre resultados */
 }
-
+.search-result:hover {
+  background-color: #f0f0f0; /* Cambia el color de fondo */
+}
 .search-result-image {
   margin-right: 10px; /* Espacio entre la imagen y el nombre */
 }
