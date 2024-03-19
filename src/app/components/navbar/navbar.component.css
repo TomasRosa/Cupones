@@ -23,7 +23,6 @@ body
 .search-bar {
   position: relative; /* Para establecer un contexto de posición */
 }
-
 .search-results {
   position: absolute; /* Cambiado a absolute para posicionar de forma absoluta en relación con el contenedor padre */
   top: calc(100% + 5px); /* Posiciona el contenedor justo debajo de la barra de búsqueda, con un espacio de 5px */
@@ -43,9 +42,10 @@ body
   display: flex; /* Usa flexbox para alinear los elementos */
   padding: 5px; /* Espaciado interno reducido */
   border-bottom: 1px solid #ced4da; /* Borde inferior entre resultados */
+  background-color: #292b2c;
 }
 .search-result:hover {
-  background-color: #f0f0f0; /* Cambia el color de fondo */
+  background-color: #18bc9c; /* Cambia el color de fondo */
 }
 .search-result-image {
   margin-right: 10px; /* Espacio entre la imagen y el nombre */
@@ -58,4 +58,14 @@ body
 .resultado-imagen {
   max-width: 50px; /* Ancho máximo de la imagen */
   height: auto; /* Altura automática para mantener la proporción */
+}
+.register-btn,
+.login-btn {
+    width: auto;
+    max-width: none;
+    white-space: nowrap;
+    overflow: visible;
+    font-size: 14px;
+    margin-left: 5px; /* Ajusta el margen izquierdo según sea necesario */
+    margin-right: 5px; /* Ajusta el margen derecho según sea necesario */
 }

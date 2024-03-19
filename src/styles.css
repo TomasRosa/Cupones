@@ -1,6 +1,8 @@
-@import 'bootstrap/dist/css/bootstrap.min.css';
 @import 'bootstrap-icons/font/bootstrap-icons.css';
 body {
-    background-color: #73d3fb ; /* Código de color celeste cielo */
-  }
-  
+  background-color: #3b5998; /* Azul oscuro */
+  color: #ffffff; /* Texto blanco */
+  font-size: 16px; /* Tamaño de fuente */
+  line-height: 1.6; /* Espaciado entre líneas */
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+}

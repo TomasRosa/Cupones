@@ -26,8 +26,8 @@
     background-color: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     position: relative; /* Añadir posición relativa para posicionar elementos secundarios */
-    background-color: #73d3fb;
-}
+    background-color: #3b5998; /* Azul oscuro */
+  }
   .popup-rectangle .btn-close {
     position: absolute;
     top: 10px;

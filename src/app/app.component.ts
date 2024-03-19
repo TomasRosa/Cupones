@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { RecaptchaModule} from 'ng-recaptcha';
+import { FooterComponent } from './components/footer/footer.component';
 
 @Component({
   selector: 'app-root',
@@ -14,6 +15,7 @@ import { RecaptchaModule} from 'ng-recaptcha';
     RouterOutlet,
     RouterLink,
     NavbarComponent,
+    FooterComponent
   ]
 })
 export class AppComponent {

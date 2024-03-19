@@ -12,7 +12,7 @@ import { NavigateToService } from '../../../services/navigate-to.service';
   styleUrl: './cine.component.css'
 })
 export class CineComponent {
-  cine: any [] = [];
+  cine: any[] = [];
 
   constructor(private shareData: ShareDataService,
     private verDetalle: VerDetallesService,
@@ -20,7 +20,12 @@ export class CineComponent {
   {
     // Llamar al método obtenerDatosSegunId con el ID 1
     this.shareData.obtenerDatosSegunIdCategoria(1).subscribe((data) =>{
-      this.cine = data;
+      console.log(data);
+      if (Array.isArray(data)) {
+        this.cine = data;
+      } else {
+        this.cine = [data]; // Envolver el objeto en un array
+      }
     })
   }
   verOferta(nombre: string, descripcion: string, precio: string, ruta: string) {
