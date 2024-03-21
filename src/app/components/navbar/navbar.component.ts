@@ -7,6 +7,7 @@ import { ShareDataService } from '../../services/share-data.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { VerDetallesService } from '../../services/ver-detalles.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
     selector: 'app-navbar',
@@ -19,10 +20,17 @@ export class NavbarComponent {
   constructor(private navigateTo: NavigateToService, 
     private popUpService: PopupService, 
     private shareData: ShareDataService,
-    private verDetalle: VerDetallesService) {}
+    private verDetalle: VerDetallesService,
+    private auth: AuthService) {}
   
   terminoBusqueda: string = '';
   resultadosBusqueda: Lugar[] = [];
+  mensajeLogout: string = '';
+
+  openPopup()
+  {
+    this.popUpService.open();
+  }
 
   filtrarLugares() {
     if (this.terminoBusqueda.trim() !== '') {
@@ -42,17 +50,19 @@ export class NavbarComponent {
 }
   navigateToDetalles(id: number) {
     // Aquí navegas al componente de detalles con los detalles del producto
-    this.navigateTos('/detalles/' + id);
+    this.navigateTo.navigateTo('/detalles/' + id);
     this.resultadosBusqueda = [];
     this.terminoBusqueda = '';
   }
-  
-  navigateTos(route: string) {
-    this.navigateTo.navigateTo(route);
-  }
-  openPopup()
+  logout()
   {
-    console.log('Abrinendo PopUp...');
-    this.popUpService.open();
+    this.auth.logout()
+    .then(response => {
+      console.log(response);
+      this.mensajeLogout = '¡Hasta luego!';
+      this.navigateTo.navigateTo('/inicio');
+    })
   }
+
+ 
 }

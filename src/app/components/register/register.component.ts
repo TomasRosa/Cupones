@@ -2,8 +2,10 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators,ReactiveFormsModule } from '@angular/forms';
 import { ValidacionUserPersonalizada } from '../../validaciones/validacion-user-personalizada';
 import { User } from '../../models/user';
+import { NavigateToService } from '../../services/navigate-to.service';
 import { CommonModule } from '@angular/common';
 import { RecaptchaModule} from 'ng-recaptcha';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -15,7 +17,8 @@ import { RecaptchaModule} from 'ng-recaptcha';
 export class RegisterComponent {
   mensajeRegistro: string = '';
   
-  constructor() {}
+  constructor(private auth: AuthService,
+  private navigateTos: NavigateToService) {}
 
   userForm = new FormGroup({
     firstName: new FormControl('', [
@@ -61,9 +64,8 @@ export class RegisterComponent {
   get confirmPassword() {
     return this.userForm.get('confirmPassword');
   }
-
-  crearUsuario() {
-    // Verifica que el formulario sea válido antes de crear el usuario
+  ///Acordarse de utilizar guards, canActivate, para que no se accedan a distintos metodos si no se esta logueado.
+  registerWithEmailAndPassword() {
     if (this.userForm.valid) 
     {
       let usuario: User = {
@@ -72,11 +74,20 @@ export class RegisterComponent {
         email: this.userForm.value.email || '',
         password: this.userForm.value.password || '',
       };
-      console.log(usuario);
-      if(usuario)
-      {
-        this.mensajeRegistro = 'Te has registrado con exito.'
-      }
-     
+      this.auth.register(usuario.email,usuario.password)
+      .then(response => {
+        console.log(response);
+        this.mensajeRegistro = 'Te has registrado correctamente. ';
+        this.navigateTos.navigateTo('/inicio');
+      })
+      .catch(error => {
+        console.log(error);
+        this.mensajeRegistro = 'Ha ocurrido un error al registrarte.';
+      })
     }}
+
+    registerWithGoogle()
+    {
+      
+    }
 }

@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NavigateToService } from '../../services/navigate-to.service';
 import { PopupService } from '../../services/pop-up-service.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-popup',
@@ -21,31 +22,44 @@ export class PopupComponent
       password: new FormControl('', [Validators.required,Validators.minLength(6),ValidacionUserPersonalizada.minDosNumeros()])
     });
 
-  constructor(private navigateTo: NavigateToService,public popupService: PopupService, private el: ElementRef ) 
-  {
-    console.log('PopupComponent cargado.');
+  constructor(private navigateTo: NavigateToService,
+  public popupService: PopupService, 
+  private el: ElementRef,
+  private auth: AuthService) {}
+  
+  mensajeLogin: string = ''; 
+
+  get email() {
+    return this.loginForm?.get('email');
   }
+
+  get password() {
+    return this.loginForm?.get('password');
+  }
+  
   openPopup() 
   {
-    console.log('Abriendo pop-up...');
     this.popupService.open(); // Abre el popup
   }
   closePopup()
   {
-    console.log('Cerrando pop-up...');
     this.popupService.close();
   }
 
   navigateTos(route: string) {
     this.navigateTo.navigateTo(route);
   }
-  get email() {
-    // Comprobación de nulidad
-    return this.loginForm?.get('email');
-  }
-
-  get password() {
-    // Comprobación de nulidad
-    return this.loginForm?.get('password');
+  
+  loginWithEmailAndPassword()
+  {
+    this.auth.login(this.email,this.password)
+    .then(response =>{
+      console.log(response);
+      this.mensajeLogin = 'Te has logueado con exito. ';
+    })
+    .catch(error => {
+      console.log(error)
+      this.mensajeLogin = 'Ha ocurrido un error al intentar loguearte. ';
+    })
   }
 }

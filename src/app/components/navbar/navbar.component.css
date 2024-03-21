@@ -30,8 +30,7 @@ body
   width: 100%; /* Ajusta el ancho al 100% */
   max-height: 20rem; /* Establece una altura máxima para el contenedor */
   overflow-y: auto; /* Agrega desplazamiento vertical si hay muchos resultados */
-  background-color: #fff; /* Fondo blanco para los resultados */
-  border: 1px solid #ccc; /* Borde del contenedor */
+  border: 1px solid; /* Borde del contenedor */
   border-top: none; /* Elimina el borde superior para que no se vea doble */
   z-index: 1000; /* Asegura que el contenedor esté en la parte superior */
   cursor: pointer; /* Cambia el cursor cuando pasa sobre el elemento */
@@ -41,7 +40,7 @@ body
 .search-result {
   display: flex; /* Usa flexbox para alinear los elementos */
   padding: 5px; /* Espaciado interno reducido */
-  border-bottom: 1px solid #ced4da; /* Borde inferior entre resultados */
+  border-bottom: 1px solid; /* Borde inferior entre resultados */
   background-color: #292b2c;
 }
 .search-result:hover {
