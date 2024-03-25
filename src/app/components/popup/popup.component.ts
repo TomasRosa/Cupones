@@ -53,17 +53,28 @@ export class PopupComponent
     this.auth.login(this.email, this.password)
       .then(response => {
         console.log(response);
+        this.mensajeLogin = 'Te has logueado con exito.';
         setTimeout(() => {
-          this.mensajeLogin = 'Te has logueado con exito.';
+          this.mensajeLogin='';
           this.closePopup();
         }, 1500); // Cerrar el pop-up después de 1.5 segundos
       })
       .catch(error => {
         console.log(error);
-        setTimeout(() => {
+        if(error.code === 'auth/network-request-failed')
+        {
+          this.mensajeLogin = 'Ese usuario no se encuentra en nuestra BDD.';
+          setTimeout(() => {
+            this.mensajeLogin = '';
+          }, 1500);
+        }
+        else
+        {
           this.mensajeLogin = 'Ha ocurrido un error al intentar loguearte.';
-          this.closePopup();
-        }, 1500); // Cerrar el pop-up después de 1.5 segundos
+          setTimeout(() => {
+            this.mensajeLogin = '';
+          }, 2000); // Cerrar el pop-up después de 1.5 segundos
+        }
       });
   }
 
@@ -83,7 +94,6 @@ export class PopupComponent
         this.mensajeLogin = 'Ha ocurrido un error al loguearte con Google.';
         setTimeout(() => {
           this.mensajeLogin = '';
-          this.closePopup();
         }, 1500); // Cerrar el pop-up después de 1.5 segundos
       });
   }

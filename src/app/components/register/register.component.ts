@@ -26,7 +26,7 @@ export class RegisterComponent {
   constructor(
     private auth: AuthService,
     private navigateTos: NavigateToService,
-    private firestore: FirestoreService,
+    private firestore: FirestoreService
   ) {}
 
   userForm = new FormGroup({
@@ -101,17 +101,22 @@ export class RegisterComponent {
               this.hideMessageAfterDelay(2000); // Ocultar el mensaje después de 2 segundos
             })
             .catch((error) => {
-              this.mensajeRegistro = "Ha ocurrido un error al registrarte.";
-              console.error("Error al registrar usuario en Firestore:", error);
+                this.mensajeRegistro = "Ha ocurrido un error al registrarte.";
+                console.error("Error al registrar usuario en Firestore:", error);
             });
         })
         .catch((error) => {
-          this.mensajeRegistro = "Ha ocurrido un error al registrarte.";
-          console.error("Error al registrar usuario:", error);
+          if (error.code === "auth/email-already-in-use") {
+            this.mensajeRegistro = "El correo electrónico ya está en uso.";
+          }
+          else
+          {
+            this.mensajeRegistro = "Ha ocurrido un error al registrarte.";
+            console.error("Error al registrar usuario:", error);
+          }
         });
     }
   }
-
   registerWithGoogle() {
     this.auth
       .loginWithGoogle()
@@ -139,14 +144,20 @@ export class RegisterComponent {
             this.hideMessageAfterDelay(2000); // Ocultar el mensaje después de 2 segundos
           })
           .catch((error) => {
-            console.error("Error al registrar usuario en Firestore:", error);
-            this.mensajeRegistro = "Ha ocurrido un error al registrarte.";
+              this.mensajeRegistro = "Ha ocurrido un error al registrarte.";
+              console.error("Error al registrar usuario en Firestore:", error);
           });
       })
       .catch((error) => {
         console.error(error);
-        this.mensajeRegistro =
+        if (error.code === "auth/email-already-in-use") {
+          this.mensajeRegistro = "El correo electrónico ya está en uso.";
+        }
+        else
+        {
+          this.mensajeRegistro =
           "Ha ocurrido un error al registrarte con Google.";
+        }
       });
   }
 

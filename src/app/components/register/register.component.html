@@ -7,9 +7,9 @@
               {{ mensajeRegistro }}
             </section>
             
-              <section *ngIf="mensajeRegistro === 'Ha ocurrido un error al registrarte.' || mensajeRegistro == 'Ha ocurrido un error al registrarte con Google.'" class="alert alert-danger" role="alert">
-                {{ mensajeRegistro }}
-              </section>          
+            <section *ngIf="mensajeRegistro === 'El correo electrónico ya está en uso.' || mensajeRegistro === 'Ha ocurrido un error al registrarte.'" class="alert alert-danger" role="alert">
+              {{ mensajeRegistro }}
+            </section>      
             <h2 class="card-title mb-4 mt-3 text-center">REGISTRARSE</h2>
             <form class="needs-validation" [formGroup]="userForm">
               <div class="mb-3 row">
