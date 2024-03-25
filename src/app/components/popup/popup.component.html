@@ -1,5 +1,5 @@
 <div *ngIf="popupService.isOpen$ | async as openCount" class="backdrop" [class.open]="openCount > 0" (click)="closePopup()">
-    <div class="modal-dialog">
+    <div class="modal-dialog" (click)="$event.stopPropagation()"> 
         <div class="modal-content">
             <div class="modal-header">
                 <div class="popup-rectangle">
@@ -13,24 +13,25 @@
                             <div class="form-group">
                                 <label for="email">Email</label>
                                 <input type="text" class="form-control" id="email" name="email" formControlName="email" placeholder="tucorreo@nombre.com" required>
-                                <div class="invalid-feedback">
+                                <span class="text-danger" *ngIf="loginForm && loginForm.get('email') && loginForm.get('email')?.invalid && (loginForm.get('email')?.dirty || loginForm.get('email')?.touched)">
                                     <div *ngIf="email?.hasError('required')">El email es requerido</div>
                                     <div *ngIf="email?.hasError('email')">El formato del email es incorrecto</div>
-                                </div>
+                                </span>
                             </div>
                             <!-- Campo de contraseña -->
                             <div class="form-group">
                                 <label for="password">Contraseña</label>
-                                <input type="password" class="form-control" id="password" name="password" formControlName="password" placeholder="tu contraseña...">
-                                <div class="invalid-feedback">
+                                <input type="password" class="form-control" id="password" name="password" formControlName="password" placeholder="tu contraseña..." required>
+                                <span class="text-danger" *ngIf="loginForm && loginForm.get('password') && loginForm.get('password')?.invalid && (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)">
                                     <div *ngIf="password?.hasError('required')">La contraseña es requerida</div>
+                                    <div *ngIf="password?.hasError('minDosNumeros')">La contraseña debe contener mínimo 2 números</div>
                                     <div *ngIf="password?.hasError('minlength')">La contraseña debe contener mínimo 6 caracteres</div>
-                                </div>
+                                </span>
                             </div>
                             <!-- Botón para iniciar sesión -->
                             <div class="text-center">
-                                <button type="button" class="btn btn-primary mt-2" style="width: 100%;">INICIAR SESIÓN</button>
-                                <button type="submit" class="btn btn-primary mt-3 google-btn">INICIAR SESIÓN CON GOOGLE</button>
+                                <button type="button" class="btn btn-primary mt-2" style="width: 100%;" [disabled]="loginForm.invalid" (click)="loginWithEmailAndPassword()">INICIAR SESIÓN</button>
+                                <button type="submit" class="btn btn-primary mt-3 google-btn" (click)="loginWithGoogle()">INICIAR SESIÓN CON GOOGLE</button>
                             </div>
                         </form>
                         <!-- Enlace para restablecer contraseña -->
@@ -46,3 +47,11 @@
         </div>
     </div>
 </div>
+
+<section *ngIf="mensajeLogin === 'Te has logueado con exito.'" class="alert alert-success popup-message" role="alert">
+    {{ mensajeLogin }}
+</section>
+
+<section *ngIf="mensajeLogin === 'Ha ocurrido un error al intentar loguearte.' || mensajeLogin === 'Ha ocurrido un error al loguearte con Google.'" class="alert alert-danger popup-message" role="alert">
+    {{ mensajeLogin }}
+</section>

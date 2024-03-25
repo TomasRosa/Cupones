@@ -49,17 +49,42 @@ export class PopupComponent
   navigateTos(route: string) {
     this.navigateTo.navigateTo(route);
   }
-  
-  loginWithEmailAndPassword()
-  {
-    this.auth.login(this.email,this.password)
-    .then(response =>{
-      console.log(response);
-      this.mensajeLogin = 'Te has logueado con exito. ';
-    })
-    .catch(error => {
-      console.log(error)
-      this.mensajeLogin = 'Ha ocurrido un error al intentar loguearte. ';
-    })
+  loginWithEmailAndPassword() {
+    this.auth.login(this.email, this.password)
+      .then(response => {
+        console.log(response);
+        setTimeout(() => {
+          this.mensajeLogin = 'Te has logueado con exito.';
+          this.closePopup();
+        }, 1500); // Cerrar el pop-up después de 1.5 segundos
+      })
+      .catch(error => {
+        console.log(error);
+        setTimeout(() => {
+          this.mensajeLogin = 'Ha ocurrido un error al intentar loguearte.';
+          this.closePopup();
+        }, 1500); // Cerrar el pop-up después de 1.5 segundos
+      });
+  }
+
+  loginWithGoogle() {
+    this.auth.loginWithGoogle()
+      .then(response => {
+        console.log(response);
+        this.mensajeLogin = 'Te has logueado con exito.';
+        setTimeout(() => {
+          this.mensajeLogin = '';
+          this.closePopup();
+        }, 1500); // Cerrar el pop-up después de 1.5 segundos
+        this.navigateTos('/inicio');
+      })
+      .catch(error => {
+        console.log(error);
+        this.mensajeLogin = 'Ha ocurrido un error al loguearte con Google.';
+        setTimeout(() => {
+          this.mensajeLogin = '';
+          this.closePopup();
+        }, 1500); // Cerrar el pop-up después de 1.5 segundos
+      });
   }
 }

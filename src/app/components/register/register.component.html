@@ -3,27 +3,49 @@
       <div class="col-md-4">
         <div class="card">
           <div class="card-body">
+            <section *ngIf="mensajeRegistro === 'Te has registrado correctamente.' || mensajeRegistro === 'Te has registrado correctamente con google.'" class="alert alert-success" role="alert">
+              {{ mensajeRegistro }}
+            </section>
+            
+              <section *ngIf="mensajeRegistro === 'Ha ocurrido un error al registrarte.' || mensajeRegistro == 'Ha ocurrido un error al registrarte con Google.'" class="alert alert-danger" role="alert">
+                {{ mensajeRegistro }}
+              </section>          
             <h2 class="card-title mb-4 mt-3 text-center">REGISTRARSE</h2>
             <form class="needs-validation" [formGroup]="userForm">
               <div class="mb-3 row">
                 <div class="col-6">
                   <label for="firstName" class="form-label">Nombre</label>
                   <input type="text" class="form-control" id="firstName" name="firstName" formControlName="firstName" placeholder="Ingrese su nombre" value="" required>
+                  <span class="text-danger" *ngIf="userForm && userForm.get('firstName') && userForm.get('firstName')?.invalid && (userForm.get('firstName')?.dirty || userForm.get('firstName')?.touched)">
+                    <div *ngIf="userForm.get('firstName')?.hasError('required')">El nombre es requerido</div>
+                    <div *ngIf="userForm.get('firstName')?.hasError('soloLetras')">El nombre debe contener solo letras</div>
+                  </span>
                 </div>
                 <div class="col-6">
                   <label for="lastName" class="form-label">Apellido</label>
                   <input type="text" class="form-control" id="lastName" name="lastName" formControlName="lastName" placeholder="Ingrese su apellido" value="" required>
+                  <span class="text-danger" *ngIf="userForm && userForm.get('lastName') && userForm.get('lastName')?.invalid && (userForm.get('lastName')?.dirty || userForm.get('lastName')?.touched)">
+                    <div *ngIf="lastName?.hasError('required')">El apellido es requerido</div>
+                    <div *ngIf="lastName?.hasError('soloLetras')">El apellido debe contener solo letras</div>
+                  </span>
                 </div>
               </div>
-  
               <div class="mb-3 row">
                 <div class="col-6">
                   <label for="email" class="form-label">Correo</label>
                   <input type="email" class="form-control" id="email" name="email" formControlName="email" placeholder="Ingrese su email" value="" required>
+                  <span class="text-danger" *ngIf="userForm && userForm.get('email') && userForm.get('email')?.invalid && (userForm.get('email')?.dirty || userForm.get('email')?.touched)">
+                    <div *ngIf="email?.hasError('required')">El email es requerido</div>
+                    <div *ngIf="email?.hasError('email')">El formato del email es incorrecto</div>
+                  </span>
                 </div>
                 <div class="col-6">
                   <label for="email-confirm" class="form-label">Confirmar Correo</label>
                   <input type="email" class="form-control" id="email-confirm" name="email-confirm" formControlName="confirmEmail" placeholder="Confirme su email" value="" required>
+                <span class="text-danger" *ngIf="userForm && userForm.get('confirmEmail') && userForm.get('confirmEmail')?.invalid && (userForm.get('confirmEmail')?.dirty || userForm.get('confirmEmail')?.touched)">
+                  <div *ngIf="userForm.get('confirmEmail')?.hasError('required')">La confirmacion de email es requerida</div>  
+                  <div *ngIf="confirmEmail?.hasError('coincideCampo')">Los emails no coinciden.</div>
+                </span>
                 </div>
               </div>
   
@@ -31,6 +53,11 @@
                 <div class="col">
                   <label for="password" class="form-label">Contraseña</label>
                   <input type="password" class="form-control" id="password" name="password" formControlName="password" placeholder="Ingrese su contraseña" value="" required>
+                  <span class="text-danger" *ngIf="userForm && userForm.get('password') && userForm.get('password')?.invalid && (userForm.get('password')?.dirty || userForm.get('password')?.touched)">
+                    <div *ngIf="password?.hasError('required')">La contraseña es requerida</div>
+                    <div *ngIf="password?.hasError('minDosNumeros')">La contraseña debe contener mínimo 2 números</div>
+                    <div *ngIf="password?.hasError('minlength')">La contraseña debe contener mínimo 6 caracteres</div>
+                  </span>
                 </div>
               </div>
   
@@ -38,15 +65,19 @@
                 <div class="col">
                   <label for="passwordConfirm" class="form-label">Confirmar Contraseña</label>
                   <input type="password" class="form-control" id="password-confirm" name="password-confirm" formControlName="confirmPassword" placeholder="Confirme su contraseña" value="" required>
+                <span class="text-danger" *ngIf="userForm && userForm.get('confirmPassword') && userForm.get('confirmPassword')?.invalid && (userForm.get('confirmPassword')?.dirty || userForm.get('confirmPassword')?.touched)">
+                  <div *ngIf="userForm.get('confirmPassword')?.hasError('required')">La confirmación de contraseña es requerida</div> 
+                  <div *ngIf="confirmPassword?.hasError('coincideCampo')">Las contraseñas no coinciden.</div>
+                </span>
                 </div>
               </div>
   
               <div class="text-center mb-3">
-                <button type="submit" class="btn btn-primary" (click)="crearUsuario()" [disabled]="!userForm.valid" style="width: 100%;">REGISTRARSE</button>
+                <button type="submit" class="btn btn-primary" (click)="registerWithEmailAndPassword()" [disabled]="!userForm.valid" style="width: 100%;">REGISTRARSE</button>
               </div>
   
               <div class="text-center mb-3">
-                <button type="submit" class="btn btn-primary google-btn">REGISTRARSE CON GOOGLE</button>
+                <button type="submit" class="btn btn-primary google-btn" (click)="registerWithGoogle()">REGISTRARSE CON GOOGLE</button>
               </div>
   
               <hr>
@@ -54,43 +85,9 @@
               <div class="text-center">
                 <p>Al registrarse acepta <u style="cursor: pointer;">Terminos y Condiciones</u></p>
             </div>
-            
-  
             </form>
           </div>
         </div>
       </div>
     </div>
   </div>
-
-      <!--SECTION DE VALIDACIONES, AGREGAR LAS COMENTADAS DE ARRIBA. -->
-    <section id="alertName" class="alert alert-danger" *ngIf="firstName?.invalid && (firstName?.dirty || firstName?.touched)">
-          <div *ngIf="firstName?.hasError('required')">El nombre es requerido</div> <!-- L -->
-          <div *ngIf="firstName?.hasError('soloLetras')">El nombre debe contener solo letras</div> <!-- L -->
-    </section>
-
-    <section id="alertLastName" class="alert alert-danger" *ngIf="lastName?.invalid && (lastName?.dirty || lastName?.touched)">
-          <div *ngIf="lastName?.hasError('required')">El apellido es requerido</div> <!-- L -->
-          <div *ngIf="lastName?.hasError('soloLetras')">El apellido debe contener solo letras</div> <!-- L -->
-    </section>
-    
-    <section id="alertEmail" class="alert alert-danger" *ngIf="email?.invalid && (email?.dirty || email?.touched)">
-        <div *ngIf="email?.hasError('required')">El email es requerido</div>  <!-- L -->
-        <div *ngIf="email?.hasError('email')">El formato del email es incorrecto</div>  <!-- L -->
-    </section>
-
-    <section id="alertConfirmPassword" class="alert alert-danger" *ngIf="userForm.get('confirmPassword')?.errors && (userForm.get('confirmPassword')?.dirty || userForm.get('confirmPassword')?.touched)">
-      <div *ngIf="userForm.get('confirmPassword')?.hasError('required')">La confirmación de contraseña es requerida</div> 
-      <div *ngIf="confirmPassword?.hasError('coincideCampo')">Las contraseñas no coinciden.</div>
-    </section>
-
-    <section id="alertConfirmEmail" class="alert alert-danger" *ngIf="userForm.get('confirmEmail')?.errors && (userForm.get('confirmEmail')?.dirty || userForm.get('confirmEmail')?.touched)">
-      <div *ngIf="userForm.get('confirmEmail')?.hasError('required')">La confirmacion de email es requerida</div>  
-      <div *ngIf="confirmEmail?.hasError('coincideCampo')">Los emails no coinciden.</div>
-    </section>
-
-    <section id="alertPassword" class="alert alert-danger" *ngIf="password?.invalid && (password?.dirty || password?.touched)">
-      <div *ngIf="password?.hasError('required')">La contraseña es requerida</div> <!-- L -->
-      <div *ngIf="password?.hasError('minDosNumeros')">La contraseña debe contener mínimo 2 números</div> <!-- L -->
-      <div *ngIf="password?.hasError('minlength')">La contraseña debe contener mínimo 6 caracteres</div> <!-- L -->
-    </section>

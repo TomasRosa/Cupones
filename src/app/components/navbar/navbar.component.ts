@@ -54,6 +54,10 @@ export class NavbarComponent {
     this.resultadosBusqueda = [];
     this.terminoBusqueda = '';
   }
+  navigateTos(route: string)
+  {
+    this.navigateTo.navigateTo(route);
+  }
   logout()
   {
     this.auth.logout()
@@ -63,6 +67,4 @@ export class NavbarComponent {
       this.navigateTo.navigateTo('/inicio');
     })
   }
-
- 
 }
