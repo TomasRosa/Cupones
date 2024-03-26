@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { VerDetallesService } from '../../services/ver-detalles.service';
 import { AuthService } from '../../services/auth.service';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'app-navbar',
@@ -66,5 +67,8 @@ export class NavbarComponent {
       this.mensajeLogout = '¡Hasta luego!';
       this.navigateTo.navigateTo('/inicio');
     })
+  }
+  isLoggedIn(): Observable<boolean> {
+    return this.auth.isLoggedIn();
   }
 }

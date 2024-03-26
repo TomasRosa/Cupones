@@ -62,7 +62,6 @@
                         <button class="btn btn-primary btn-sm" (click)="navigateTos('entretenimiento')">
                             Entretenimiento
                         </button>
-                        <!-- Agrega aquí los botones de las categorías faltantes -->
                     </div>
                 </div>
             </div>
@@ -75,6 +74,8 @@
           <button class="btn btn-success btn-sm login-btn" (click)="openPopup()">
               <i class="bi bi-door-open"></i> Iniciar Sesión
           </button>
+          <i class="fa fa-user" *ngIf="isLoggedIn() | async" aria-hidden="true"></i>
+          <i class="fa fa-ticket" *ngIf="isLoggedIn() | async" aria-hidden="true"></i>
       </div>
     </div>
   </div>
