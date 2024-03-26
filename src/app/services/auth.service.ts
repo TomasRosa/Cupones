@@ -8,9 +8,10 @@ import { map } from 'rxjs/operators';
 })
 export class AuthService 
 {
-  user: Observable<any>;
+ // user: Observable<any>;
 
   constructor(private auth: Auth) {
+    /*
     this.user = new Observable<any>((observer) => {
       const unsubscribe = this.auth.onAuthStateChanged(
         (user) => {
@@ -27,6 +28,7 @@ export class AuthService
         unsubscribe();
       };
     });
+    */
   }
 
   register(email: any, password: any)
@@ -45,7 +47,9 @@ export class AuthService
   {
     return signOut(this.auth);
   }
+  /*
   isLoggedIn(): Observable<boolean> {
     return this.user.pipe(map(user => !!user));
   }
+  */
 }
