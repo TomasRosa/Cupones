@@ -80,4 +80,7 @@ export class NavbarComponent implements OnInit{
       this.navigateTo.navigateTo('/inicio');
     })
   }
+  isLoggedIn(): Observable<boolean> {
+    return this.auth.isLoggedIn();
+  }
 }
