@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavigateToService } from '../../services/navigate-to.service';
 import { PopupService } from '../../services/pop-up-service.service';
 import { PopupComponent } from "../popup/popup.component";
@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { VerDetallesService } from '../../services/ver-detalles.service';
 import { AuthService } from '../../services/auth.service';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'app-navbar',
@@ -16,7 +17,7 @@ import { AuthService } from '../../services/auth.service';
     styleUrls: ['./navbar.component.css'],
     imports: [PopupComponent,CommonModule,FormsModule]
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit{
   constructor(private navigateTo: NavigateToService, 
     private popUpService: PopupService, 
     private shareData: ShareDataService,
@@ -26,6 +27,18 @@ export class NavbarComponent {
   terminoBusqueda: string = '';
   resultadosBusqueda: Lugar[] = [];
   mensajeLogout: string = '';
+  isUserLoggedIn$!: Observable<boolean>;
+    
+  ngOnInit(): void {
+    this.isUserLoggedIn$ = this.auth.isLoggedIn();
+    this.isUserLoggedIn$.subscribe(isLoggedIn => {
+      if (isLoggedIn) {
+        console.log('El usuario está logueado');
+      } else {
+        console.log('El usuario no está logueado');
+      }
+    });
+  }
 
   openPopup()
   {

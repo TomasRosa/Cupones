@@ -67,18 +67,33 @@
                 </div>
             </div>
         </div>
-        <!-- Botones de usuario -->
         <div class="col-md-2 order-md-3 d-flex pe-4" style="margin-left: auto;">
-          <button class="btn btn-success btn-sm me-2 register-btn" (click)="navigateTos('register')">
-              <i class="bi bi-person"></i> Registrarse
-          </button>
-          <button class="btn btn-success btn-sm login-btn" (click)="openPopup()">
-              <i class="bi bi-door-open"></i> Iniciar Sesión
-          </button>
-      </div>
+            <!-- Botón de Registrarse -->
+            <button *ngIf="!(isUserLoggedIn$ | async)" class="btn btn-success btn-sm me-2 register-btn" (click)="navigateTos('register')">
+                <i class="bi bi-person"></i> Registrarse
+            </button>
+            
+            <!-- Botón de Iniciar Sesión -->
+            <button *ngIf="!(isUserLoggedIn$ | async)" class="btn btn-success btn-sm login-btn" (click)="openPopup()">
+                <i class="bi bi-door-open"></i> Iniciar Sesión
+            </button>
+            
+            <!-- Contenedor de botones de perfil y ticket -->
+            <div *ngIf="(isUserLoggedIn$ | async)" class="buttons-container">
+                <!-- Botón de Perfil -->
+                <button class="btn btn-success btn-sm profile-button">
+                    <i class="bi bi-person"></i> <!-- Bootstrap Icons icono de perfil -->
+                </button>
+            
+                <!-- Botón de Ticket -->
+                <button class="btn btn-success btn-sm ticket-button">
+                    <i class="bi bi-ticket"></i> <!-- Bootstrap Icons icono de ticket -->
+                </button>
+            </div>
+        </div>
     </div>
-  </div>
+    </div>
 </nav>
 <section *ngIf="mensajeLogout === '¡Hasta luego!'"  class="alert alert-info" role="alert">
     {{ mensajeLogout }}
-  </section>
+</section>

@@ -68,3 +68,17 @@ body
     margin-left: 5px; /* Ajusta el margen izquierdo según sea necesario */
     margin-right: 5px; /* Ajusta el margen derecho según sea necesario */
 }
+.buttons-container {
+  display: flex; /* Mostrar los botones en línea */
+  margin-right: 300px; /* Ajustar el margen izquierdo del contenedor */
+}
+
+.profile-button,
+.ticket-button {
+  width: auto;
+  max-width: none;
+  white-space: nowrap;
+  margin-left: 5px; /* Ajustar el margen izquierdo de los botones */
+  margin-right: 20px; /* Ajustar el margen derecho de los botones */
+  font-size: 20px;
+}
