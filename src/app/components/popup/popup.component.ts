@@ -101,11 +101,8 @@ export class PopupComponent
     this.auth.loginWithGoogle()
       .then(response => {
         console.log(response);
-        this.mensajeLogin = 'Te has logueado con exito.';
-        this.auth.isLoggedIn().subscribe(isLoggedIn => {
-          // No asignes directamente el observable, emite el valor correspondiente a través del BehaviorSubject
-          this.auth.setUserLoggedIn(true); 
-        });
+        this.mensajeLogin = 'Te has logueado con éxito.';
+        this.auth.setUserLoggedIn(true);
         setTimeout(() => {
           this.mensajeLogin = '';
           this.closePopup();
