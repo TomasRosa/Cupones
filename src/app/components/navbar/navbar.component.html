@@ -80,10 +80,17 @@
             <!-- Contenedor de botones de perfil y ticket -->
             <div *ngIf="(isUserLoggedIn$ | async)" class="buttons-container">
                 <!-- Botón de Perfil -->
-                <button class="btn btn-success btn-sm profile-button">
+                <button class="btn btn-success btn-sm profile-button" (click)="toggleMenu()">
                     <i class="bi bi-person"></i> <!-- Bootstrap Icons icono de perfil -->
                 </button>
-            
+        
+                <!-- Menú Hamburguesa -->
+                <div class="menu" [ngClass]="{ 'show': isMenuOpen }">
+                    <p class="greeting">¡Hola {{ nombreUsuario$ | async }}!</p>
+                    <button class="menu-item" (click)="navigateTos('datos')">Mis datos</button>
+                    <button class="menu-item" (click)="logout()">Logout</button>
+                </div>
+        
                 <!-- Botón de Ticket -->
                 <button class="btn btn-success btn-sm ticket-button">
                     <i class="bi bi-ticket"></i> <!-- Bootstrap Icons icono de ticket -->

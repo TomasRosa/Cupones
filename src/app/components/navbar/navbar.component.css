@@ -82,3 +82,22 @@ body
   margin-right: 20px; /* Ajustar el margen derecho de los botones */
   font-size: 20px;
 }
+.profile-button {
+  position: relative; /* Para que el menú se posicione correctamente con respecto al botón de perfil */
+}
+.menu {
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  z-index: 1000; /* Asegura que el menú esté por encima del resto del contenido */
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  top:100px;
+  right: 127px;
+}
+.menu.show {
+  display: flex;
+}
