@@ -8,7 +8,8 @@ import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { VerDetallesService } from "../../services/ver-detalles.service";
 import { AuthService } from "../../services/auth.service";
-import { Observable, forkJoin, map, of } from "rxjs";
+import { UserDataService } from "../../services/user-data.service";
+import { Observable, switchMap, take, of} from "rxjs";
 
 
 @Component({
@@ -25,6 +26,7 @@ export class NavbarComponent implements OnInit {
     private shareData: ShareDataService,
     private verDetalle: VerDetallesService,
     private auth: AuthService,
+    private userData: UserDataService
   ) {}
 
   terminoBusqueda: string = "";
@@ -41,26 +43,35 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit(): void {
     this.isUserLoggedIn$ = this.auth.isLoggedIn();
-    console.log(this.isUserLoggedIn$);
-    this.isUserLoggedIn$.subscribe((isLoggedIn) => {
-      if (isLoggedIn) {
-        console.log("El usuario está logueado");
-  
-        // Combinar observables para esperar a que ambos se completen
-        forkJoin({
-          nombre: this.auth.getName(),
-          email: this.auth.getEmail()
-        }).subscribe(({ nombre, email }) => {
-          this.nombreUsuario$ = of(nombre);
-          this.emailUsuario$ = of(email);
-        });
-      } else {
-        console.log("El usuario no está logueado");
-        this.nombreUsuario$ = null;
-        this.emailUsuario$ = null;
-      }
+
+    this.isUserLoggedIn$.pipe(
+      switchMap(isLoggedIn => {
+        if (isLoggedIn) {
+          console.log("El usuario está logueado");
+          return this.auth.getName().pipe(take(1));
+        } else {
+          console.log("El usuario no está logueado");
+          return of(null);
+        }
+      })
+    ).subscribe(name => {
+      this.nombreUsuario$ = of(name);
+    });
+
+    this.isUserLoggedIn$.pipe(
+      switchMap(isLoggedIn => {
+        if (isLoggedIn) {
+          return this.auth.getEmail().pipe(take(1));
+        } else {
+          return of(null);
+        }
+      })
+    ).subscribe(email => {
+      this.emailUsuario$ = of(email);
     });
   }
+
+
   isLoggedIn(): Observable<boolean> {
     return this.auth.isLoggedIn();
   }
