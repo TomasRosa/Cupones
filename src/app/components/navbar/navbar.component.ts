@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { NavigateToService } from "../../services/navigate-to.service";
 import { PopupService } from "../../services/pop-up-service.service";
 import { PopupComponent } from "../popup/popup.component";
@@ -8,7 +8,8 @@ import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { VerDetallesService } from "../../services/ver-detalles.service";
 import { AuthService } from "../../services/auth.service";
-import { Observable } from "rxjs";
+import { Observable, forkJoin, map, of } from "rxjs";
+
 
 @Component({
   selector: "app-navbar",
@@ -23,7 +24,7 @@ export class NavbarComponent implements OnInit {
     private popUpService: PopupService,
     private shareData: ShareDataService,
     private verDetalle: VerDetallesService,
-    private auth: AuthService
+    private auth: AuthService,
   ) {}
 
   terminoBusqueda: string = "";
@@ -34,24 +35,34 @@ export class NavbarComponent implements OnInit {
 
   isMenuOpen: boolean = false;
 
-  nombreUsuario$!: Observable<string | null>;
-  emailUsuario$!: Observable<string | null>;
   apellidoUsuario$!: Observable<string | null>;
+  nombreUsuario$: Observable<string | null> | null = null;
+  emailUsuario$: Observable<string | null> | null = null;
 
   ngOnInit(): void {
     this.isUserLoggedIn$ = this.auth.isLoggedIn();
+    console.log(this.isUserLoggedIn$);
     this.isUserLoggedIn$.subscribe((isLoggedIn) => {
       if (isLoggedIn) {
         console.log("El usuario está logueado");
-        this.nombreUsuario$ = this.auth.getName();
-        console.log(this.nombreUsuario$);
-        this.emailUsuario$ = this.auth.getEmail();
-        console.log(this.emailUsuario$);
-        this.apellidoUsuario$ = this.auth.getLastName();
+  
+        // Combinar observables para esperar a que ambos se completen
+        forkJoin({
+          nombre: this.auth.getName(),
+          email: this.auth.getEmail()
+        }).subscribe(({ nombre, email }) => {
+          this.nombreUsuario$ = of(nombre);
+          this.emailUsuario$ = of(email);
+        });
       } else {
         console.log("El usuario no está logueado");
+        this.nombreUsuario$ = null;
+        this.emailUsuario$ = null;
       }
     });
+  }
+  isLoggedIn(): Observable<boolean> {
+    return this.auth.isLoggedIn();
   }
   toggleMenu(): void {
     this.isMenuOpen = !this.isMenuOpen;
@@ -92,8 +103,5 @@ export class NavbarComponent implements OnInit {
       this.mensajeLogout = "¡Hasta luego!";
       this.navigateTo.navigateTo("/inicio");
     });
-  }
-  isLoggedIn(): Observable<boolean> {
-    return this.auth.isLoggedIn();
   }
 }

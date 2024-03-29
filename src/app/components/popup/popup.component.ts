@@ -8,6 +8,7 @@ import { PopupService } from '../../services/pop-up-service.service';
 import { AuthService } from '../../services/auth.service';
 import { Observable, Subscription } from 'rxjs';
 
+
 @Component({
   selector: 'app-popup',
   standalone: true,
@@ -31,11 +32,11 @@ export class PopupComponent
     private auth: AuthService) {}
     
     ngOnInit(): void {
-      this.authSubscription = this.auth.isLoggedIn().subscribe(isLoggedIn => {
-        this.isUserLoggedIn$ = new Observable(observer => {
-          observer.next(isLoggedIn); // Emitir el valor de isLoggedIn
-        });
-  
+      this.isUserLoggedIn$ = this.auth.isLoggedIn();
+      console.log('PopupComponent - isLoggedIn$', this.isUserLoggedIn$);
+      
+      this.authSubscription = this.isUserLoggedIn$.subscribe(isLoggedIn => {
+        console.log('PopupComponent - isLoggedIn', isLoggedIn);
         if (isLoggedIn) {
           console.log('El usuario está logueado');
         } else {
@@ -49,7 +50,7 @@ export class PopupComponent
     if (this.authSubscription) {
         this.authSubscription.unsubscribe();
     }
-}
+  }
     mensajeLogin: string = ''; 
     loginWithEmailAndPassword() {
       const email = this.email?.value;
