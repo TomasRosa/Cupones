@@ -9,13 +9,14 @@ import { FirestoreService } from './firestore.service';
 export class AuthService {
   private userSubject = new BehaviorSubject<boolean>(false);
 
-  constructor(private auth: Auth,
-  private firestore: FirestoreService) {
+ constructor(private auth: Auth,
+              private firestore: FirestoreService) {
+    // Observador para el estado de autenticación global
     this.auth.onAuthStateChanged((user: User | null) => {
-      if (!user) {
-        this.setUserLoggedIn(true); // Emitir true si el usuario está autenticado
+      if (user) {
+        this.setUserLoggedIn(true);
       } else {
-        this.setUserLoggedIn(false); // Emitir false si el usuario no está autenticado
+        this.setUserLoggedIn(false);
       }
     });
   }
@@ -49,6 +50,31 @@ export class AuthService {
       })
     );
   }
+  checkFirstTimeGoogleLogin(): Observable<boolean> {
+    // Comprueba si el usuario actual ha iniciado sesión con Google
+    return new Observable<boolean>((observer) => {
+      const currentUser = this.auth.currentUser;
+      if (currentUser) {
+        const isGoogleUser = currentUser.providerData
+          .some(provider => provider.providerId === 'google.com');
+        observer.next(isGoogleUser);
+        observer.complete();
+      } else {
+        observer.next(false);
+        observer.complete();
+      }
+    });
+  }
+
+  getNameFromGoogle(): Observable<string | null> {
+    // Obtén el nombre del usuario actual si ha iniciado sesión con Google
+    const currentUser = this.auth.currentUser;
+    if (currentUser) {
+      return of(currentUser.displayName ?? null);
+    } else {
+      return of(null);
+    }
+  }
   getUserId(): Observable<string | null> {
     const currentUser = this.auth.currentUser;
     if (currentUser) {
@@ -66,6 +92,7 @@ export class AuthService {
   setUserLoggedIn(value: boolean) {
     this.userSubject.next(value);
   }
+
   register(email: any, password: any)
   {
     return createUserWithEmailAndPassword(this.auth,email,password);

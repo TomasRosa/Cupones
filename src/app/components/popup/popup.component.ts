@@ -6,9 +6,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NavigateToService } from '../../services/navigate-to.service';
 import { PopupService } from '../../services/pop-up-service.service';
 import { AuthService } from '../../services/auth.service';
-import { Observable, Subscription, filter, take, of } from 'rxjs';
+import { Observable, Subscription, filter, take, of, switchMap } from 'rxjs';
 import { FirestoreService } from '../../services/firestore.service';
-import { UserDataService } from '../../services/user-data.service';
 
 @Component({
   selector: 'app-popup',
@@ -31,8 +30,7 @@ export class PopupComponent
     constructor(private navigateTo: NavigateToService,
     public popupService: PopupService,
     private auth: AuthService,
-    private firestore: FirestoreService,
-    private userData: UserDataService) {}
+    private firestore: FirestoreService) {}
     
     ngOnInit(): void {
       this.isUserLoggedIn$ = this.auth.isLoggedIn();
@@ -55,6 +53,47 @@ export class PopupComponent
     }
   }
     mensajeLogin: string = ''; 
+    loginWithGoogle() {
+      this.auth.loginWithGoogle()
+        .then(response => {
+          const user = response.user;
+          const userId = user.uid;
+    
+          // Verificar si el usuario está registrado en Firestore
+          this.firestore.getUserData(userId).subscribe(userData => {
+            if (userData) {
+              // El usuario está registrado en Firestore, permitir el acceso
+              console.log("El usuario está registrado en Firestore");
+              this.mensajeLogin = 'Te has logueado con éxito.';
+              this.auth.setUserLoggedIn(true);
+              setTimeout(() => {
+                this.mensajeLogin = '';
+                this.closePopup();
+              }, 1500);
+            } else {
+              // El usuario no está registrado en Firestore, mostrar mensaje de registro
+              console.log("El usuario no está registrado en Firestore");
+              this.mensajeLogin = 'Debes registrarte con Google primero para iniciar sesión con Google. Por favor, hazlo.';
+              setTimeout(() => {
+                this.mensajeLogin = '';
+              }, 2500);
+              // Desvincular la cuenta de Google recién autenticada
+              user.delete().then(() => {
+                console.log('Cuenta de Google recién autenticada desvinculada');
+              }).catch(error => {
+                console.error('Error al desvincular la cuenta de Google recién autenticada:', error);
+              });
+            }
+          });
+        })
+        .catch(error => {
+          console.error(error);
+          this.mensajeLogin = 'Ha ocurrido un error al iniciar sesión con Google.';
+          setTimeout(() => {
+            this.mensajeLogin = '';
+          }, 1500);
+        });
+    }
     loginWithEmailAndPassword() {
       const email = this.loginForm.get('email')?.value;
       const password = this.loginForm.get('password')?.value;
@@ -94,61 +133,6 @@ export class PopupComponent
           }, 2000); // Cerrar el pop-up después de 2 segundos
         });
     }
-    loginWithGoogle() {
-      this.auth.loginWithGoogle()
-        .then(response => {
-          console.log(response);
-          this.mensajeLogin = 'Te has logueado con éxito.';
-          this.auth.setUserLoggedIn(true);
-          setTimeout(() => {
-            this.mensajeLogin = '';
-            this.closePopup();
-          }, 1500); // Cerrar el pop-up después de 1.5 segundos
-    
-          const user = response.user;
-          const fullName: string = user.displayName || "";
-          const names: string[] = fullName.split(" ");
-          const firstName = names[0];
-          const lastName = names.slice(1).join(" ");
-    
-          const userId = user.uid;
-    
-          // Verificar si el usuario ya existe en Firestore
-          this.firestore.getUserData(userId).subscribe(userData => {
-            if (!userData) {
-              // Si el usuario no existe en Firestore, agregarlo
-              const usuario = {
-                firstName: firstName,
-                lastName: lastName,
-                email: user.email || "",
-                id: userId,
-              };
-    
-              this.firestore.createUser(usuario)
-                .then(() => {
-                  console.log("Usuario registrado en Firestore correctamente.");
-                  // Emitir el nombre de usuario para que se muestre en la navbar
-                  this.nombreUsuario$ = of(firstName); // Cambia "nombreUsuario$" por el nombre correcto de tu observable en la navbar
-                })
-                .catch(error => {
-                  console.error("Error al registrar usuario en Firestore:", error);
-                });
-            } else {
-              console.log("El usuario ya existe en Firestore.");
-              // Si el usuario ya existe, emitir su nombre de usuario para que se muestre en la navbar
-              this.nombreUsuario$ = of(userData.firstName); // Cambia "nombreUsuario$" por el nombre correcto de tu observable en la navbar
-            }
-          });
-        })
-        .catch(error => {
-          console.log(error);
-          this.mensajeLogin = 'Ha ocurrido un error al loguearte con Google.';
-          setTimeout(() => {
-            this.mensajeLogin = '';
-          }, 1500); // Cerrar el pop-up después de 1.5 segundos
-        });
-    }
-        
     get email() {
       return this.loginForm?.get('email');
     }

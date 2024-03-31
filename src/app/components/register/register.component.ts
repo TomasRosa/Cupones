@@ -118,49 +118,61 @@ export class RegisterComponent {
     }
   }
   registerWithGoogle() {
-    this.auth
-      .loginWithGoogle()
-      .then((response) => {
-        const user = response.user;
-        const fullName: string = user.displayName || "";
-        const names: string[] = fullName.split(" ");
-        const firstName = names[0];
-        const lastName = names.slice(1).join(" ");
-
-        const userId = user.uid;
-
-        const usuario = {
-          firstName: firstName,
-          lastName: lastName,
-          email: user.email || "",
-          id: userId,
-        };
-
-        this.firestore
-          .createUser(usuario)
-          .then(() => {
-            this.mensajeRegistro =
-              "Te has registrado correctamente con google.";
-            this.hideMessageAfterDelay(2000); // Ocultar el mensaje después de 2 segundos
-          })
-          .catch((error) => {
-              this.mensajeRegistro = "Ha ocurrido un error al registrarte.";
-              console.error("Error al registrar usuario en Firestore:", error);
+    // Permitir al usuario elegir su cuenta de Google
+    this.auth.loginWithGoogle().then(() => {
+      // Obtener el ID de usuario después de iniciar sesión con Google
+      this.auth.getUserId().subscribe(userId => {
+        if (userId) {
+          // Verificar si el usuario ya existe en Firestore
+          this.firestore.getUserData(userId).subscribe(userData => {
+            if (userData) {
+              // Si el usuario ya existe, mostrar un mensaje para iniciar sesión en lugar de registrarse nuevamente
+              this.mensajeRegistro = 'Esta cuenta ya está registrada con Google. Por favor, inicia sesión.';
+            } else {
+              // Si el usuario no existe, se puede registrar
+              this.auth.getNameFromGoogle().subscribe(name => {
+                if (name) {
+                  const fullName: string = name;
+                  const names: string[] = fullName.split(" ");
+                  const firstName = names[0];
+                  const lastName = names.slice(1).join(" ");
+  
+                  this.auth.getEmail().subscribe(email => {
+                    if (email) {
+                      // Crear un nuevo usuario en Firestore
+                      const usuario = {
+                        firstName: firstName,
+                        lastName: lastName,
+                        email: email,
+                        id: userId,
+                      };
+  
+                      this.firestore.createUser(usuario)
+                        .then(() => {
+                          // Mostrar mensaje de registro exitoso
+                          this.mensajeRegistro = "Te has registrado correctamente con Google.";
+                          this.hideMessageAfterDelay(2000); // Ocultar el mensaje después de 2 segundos
+                        })
+                        .catch((error) => {
+                          // Manejar errores al crear el usuario en Firestore
+                          this.mensajeRegistro = "Ha ocurrido un error al registrarte.";
+                          console.error("Error al registrar usuario en Firestore:", error);
+                        });
+                    }
+                  });
+                }
+              });
+            }
           });
-      })
-      .catch((error) => {
-        console.error(error);
-        if (error.code === "auth/email-already-in-use") {
-          this.mensajeRegistro = "El correo electrónico ya está en uso.";
-        }
-        else
-        {
-          this.mensajeRegistro =
-          "Ha ocurrido un error al registrarte con Google.";
         }
       });
+    }).catch(error => {
+      // Manejar errores si la autenticación con Google falla
+      console.error("Error al iniciar sesión con Google:", error);
+      // Mostrar un mensaje de error al usuario si es necesario
+      this.mensajeRegistro = "Ha ocurrido un error al iniciar sesión con Google.";
+    });
   }
-
   hideMessageAfterDelay(delay: number) {
     setTimeout(() => {
       this.mensajeRegistro = "";

@@ -52,6 +52,6 @@
     {{ mensajeLogin }}
 </section>
 
-<section *ngIf="mensajeLogin === 'Ha ocurrido un error al intentar loguearte.' || mensajeLogin === 'Ha ocurrido un error al loguearte con Google.' || mensajeLogin === 'Ese usuario no se encuentra en nuestra BDD.'" class="alert alert-danger popup-message" role="alert">
+<section *ngIf="mensajeLogin === 'Ha ocurrido un error al intentar loguearte.' || mensajeLogin === 'Ha ocurrido un error al loguearte con Google.' || mensajeLogin === 'Ese usuario no se encuentra en nuestra BDD.' || mensajeLogin === 'Debes registrarte con Google primero para iniciar sesión con Google. Por favor, hazlo.'" class="alert alert-danger popup-message" role="alert">
     {{ mensajeLogin }}
 </section>

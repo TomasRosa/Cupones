@@ -3,11 +3,11 @@
       <div class="col-md-4">
         <div class="card">
           <div class="card-body">
-            <section *ngIf="mensajeRegistro === 'Te has registrado correctamente.' || mensajeRegistro === 'Te has registrado correctamente con google.'" class="alert alert-success" role="alert">
+            <section *ngIf="mensajeRegistro === 'Te has registrado correctamente.' || mensajeRegistro === 'Te has registrado correctamente con Google.'" class="alert alert-success" role="alert">
               {{ mensajeRegistro }}
             </section>
             
-            <section *ngIf="mensajeRegistro === 'El correo electrónico ya está en uso.' || mensajeRegistro === 'Ha ocurrido un error al registrarte.'" class="alert alert-danger" role="alert">
+            <section *ngIf="mensajeRegistro === 'El correo electrónico ya está en uso.' || mensajeRegistro === 'Ha ocurrido un error al registrarte.' || mensajeRegistro === 'Esta cuenta ya está registrada con Google. Por favor, inicia sesión.'" class="alert alert-danger" role="alert">
               {{ mensajeRegistro }}
             </section>      
             <h2 class="card-title mb-4 mt-3 text-center">REGISTRARSE</h2>

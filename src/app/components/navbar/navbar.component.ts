@@ -8,7 +8,6 @@ import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { VerDetallesService } from "../../services/ver-detalles.service";
 import { AuthService } from "../../services/auth.service";
-import { UserDataService } from "../../services/user-data.service";
 import { Observable, switchMap, take, of} from "rxjs";
 
 
@@ -26,7 +25,6 @@ export class NavbarComponent implements OnInit {
     private shareData: ShareDataService,
     private verDetalle: VerDetallesService,
     private auth: AuthService,
-    private userData: UserDataService
   ) {}
 
   terminoBusqueda: string = "";
@@ -70,7 +68,6 @@ export class NavbarComponent implements OnInit {
       this.emailUsuario$ = of(email);
     });
   }
-
 
   isLoggedIn(): Observable<boolean> {
     return this.auth.isLoggedIn();
