@@ -90,7 +90,10 @@ export class AuthService {
   }
 
   setUserLoggedIn(value: boolean) {
-    this.userSubject.next(value);
+    // Actualizar el estado del usuario solo si es necesario
+    if (this.userSubject.getValue() !== value) {
+      this.userSubject.next(value);
+    }
   }
 
   register(email: any, password: any)

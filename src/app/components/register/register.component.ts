@@ -117,62 +117,65 @@ export class RegisterComponent {
         });
     }
   }
-  registerWithGoogle() {
-    // Permitir al usuario elegir su cuenta de Google
-    this.auth.loginWithGoogle().then(() => {
-      // Obtener el ID de usuario después de iniciar sesión con Google
-      this.auth.getUserId().subscribe(userId => {
-        if (userId) {
-          // Verificar si el usuario ya existe en Firestore
-          this.firestore.getUserData(userId).subscribe(userData => {
-            if (userData) {
-              // Si el usuario ya existe, mostrar un mensaje para iniciar sesión en lugar de registrarse nuevamente
-              this.mensajeRegistro = 'Esta cuenta ya está registrada con Google. Por favor, inicia sesión.';
+
+  registerWithGoogle(): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      this.auth.loginWithGoogle()
+        .then(response => {
+          const user = response.user;
+          const userId = user.uid;
+  
+          // Obtener la referencia al documento del usuario en Firestore
+          const userDocRef$ = this.firestore.getUserData(userId);
+  
+          // Suscribirse al observable para obtener los datos del usuario
+          userDocRef$.subscribe(doc => {
+            if (doc) {
+              // El usuario está registrado en Firestore, mostrar mensaje de que inicie sesión
+              console.log("El usuario está registrado en Firestore");
+              this.mensajeRegistro = 'Esta cuenta ya está registrada. Por favor, inicia sesión.';
+              setTimeout(() => {
+                this.mensajeRegistro = '';
+              }, 2500);
+              // Desloguear al usuario
+              this.auth.logout().then(() => resolve()).catch((error: any) => reject(error));
             } else {
-              // Si el usuario no existe, se puede registrar
-              this.auth.getNameFromGoogle().subscribe(name => {
-                if (name) {
-                  const fullName: string = name;
-                  const names: string[] = fullName.split(" ");
-                  const firstName = names[0];
-                  const lastName = names.slice(1).join(" ");
-  
-                  this.auth.getEmail().subscribe(email => {
-                    if (email) {
-                      // Crear un nuevo usuario en Firestore
-                      const usuario = {
-                        firstName: firstName,
-                        lastName: lastName,
-                        email: email,
-                        id: userId,
-                      };
-  
-                      this.firestore.createUser(usuario)
-                        .then(() => {
-                          // Mostrar mensaje de registro exitoso
-                          this.mensajeRegistro = "Te has registrado correctamente con Google.";
-                          this.hideMessageAfterDelay(2000); // Ocultar el mensaje después de 2 segundos
-                        })
-                        .catch((error) => {
-                          // Manejar errores al crear el usuario en Firestore
-                          this.mensajeRegistro = "Ha ocurrido un error al registrarte.";
-                          console.error("Error al registrar usuario en Firestore:", error);
-                        });
-                    }
-                  });
-                }
+              // El usuario no está registrado en Firestore, guardar su usuario en Firestore
+              console.log("El usuario no está registrado en Firestore");
+              const userData = {
+                firstName: user.displayName ? user.displayName.split(' ')[0] : '',
+                lastName: user.displayName ? user.displayName.split(' ')[1] : '',
+                email: user.email || '',
+                id: userId,
+              };
+              this.firestore.createUser(userData).then(() => {
+                console.log('Usuario creado correctamente en Firestore');
+                this.mensajeRegistro = "Te has registrado correctamente con Google.";
+                setTimeout(() => {
+                  this.mensajeRegistro = '';
+                }, 2500);
+                // Desloguear al usuario después de registrarse correctamente en Firestore
+                this.auth.logout().then(() => resolve()).catch((error: any) => reject(error));
+              }).catch((error: any) => {
+                console.error('Error al crear el usuario en Firestore:', error);
+                reject(error);
               });
             }
+          }, (error: any) => {
+            console.error("Error al obtener datos del usuario en Firestore:", error);
+            reject(error);
           });
-        }
-      });
-    }).catch(error => {
-      // Manejar errores si la autenticación con Google falla
-      console.error("Error al iniciar sesión con Google:", error);
-      // Mostrar un mensaje de error al usuario si es necesario
-      this.mensajeRegistro = "Ha ocurrido un error al iniciar sesión con Google.";
+        })
+        .catch((error: any) => {
+          console.error("Error al registrar con Google:", error);
+          this.mensajeRegistro = "Ha ocurrido un error al registrar con Google.";
+          reject(error);
+        });
     });
   }
+  
+  
+  
   hideMessageAfterDelay(delay: number) {
     setTimeout(() => {
       this.mensajeRegistro = "";
