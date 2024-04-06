@@ -133,13 +133,15 @@ export class RegisterComponent {
             if (doc) {
               // El usuario está registrado en Firestore, mostrar mensaje de que inicie sesión
               console.log("El usuario está registrado en Firestore");
-              this.mensajeRegistro = 'Esta cuenta ya está registrada. Por favor, inicia sesión.';
+              this.mensajeRegistro = 'Esta cuenta ya está registrada con Google. Por favor, inicia sesión.';
               setTimeout(() => {
                 this.mensajeRegistro = '';
               }, 2500);
               // Desloguear al usuario
               this.auth.logout().then(() => resolve()).catch((error: any) => reject(error));
-            } else {
+            } 
+            else 
+            {
               // El usuario no está registrado en Firestore, guardar su usuario en Firestore
               console.log("El usuario no está registrado en Firestore");
               const userData = {

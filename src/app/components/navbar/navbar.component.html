@@ -85,10 +85,10 @@
                 </button>
         
                 <!-- Menú Hamburguesa -->
-                <div class="menu" [ngClass]="{ 'show': isMenuOpen }">
+                <div class="menu bg-success" [ngClass]="{ 'show': isMenuOpen }">
                     <p class="greeting">¡Hola {{ nombreUsuario$ | async }}!</p>
-                    <button class="menu-item" (click)="navigateTos('datos')">Mis datos</button>
-                    <button class="menu-item" (click)="logout()">Logout</button>
+                    <button class="btn btn-primary menu-item mb-2" (click)="navigateTos('datos')">Mis datos</button>
+                    <button class="btn btn-primary menu-item" (click)="logout()">Logout</button>
                 </div>
         
                 <!-- Botón de Ticket -->
@@ -100,6 +100,6 @@
     </div>
     </div>
 </nav>
-<section *ngIf="mensajeLogout === '¡Hasta luego!'"  class="alert alert-info" role="alert">
+<section *ngIf="mensajeLogout === '¡Hasta luego!'"  class="alert alert-dismissible alert-light text-center" role="alert">
     {{ mensajeLogout }}
 </section>

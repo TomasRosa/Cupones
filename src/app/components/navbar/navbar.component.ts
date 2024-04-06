@@ -109,7 +109,10 @@ export class NavbarComponent implements OnInit {
     this.auth.logout().then((response) => {
       console.log(response);
       this.mensajeLogout = "¡Hasta luego!";
-      this.navigateTo.navigateTo("/inicio");
+      setTimeout(() => {
+        this.mensajeLogout = '';
+        this.navigateTo.navigateTo("/inicio");
+      }, 1500);
     });
   }
 }
