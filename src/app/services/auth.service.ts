@@ -74,6 +74,7 @@ export class AuthService {
         displayName: nombre + ' ' + apellido
       }).then(() => {
         // Actualización exitosa
+        return this.firestore.actualizarDatosUsuario(currentUser.uid, nombre, apellido);
       }).catch((error: any) => {
         // Manejo de errores
         console.error('Error al actualizar datos de usuario en Firebase Auth:', error);

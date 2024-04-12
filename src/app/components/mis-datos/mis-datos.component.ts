@@ -3,16 +3,23 @@ import { AuthService } from '../../services/auth.service';
 import { Observable, of, switchMap, take } from 'rxjs';
 import { NavigateToService } from '../../services/navigate-to.service';
 import { FirestoreService } from '../../services/firestore.service';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-mis-datos',
+  standalone: true,
   templateUrl: './mis-datos.component.html',
-  styleUrls: ['./mis-datos.component.css']
+  styleUrls: ['./mis-datos.component.css'],
+  imports: [CommonModule,
+  FormsModule
+  ]
 })
 export class MisDatosComponent implements OnInit {
-  nombreUsuario: string | null = null;
   apellidoUsuario: string | null = null;
+  nombreUsuario: string | null = null;
   emailUsuario: string | null = null;
+  editando: boolean = false; // Variable para controlar la edición de campos
   isUserLoggedIn$!: Observable<boolean>;
 
   constructor(private auth: AuthService,
@@ -64,28 +71,45 @@ export class MisDatosComponent implements OnInit {
       this.emailUsuario = email;
     });
   }
+  toggleEdicion() {
+    // Cambiar el estado de la variable editando para habilitar o deshabilitar la edición de campos
+    this.editando = !this.editando;
+  }
   actualizarDatos() {
     if (this.nombreUsuario && this.apellidoUsuario) {
-      // Actualizar datos en Firebase Auth
-      this.auth.actualizarDatosUsuario(this.nombreUsuario, this.apellidoUsuario)
-        .then(() => {
-          console.log('Datos actualizados en Firebase Auth.');
-
-          // Actualizar datos en Firestore
-          this.firestore.actualizarDatosUsuario(this.auth.currentUser?.uid || '', this.nombreUsuario, this.apellidoUsuario)
-            .then(() => {
-              console.log('Datos actualizados en Firestore.');
-
-              // Volver a cargar los datos del usuario en el componente
-              this.cargarDatosUsuario();
-            })
-            .catch(error => {
-              console.error('Error al actualizar los datos en Firestore:', error);
-            });
-        })
-        .catch(error => {
-          console.error('Error al actualizar los datos en Firebase Auth:', error);
+      // Verifica que nombreUsuario y apellidoUsuario no sean nulos antes de continuar
+      if (this.nombreUsuario !== null && this.apellidoUsuario !== null) {
+        this.auth.getUserId().pipe(
+          take(1),
+        ).subscribe(userId => {
+          if (userId) {
+            // Actualizar datos en Firebase Auth
+            this.auth.actualizarDatosUsuario(this.nombreUsuario!, this.apellidoUsuario!)
+              .then(() => {
+                console.log('Datos actualizados en Firebase Auth.');
+  
+                // Actualizar datos en Firestore
+                this.firestore.actualizarDatosUsuario(userId, this.nombreUsuario!, this.apellidoUsuario!)
+                  .then(() => {
+                    console.log('Datos actualizados en Firestore.');
+  
+                    // Volver a cargar los datos del usuario en el componente
+                    this.cargarDatosUsuario();
+                  })
+                  .catch(error => {
+                    console.error('Error al actualizar los datos en Firestore:', error);
+                  });
+              })
+              .catch(error => {
+                console.error('Error al actualizar los datos en Firebase Auth:', error);
+              });
+          } else {
+            console.warn('No se encontró un usuario autenticado.');
+          }
         });
+      } else {
+        console.warn('Nombre y apellido no pueden ser nulos.');
+      }
     } else {
       console.warn('Nombre y apellido no pueden estar vacíos.');
     }
