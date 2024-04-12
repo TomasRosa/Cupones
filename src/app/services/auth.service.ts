@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
- import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, signInWithPopup,GoogleAuthProvider, User} from '@angular/fire/auth';
+import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, signInWithPopup,GoogleAuthProvider, User, user, updateProfile} from '@angular/fire/auth';
 import { BehaviorSubject, Observable,map,of, switchMap } from 'rxjs';
 import { FirestoreService } from './firestore.service';
 
@@ -34,6 +34,22 @@ export class AuthService {
       })
     );
   }
+  getLastName(): Observable<string | null>{
+    return this.getUserId().pipe(
+      switchMap(userId => {
+        if(userId)
+          {
+            return this.firestore.getUserData(userId).pipe(
+              map(userData => userData ? userData.firstName : null)
+            );
+          }
+        else
+        {
+          return of(null);
+        }
+      })
+    )
+  }
   getEmail(): Observable<string | null> {
     return this.getUserId().pipe(
       switchMap(userId => {
@@ -49,6 +65,23 @@ export class AuthService {
         }
       })
     );
+  }
+  actualizarDatosUsuario(nombre: string, apellido: string): Promise<void> {
+    // Actualizar nombre y apellido del usuario en Firebase Auth
+    const currentUser = this.auth.currentUser;
+    if (currentUser) {
+      return updateProfile(currentUser, {
+        displayName: nombre + ' ' + apellido
+      }).then(() => {
+        // Actualización exitosa
+      }).catch((error: any) => {
+        // Manejo de errores
+        console.error('Error al actualizar datos de usuario en Firebase Auth:', error);
+        throw error;
+      });
+    } else {
+      return Promise.reject('No se encontró un usuario autenticado.');
+    }
   }
   checkFirstTimeGoogleLogin(): Observable<boolean> {
     // Comprueba si el usuario actual ha iniciado sesión con Google
@@ -89,13 +122,13 @@ export class AuthService {
     return this.userSubject.asObservable();
   }
 
+  
   setUserLoggedIn(value: boolean) {
     // Actualizar el estado del usuario solo si es necesario
     if (this.userSubject.getValue() !== value) {
       this.userSubject.next(value);
     }
   }
-
   register(email: any, password: any)
   {
     return createUserWithEmailAndPassword(this.auth,email,password);

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, query, where, getDocs, DocumentData, QuerySnapshot, addDoc } from '@angular/fire/firestore';
+import { Firestore, collection, query, where, getDocs, DocumentData, QuerySnapshot, addDoc, doc, updateDoc } from '@angular/fire/firestore';
 import { Observable, from } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { User } from '../models/user';
@@ -18,7 +18,6 @@ export class FirestoreService {
   createUser(user: User) {
     return addDoc(this._collection, user);
   }
-
   getUserData(userId: string): Observable<User | null> {
     const userQuery = query(collection(this.firestore, PATH), where('id', '==', userId));
     
@@ -32,5 +31,17 @@ export class FirestoreService {
         }
       })
     );
+  }
+  actualizarDatosUsuario(userId: string, nombre: string, apellido: string): Promise<void> {
+    const userRef = doc(this.firestore, PATH, userId);
+
+    return updateDoc(userRef, { nombre, apellido })
+      .then(() => {
+        console.log('Datos actualizados en Firestore.');
+      })
+      .catch(error => {
+        console.error('Error al actualizar los datos en Firestore:', error);
+        throw error;
+      });
   }
 }

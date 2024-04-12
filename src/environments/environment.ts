@@ -1,10 +1,10 @@
 export const environment = {
     firebase: {
-        "projectId":"gocupon-4545b",
-        "appId":"1:602761522123:web:703abc63c01fb10fd7a44e",
-        "storageBucket":"gocupon-4545b.appspot.com",
-        "apiKey":"AIzaSyBSNkBPhkh7Ie6_SJYN85iS-TuORaworlU",
-        "authDomain":"gocupon-4545b.firebaseapp.com",
-        "messagingSenderId":"602761522123"
+      apiKey: "AIzaSyAA40MNjRcgCYfetxNe-YJ9nkvTBC0nHzI",
+      authDomain: "gocupon.firebaseapp.com",
+      projectId: "gocupon",
+      storageBucket: "gocupon.appspot.com",
+      messagingSenderId: "844886105929",
+      appId: "1:844886105929:web:ae96eec91d9f31b4358498"
       }
 }

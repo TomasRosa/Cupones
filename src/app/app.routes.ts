@@ -12,6 +12,7 @@ import { EsteticaComponent } from './components/categorias/estetica/estetica.com
 import { EntretenimientoComponent } from './components/categorias/entretenimiento/entretenimiento.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { DetallesComponent } from './components/detalles/detalles.component';
+import { MisDatosComponent } from './components/mis-datos/mis-datos.component';
 
 export const routes: Routes = [{path:'', title: 'Inicio',component: InicioComponent},
 {path:'inicio', title: 'Inicio',component: InicioComponent},
@@ -27,4 +28,5 @@ export const routes: Routes = [{path:'', title: 'Inicio',component: InicioCompon
 {path:'entretenimiento',title:'Entretenimiento',component: EntretenimientoComponent},
 {path: 'forgot-password', title:'Recuperar Contraseña', component:ForgotPasswordComponent},
 {path: 'detalles', title:'Detalles', component: DetallesComponent},
+{path: 'mis-datos', title:'Mis Datos', component: MisDatosComponent},
 {path: 'detalles/:id', title:'Detalles', component: DetallesComponent}];

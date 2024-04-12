@@ -87,7 +87,7 @@
                 <!-- Menú Hamburguesa -->
                 <div class="menu bg-success" [ngClass]="{ 'show': isMenuOpen }">
                     <p class="greeting">¡Hola {{ nombreUsuario$ | async }}!</p>
-                    <button class="btn btn-primary menu-item mb-2" (click)="navigateTos('datos')">Mis datos</button>
+                    <button class="btn btn-primary menu-item mb-2" (click)="navigateTos('mis-datos')">Mis datos</button>
                     <button class="btn btn-primary menu-item" (click)="logout()">Logout</button>
                 </div>
         
