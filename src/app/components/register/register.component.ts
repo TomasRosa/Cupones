@@ -9,19 +9,18 @@ import { ValidacionUserPersonalizada } from "../../validaciones/validacion-user-
 import { User } from "../../models/user";
 import { NavigateToService } from "../../services/navigate-to.service";
 import { CommonModule } from "@angular/common";
-import { RecaptchaModule } from "ng-recaptcha";
 import { AuthService } from "../../services/auth.service";
 import { FirestoreService } from "../../services/firestore.service";
 
 @Component({
   selector: "app-register",
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, RecaptchaModule],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: "./register.component.html",
   styleUrls: ["./register.component.css"],
 })
 export class RegisterComponent {
-  mensajeRegistro: string = "KAKAROTO";
+  mensajeRegistro: string = "";
 
   constructor(
     private auth: AuthService,
@@ -175,9 +174,6 @@ export class RegisterComponent {
         });
     });
   }
-  
-  
-  
   hideMessageAfterDelay(delay: number) {
     setTimeout(() => {
       this.mensajeRegistro = "";

@@ -1,19 +1,36 @@
 <div class="container mt-5">
   <div class="row justify-content-center align-items-center">
-    <div class="col-md-8 d-flex justify-content-center"> <!-- Modificación aquí -->
+    <div class="col-md-8 d-flex justify-content-center">
       <div class="card" style="max-width: 400px;">
         <div class="card-body">
+          <section *ngIf="mensajeMisDatos === 'Haz actualizado tus datos con éxito!'" class="alert alert-success" role="alert">
+            {{ mensajeMisDatos }}
+          </section>
+          
+          <section *ngIf="mensajeMisDatos === 'Ha ocurrido un error al intentar actualizar tus datos.'" class="alert alert-danger" role="alert">
+            {{ mensajeMisDatos }}
+          </section> 
           <h2 class="card-title mb-4 mt-3 text-center display-4">MIS DATOS</h2>
-          <div class="row justify-content-center mb-3">
-            <div class="col">
-              <label for="nombre" class="form-label">Nombre</label>
-              <input type="text" class="form-control" id="nombre" [(ngModel)]="nombreUsuario" [disabled]="!editando">
+          <div [formGroup]="misDatosForm">
+            <div class="row justify-content-center mb-3">
+              <div class="col">
+                <label for="nombre" class="form-label">Nombre</label>
+                <input type="text" class="form-control" id="firstName" name="firstName" formControlName="firstName" [(ngModel)]="nombreUsuario" [readonly]="!editando">
+                <span class="text-danger" *ngIf="misDatosForm.get('firstName')?.invalid && (misDatosForm.get('firstName')?.dirty || misDatosForm.get('firstName')?.touched)">
+                  <div *ngIf="misDatosForm.get('firstName')?.hasError('required')">El nombre es requerido</div>
+                  <div *ngIf="misDatosForm.get('firstName')?.hasError('soloLetras')">El nombre debe contener solo letras</div>
+                </span>
+              </div>
             </div>
-          </div>
-          <div class="row justify-content-center mb-3">
-            <div class="col">
-              <label for="apellido" class="form-label">Apellido</label>
-              <input type="text" class="form-control" id="apellido" [(ngModel)]="apellidoUsuario" [disabled]="!editando">
+            <div class="row justify-content-center mb-3">
+              <div class="col">
+                <label for="apellido" class="form-label">Apellido</label>
+                <input type="text" class="form-control" id="lastName" name="lastName" formControlName="lastName" [(ngModel)]="apellidoUsuario" [readonly]="!editando">
+                <span class="text-danger" *ngIf="misDatosForm.get('lastName')?.invalid && (misDatosForm.get('lastName')?.dirty || misDatosForm.get('lastName')?.touched)">
+                  <div *ngIf="lastName?.hasError('required')">El apellido es requerido</div>
+                  <div *ngIf="lastName?.hasError('soloLetras')">El apellido debe contener solo letras</div>
+                </span>
+              </div>
             </div>
           </div>
           <div class="row justify-content-center mb-3">
@@ -22,13 +39,17 @@
               <p class="form-control">{{ emailUsuario }}</p>
             </div>
           </div>
-          <div class="row justify-content-center">
+          <div class="row justify-content-center mb-3">
             <div class="col">
               <div class="d-flex justify-content-between">
                 <button class="btn btn-primary" (click)="toggleEdicion()">Editar</button>
                 <button class="btn btn-primary" (click)="actualizarDatos()" [disabled]="!editando">Actualizar</button>
-                <button class="btn btn-link" (click)="navigateTos('forgot-password')">¿Quieres cambiar tu contraseña?</button>
               </div>
+            </div>
+          </div>
+          <div class="row justify-content-center">
+            <div class="col">
+              <button class="btn btn-link" (click)="navigateTos('forgot-password')">¿Quieres cambiar tu contraseña?</button>
             </div>
           </div>
         </div>

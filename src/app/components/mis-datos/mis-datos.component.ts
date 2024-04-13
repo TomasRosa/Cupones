@@ -3,8 +3,10 @@ import { AuthService } from '../../services/auth.service';
 import { Observable, of, switchMap, take } from 'rxjs';
 import { NavigateToService } from '../../services/navigate-to.service';
 import { FirestoreService } from '../../services/firestore.service';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ValidacionUserPersonalizada } from '../../validaciones/validacion-user-personalizada';
+
 
 @Component({
   selector: 'app-mis-datos',
@@ -12,7 +14,8 @@ import { CommonModule } from '@angular/common';
   templateUrl: './mis-datos.component.html',
   styleUrls: ['./mis-datos.component.css'],
   imports: [CommonModule,
-  FormsModule
+  FormsModule,
+  ReactiveFormsModule
   ]
 })
 export class MisDatosComponent implements OnInit {
@@ -25,12 +28,33 @@ export class MisDatosComponent implements OnInit {
   
   mensajeMisDatos: string = '';
 
+  misDatosForm = new FormGroup({
+    firstName: new FormControl(this.nombreUsuario,[
+      Validators.required,
+      ValidacionUserPersonalizada.soloLetras(),
+    ]),
+    lastName: new FormControl(this.apellidoUsuario, [
+      Validators.required,
+      ValidacionUserPersonalizada.soloLetras(),
+    ])
+  })
+
   constructor(private auth: AuthService,
   private navigateTo: NavigateToService,
   private firestore: FirestoreService
   ) { }
 
+  get firstName() 
+  {
+    return this.misDatosForm.get("firstName");
+  }
+  get lastName() 
+  {
+    return this.misDatosForm.get("lastName");
+  }
   ngOnInit(): void {
+    this.editando = false; // Inicializar editando como false
+
     this.isUserLoggedIn$ = this.auth.isLoggedIn();
 
     this.cargarDatosUsuario();
@@ -92,9 +116,9 @@ export class MisDatosComponent implements OnInit {
     });
   }
   toggleEdicion() {
-    // Cambiar el estado de la variable editando para habilitar o deshabilitar la edición de campos
     this.editando = !this.editando;
   }
+  ///Al mostrarlo, recargar pagina lueg ode ir a inicio.
   actualizarDatos() {
     if (this.nombreUsuario && this.apellidoUsuario) {
       // Verifica que nombreUsuario y apellidoUsuario no sean nulos antes de continuar
@@ -109,11 +133,13 @@ export class MisDatosComponent implements OnInit {
                 this.firestore.actualizarDatosUsuario(userId, this.nombreUsuario!, this.apellidoUsuario!)
                   .then(() => {
                     console.log('Datos actualizados en Firestore.');
-  
-                    // Volver a cargar los datos del usuario en el componente
+                    this.mensajeMisDatos = 'Haz actualizado tus datos con éxito!';
+                    this.hideMessageAfterDelay(2000);
                     this.cargarDatosUsuario();
                   })
                   .catch(error => {
+                    this.mensajeMisDatos = 'Ha ocurrido un error al intentar actualizar tus datos.';
+                    this.hideMessageAfterDelay(2000);
                     console.error('Error al actualizar los datos en Firestore:', error);
                   });
               })
@@ -132,5 +158,11 @@ export class MisDatosComponent implements OnInit {
   navigateTos(ruta: string)
   {
     this.navigateTo.navigateTo(ruta);
+  }
+  hideMessageAfterDelay(delay: number) {
+    setTimeout(() => {
+      this.mensajeMisDatos = "";
+      this.navigateTos("/inicio"); // Restablecer el mensaje después del retraso
+    }, delay);
   }
 }
