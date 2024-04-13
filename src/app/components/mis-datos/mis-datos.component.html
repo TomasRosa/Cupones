@@ -1,28 +1,35 @@
 <div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-md-8">
+  <div class="row justify-content-center align-items-center">
+    <div class="col-md-8 d-flex justify-content-center"> <!-- Modificación aquí -->
       <div class="card" style="max-width: 400px;">
         <div class="card-body">
           <h2 class="card-title mb-4 mt-3 text-center display-4">MIS DATOS</h2>
-          <div class="mb-3">
-            <label for="nombre" class="form-label">Nombre</label>
-            <input type="text" class="form-control" id="nombre" [(ngModel)]="nombreUsuario" [disabled]="!editando">
-            <hr class="my-2">
+          <div class="row justify-content-center mb-3">
+            <div class="col">
+              <label for="nombre" class="form-label">Nombre</label>
+              <input type="text" class="form-control" id="nombre" [(ngModel)]="nombreUsuario" [disabled]="!editando">
+            </div>
           </div>
-          <div class="mb-3">
-            <label for="apellido" class="form-label">Apellido</label>
-            <input type="text" class="form-control" id="apellido" [(ngModel)]="apellidoUsuario" [disabled]="!editando">
-            <hr class="my-2">
+          <div class="row justify-content-center mb-3">
+            <div class="col">
+              <label for="apellido" class="form-label">Apellido</label>
+              <input type="text" class="form-control" id="apellido" [(ngModel)]="apellidoUsuario" [disabled]="!editando">
+            </div>
           </div>
-          <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <p class="form-control">{{ emailUsuario }}</p>
-            <hr class="my-2">
+          <div class="row justify-content-center mb-3">
+            <div class="col">
+              <label for="email" class="form-label">Email</label>
+              <p class="form-control">{{ emailUsuario }}</p>
+            </div>
           </div>
-          <div class="d-flex justify-content-between">
-            <button class="btn btn-primary" (click)="toggleEdicion()">Editar</button>
-            <button class="btn btn-primary" (click)="actualizarDatos()" [disabled]="!editando">Actualizar</button>
-            <button class="btn btn-link" (click)="navigateTos('forgot-password')">¿Quieres cambiar tu contraseña?</button>
+          <div class="row justify-content-center">
+            <div class="col">
+              <div class="d-flex justify-content-between">
+                <button class="btn btn-primary" (click)="toggleEdicion()">Editar</button>
+                <button class="btn btn-primary" (click)="actualizarDatos()" [disabled]="!editando">Actualizar</button>
+                <button class="btn btn-link" (click)="navigateTos('forgot-password')">¿Quieres cambiar tu contraseña?</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, signInWithPopup,GoogleAuthProvider, User, user, updateProfile} from '@angular/fire/auth';
-import { BehaviorSubject, Observable,map,of, switchMap } from 'rxjs';
+import { BehaviorSubject, Observable,first,map,of, switchMap } from 'rxjs';
 import { FirestoreService } from './firestore.service';
 
 @Injectable({
@@ -20,6 +20,31 @@ export class AuthService {
       }
     });
   }
+  actualizarDatosUsuario(firstName: string, lastName: string): Promise<void> {
+    const currentUser = this.auth.currentUser;
+    if (currentUser) {
+        return updateProfile(currentUser, {
+            displayName: firstName + ' ' + lastName
+        }).then(() => {
+            // Obtener la ID del usuario desde Firestore
+            return this.firestore.getUserIdByEmail(currentUser.email!).pipe(
+                switchMap(userId => {
+                    if (userId) {
+                        // Actualizar datos del usuario en Firestore usando la ID obtenida
+                        return this.firestore.actualizarDatosUsuario(userId, firstName, lastName);
+                    } else {
+                        return Promise.reject('No se encontró la ID del usuario en Firestore.');
+                    }
+                })
+            ).toPromise();
+        }).catch((error: any) => {
+            console.error('Error al actualizar datos de usuario en Firebase Auth:', error);
+            throw error;
+        });
+    } else {
+        return Promise.reject('No se encontró un usuario autenticado.');
+    }
+}
 
   getName(): Observable<string | null> {
     return this.getUserId().pipe(
@@ -34,13 +59,14 @@ export class AuthService {
       })
     );
   }
+ 
   getLastName(): Observable<string | null>{
     return this.getUserId().pipe(
       switchMap(userId => {
         if(userId)
           {
             return this.firestore.getUserData(userId).pipe(
-              map(userData => userData ? userData.firstName : null)
+              map(userData => userData ? userData.lastName : null)
             );
           }
         else
@@ -66,22 +92,13 @@ export class AuthService {
       })
     );
   }
-  actualizarDatosUsuario(nombre: string, apellido: string): Promise<void> {
-    // Actualizar nombre y apellido del usuario en Firebase Auth
+  getUserId(): Observable<string | null> {
     const currentUser = this.auth.currentUser;
     if (currentUser) {
-      return updateProfile(currentUser, {
-        displayName: nombre + ' ' + apellido
-      }).then(() => {
-        // Actualización exitosa
-        return this.firestore.actualizarDatosUsuario(currentUser.uid, nombre, apellido);
-      }).catch((error: any) => {
-        // Manejo de errores
-        console.error('Error al actualizar datos de usuario en Firebase Auth:', error);
-        throw error;
-      });
+      const uid = currentUser.uid;
+      return of(uid);
     } else {
-      return Promise.reject('No se encontró un usuario autenticado.');
+      return of(null);
     }
   }
   checkFirstTimeGoogleLogin(): Observable<boolean> {
@@ -99,7 +116,6 @@ export class AuthService {
       }
     });
   }
-
   getNameFromGoogle(): Observable<string | null> {
     // Obtén el nombre del usuario actual si ha iniciado sesión con Google
     const currentUser = this.auth.currentUser;
@@ -109,21 +125,10 @@ export class AuthService {
       return of(null);
     }
   }
-  getUserId(): Observable<string | null> {
-    const currentUser = this.auth.currentUser;
-    if (currentUser) {
-      const uid = currentUser.uid;
-      return of(uid);
-    } else {
-      return of(null);
-    }
-  }
-  
+ 
   isLoggedIn(): Observable<boolean> {
     return this.userSubject.asObservable();
   }
-
-  
   setUserLoggedIn(value: boolean) {
     // Actualizar el estado del usuario solo si es necesario
     if (this.userSubject.getValue() !== value) {

@@ -32,10 +32,10 @@ export class FirestoreService {
       })
     );
   }
-  actualizarDatosUsuario(userId: string, nombre: string, apellido: string): Promise<void> {
-    const userRef = doc(this.firestore, PATH, userId);
-
-    return updateDoc(userRef, { nombre, apellido })
+  actualizarDatosUsuario(userId: string, firstName: string, lastName: string): Promise<void> {
+    const userRef = doc(this.firestore, PATH, '2Xj9mUpbPJZKKjeL4l59');
+    
+    return updateDoc(userRef, { firstName, lastName })
       .then(() => {
         console.log('Datos actualizados en Firestore.');
       })
@@ -44,4 +44,19 @@ export class FirestoreService {
         throw error;
       });
   }
+  getUserIdByEmail(email: string): Observable<string | null> {
+    const userQuery = query(collection(this.firestore, PATH), where('email', '==', email));
+
+    return from(getDocs(userQuery)).pipe(
+        map((snapshot: QuerySnapshot<DocumentData>) => {
+            if (snapshot.empty) {
+                return null; // User not found
+            } else {
+                const userId = snapshot.docs[0].id;
+                return userId;
+            }
+        })
+    );
+}
+
 }

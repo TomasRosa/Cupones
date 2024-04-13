@@ -19,8 +19,11 @@ export class MisDatosComponent implements OnInit {
   apellidoUsuario: string | null = null;
   nombreUsuario: string | null = null;
   emailUsuario: string | null = null;
+  userId: string | null = null;
   editando: boolean = false; // Variable para controlar la edición de campos
   isUserLoggedIn$!: Observable<boolean>;
+  
+  mensajeMisDatos: string = '';
 
   constructor(private auth: AuthService,
   private navigateTo: NavigateToService,
@@ -46,7 +49,24 @@ export class MisDatosComponent implements OnInit {
     ).subscribe(name => {
       this.nombreUsuario = name;
     });
-
+    this.isUserLoggedIn$.pipe(
+      switchMap(isLoggedIn => {
+        if(isLoggedIn)
+        {
+          this.auth.getUserId().subscribe(userId => {
+            console.log("Id del usuario actual: ", userId);
+          })
+          return this.auth.getUserId().pipe(take(1)); // Debes suscribirte al observable aquí
+        }
+        else
+        {
+          console.log("El usuario no esta logueado. ");
+          return of(null);
+        }
+      })
+    ).subscribe(id => {
+      this.userId = id;
+    });
     this.isUserLoggedIn$.pipe(
       switchMap(isLoggedIn => {
         if (isLoggedIn) {
@@ -79,15 +99,12 @@ export class MisDatosComponent implements OnInit {
     if (this.nombreUsuario && this.apellidoUsuario) {
       // Verifica que nombreUsuario y apellidoUsuario no sean nulos antes de continuar
       if (this.nombreUsuario !== null && this.apellidoUsuario !== null) {
-        this.auth.getUserId().pipe(
-          take(1),
-        ).subscribe(userId => {
+        this.firestore.getUserIdByEmail(this.emailUsuario!).subscribe(userId => {
           if (userId) {
             // Actualizar datos en Firebase Auth
             this.auth.actualizarDatosUsuario(this.nombreUsuario!, this.apellidoUsuario!)
               .then(() => {
                 console.log('Datos actualizados en Firebase Auth.');
-  
                 // Actualizar datos en Firestore
                 this.firestore.actualizarDatosUsuario(userId, this.nombreUsuario!, this.apellidoUsuario!)
                   .then(() => {
@@ -102,17 +119,15 @@ export class MisDatosComponent implements OnInit {
               })
               .catch(error => {
                 console.error('Error al actualizar los datos en Firebase Auth:', error);
+              })
+              .finally(() => {
+                // Deshabilitar el botón "Actualizar"
+                this.editando = false;
               });
-          } else {
-            console.warn('No se encontró un usuario autenticado.');
           }
         });
-      } else {
-        console.warn('Nombre y apellido no pueden ser nulos.');
-      }
-    } else {
-      console.warn('Nombre y apellido no pueden estar vacíos.');
-    }
+      } 
+    } 
   }
   navigateTos(ruta: string)
   {
