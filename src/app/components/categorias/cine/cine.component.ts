@@ -28,9 +28,9 @@ export class CineComponent {
       }
     })
   }
-  verOferta(id: number, nombre: string, descripcion: string, precio: string, ruta: string, direccion: string) {
+  verOferta(id: number, nombre: string, descripcion: string, precio: string, ruta: string) {
     // Almacenar los detalles del producto en el servicio
-    this.verDetalle.setDetallesProducto({ nombre, descripcion, precio, ruta, direccion });
+    this.verDetalle.setDetallesProducto({ nombre, descripcion, precio, ruta});
     this.navigateTo.navigateTo('/detalles/' + id);
   }
 }

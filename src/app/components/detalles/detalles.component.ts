@@ -1,7 +1,7 @@
+/// <reference types="@types/googlemaps" />
 import { Component, OnInit } from '@angular/core';
 import { VerDetallesService } from '../../services/ver-detalles.service';
 import { CommonModule } from '@angular/common';
-import { GeocoderResult, GeocoderStatus } from 'googlemaps';
 
 @Component({
   selector: 'app-detalles',
@@ -21,7 +21,9 @@ export class DetallesComponent implements OnInit {
     // Suscribirse al observable para obtener los detalles del producto
     this.verDetallesService.detallesProducto$.subscribe(detalles => {
       this.detallesProducto = detalles;
-      console.log(this.detallesProducto);
+      if (this.detallesProducto) {
+        this.initMap();
+      }
     });
   }
   
@@ -32,26 +34,15 @@ export class DetallesComponent implements OnInit {
   }
 
   initMap(): void {
-    
-    const geocoder = new google.maps.Geocoder();
     const mapElement = document.getElementById('map');
-    
     this.map = new google.maps.Map(mapElement!, {
-      center: { lat: 0, lng: 0 }, // Centro inicial del mapa
-      zoom: 15 // Zoom inicial del mapa
+      center: { lat: this.detallesProducto.latitud, lng: this.detallesProducto.longitud },
+      zoom: 15
     });
-
-    // Geocodificar la dirección y centrar el mapa en esa ubicación
-    geocoder.geocode({ address: this.detallesProducto.direccion }, (results: GeocoderResult[], status: GeocoderStatus) => {
-      if (status === 'OK' && results[0]) {
-        this.map.setCenter(results[0].geometry.location);
-        new google.maps.Marker({
-          map: this.map,
-          position: results[0].geometry.location
-        });
-      } else {
-        console.error('Geocodificación fallida:', status);
-      }
+    // Colocar un marcador en las coordenadas especificadas
+    new google.maps.Marker({
+      map: this.map,
+      position: { lat: this.detallesProducto.latitud, lng: this.detallesProducto.longitud }
     });
   }
 }
