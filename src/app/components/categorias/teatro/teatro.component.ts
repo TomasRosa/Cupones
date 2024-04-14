@@ -16,16 +16,16 @@ export class TeatroComponent {
 
   constructor(private shareData: ShareDataService,
   private verDetalle: VerDetallesService,
-  private navigateTos: NavigateToService)
+  private navigateTo: NavigateToService)
   {
     // Llamar al método obtenerDatosSegunId con el ID 1
     this.shareData.obtenerDatosSegunIdCategoria(8).subscribe((data) =>{
       this.teatro = data;
     })
   }
-  verOferta(nombre: string, descripcion: string, precio: string, ruta: string) {
+  verOferta(id: number, nombre: string, descripcion: string, precio: string, ruta: string, direccion: string) {
     // Almacenar los detalles del producto en el servicio
-    this.verDetalle.setDetallesProducto({ nombre, descripcion, precio, ruta });
-    this.navigateTos.navigateTo('/detalles');
+    this.verDetalle.setDetallesProducto({ nombre, descripcion, precio, ruta, direccion });
+    this.navigateTo.navigateTo('/detalles/' + id);
   }
 }

@@ -18,6 +18,7 @@ export class DetallesComponent implements OnInit {
     // Suscribirse al observable para obtener los detalles del producto
     this.verDetallesService.detallesProducto$.subscribe(detalles => {
       this.detallesProducto = detalles;
+      console.log(this.detallesProducto);
     });
   }
 }
