@@ -14,6 +14,7 @@ export class DetallesComponent implements OnInit {
   detallesProducto: any;
   // @ts-ignore
   map: google.maps.Map; 
+  marker: google.maps.Marker | null = null; 
 
   constructor(private verDetallesService: VerDetallesService) { }
 
@@ -21,9 +22,7 @@ export class DetallesComponent implements OnInit {
     // Suscribirse al observable para obtener los detalles del producto
     this.verDetallesService.detallesProducto$.subscribe(detalles => {
       this.detallesProducto = detalles;
-      if (this.detallesProducto) {
-        this.initMap();
-      }
+      console.log(this.detallesProducto);
     });
   }
   
@@ -36,13 +35,15 @@ export class DetallesComponent implements OnInit {
   initMap(): void {
     const mapElement = document.getElementById('map');
     this.map = new google.maps.Map(mapElement!, {
-      center: { lat: this.detallesProducto.latitud, lng: this.detallesProducto.longitud },
+      center: { lat: parseFloat(this.detallesProducto.latitud), lng: parseFloat(this.detallesProducto.longitud) },
       zoom: 15
     });
+    
     // Colocar un marcador en las coordenadas especificadas
-    new google.maps.Marker({
+    this.marker = new google.maps.Marker({
+      position: { lat: parseFloat(this.detallesProducto.latitud), lng: parseFloat(this.detallesProducto.longitud) },
       map: this.map,
-      position: { lat: this.detallesProducto.latitud, lng: this.detallesProducto.longitud }
+      title: this.detallesProducto.nombre
     });
   }
 }

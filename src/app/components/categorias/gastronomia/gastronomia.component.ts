@@ -23,9 +23,9 @@ export class GastronomiaComponent {
       this.gastronomia = data;
     })
   }
-  verOferta(id: number, nombre: string, descripcion: string, precio: string, ruta: string, direccion: string) {
+  verOferta(id: number, nombre: string, descripcion: string, precio: string, ruta: string, latitud: number, longitud: number) {
     // Almacenar los detalles del producto en el servicio
-    this.verDetalle.setDetallesProducto({ nombre, descripcion, precio, ruta, direccion });
+    this.verDetalle.setDetallesProducto({ nombre, descripcion, precio, ruta,latitud,longitud});
     this.navigateTo.navigateTo('/detalles/' + id);
   }
 }

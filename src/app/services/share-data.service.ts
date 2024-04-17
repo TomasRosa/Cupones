@@ -16,9 +16,8 @@ export class ShareDataService {
   obtenerDatosSegunIdCategoria(idCategoria: number): Observable<Lugar[]> {
     return this.http.get<Lugar[]>(`${this.URL}/lugares/categorias/${idCategoria}`);
   }
-  obtenerDatosSegunId(idFront: number): Observable<Lugar>
-  {
-    return this.http.get<Lugar>(`${this.URL}/lugares/${idFront}`)
+  obtenerDatosSegunId(idFront: number): Observable<Lugar> {
+    return this.http.get<any>(`${this.URL}/lugares/${idFront}`);
   }
   
   filtrarPorLugares(consulta: string): Observable<Lugar[]> {
