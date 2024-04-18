@@ -68,6 +68,7 @@ export class PopupComponent
               this.auth.setUserLoggedIn(true);
               setTimeout(() => {
                 this.mensajeLogin = '';
+                this.navigateTo.navigateTo('/inicio');
                 this.closePopup();
               }, 1500);
             } else {
@@ -104,6 +105,7 @@ export class PopupComponent
           this.auth.setUserLoggedIn(true); // Cambiar el estado de isLoggedIn a true
           setTimeout(() => {
             this.mensajeLogin = '';
+            this.navigateTo.navigateTo('/inicio');
             this.closePopup();
           }, 1500); // Cerrar el pop-up después de 1.5 segundos
     
@@ -115,7 +117,6 @@ export class PopupComponent
                 if (userData) {
                   // Obtener el nombre de usuario desde los datos del usuario
                   const userName = userData.firstName; // Ajusta esto según cómo se llame el campo de nombre en Firestore
-                  console.log("Nombre de usuario:", userName);
                 }
               });
             }
