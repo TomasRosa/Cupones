@@ -13,6 +13,7 @@ import { EntretenimientoComponent } from './components/categorias/entretenimient
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { DetallesComponent } from './components/detalles/detalles.component';
 import { MisDatosComponent } from './components/mis-datos/mis-datos.component';
+import { MisCuponesComponent } from './components/mis-cupones/mis-cupones.component';
 
 export const routes: Routes = [{path:'', title: 'Inicio',component: InicioComponent},
 {path:'inicio', title: 'Inicio',component: InicioComponent},
@@ -29,4 +30,5 @@ export const routes: Routes = [{path:'', title: 'Inicio',component: InicioCompon
 {path: 'forgot-password', title:'Recuperar Contraseña', component:ForgotPasswordComponent},
 {path: 'detalles', title:'Detalles', component: DetallesComponent},
 {path: 'mis-datos', title:'Mis Datos', component: MisDatosComponent},
-{path: 'detalles/:id', title:'Detalles', component: DetallesComponent}];
+{path: 'detalles/:id', title:'Detalles', component: DetallesComponent},
+{path: 'mis-cupones', title:'Mis Cupones', component: MisCuponesComponent}];

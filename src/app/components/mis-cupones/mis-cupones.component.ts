@@ -10,7 +10,6 @@ import { Lugar } from '../../interfaces/lugar';
 })
 export class MisCuponesComponent 
 {
-  arrayDeCupones: Lugar[] = [];
 
   
 }

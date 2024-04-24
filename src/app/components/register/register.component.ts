@@ -91,6 +91,7 @@ export class RegisterComponent {
             lastName: usuario.lastName,
             email: usuario.email,
             id: userId,
+            coupons: usuario.coupons
           };
 
           this.firestore
@@ -116,7 +117,6 @@ export class RegisterComponent {
         });
     }
   }
-
   registerWithGoogle(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       this.auth.loginWithGoogle()
@@ -138,17 +138,18 @@ export class RegisterComponent {
               }, 2500);
               // Desloguear al usuario
               this.auth.logout().then(() => resolve()).catch((error: any) => reject(error));
-            } 
-            else 
-            {
+            } else {
               // El usuario no está registrado en Firestore, guardar su usuario en Firestore
               console.log("El usuario no está registrado en Firestore");
+  
               const userData = {
                 firstName: user.displayName ? user.displayName.split(' ')[0] : '',
                 lastName: user.displayName ? user.displayName.split(' ')[1] : '',
                 email: user.email || '',
                 id: userId,
+                coupons: [] // Inicializar como un array vacío
               };
+  
               this.firestore.createUser(userData).then(() => {
                 console.log('Usuario creado correctamente en Firestore');
                 this.mensajeRegistro = "Te has registrado correctamente con Google.";
