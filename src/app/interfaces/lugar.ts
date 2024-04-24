@@ -8,6 +8,4 @@ export interface Lugar {
   idCategoria: number;
   latitud: number;
   longitud: number;
-  createdAt: Date; // Asegúrate de que el tipo sea adecuado para la fecha, posiblemente Date
-  updatedAt: Date; // Asegúrate de que el tipo sea adecuado para la fecha, posiblemente Date
 }

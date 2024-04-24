@@ -23,6 +23,12 @@ const PATH = "users";
   providedIn: "root",
 })
 export class FirestoreService {
+  getUserDocumentRef() {
+    throw new Error('Method not implemented.');
+  }
+  collection(arg0: string) {
+    throw new Error('Method not implemented.');
+  }
   constructor(private firestore: Firestore) {}
 
   private _collection = collection(this.firestore, PATH);
@@ -65,7 +71,7 @@ export class FirestoreService {
   }
   addCouponToUser(userId: string, coupon: Lugar): Promise<void> {
     const userRef = doc(this.firestore, PATH, userId);
-
+    console.log(userId);
     return updateDoc(userRef, {
       coupons: arrayUnion(coupon), // Agrega el cupón al arreglo de cupones del usuario
     })

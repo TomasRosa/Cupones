@@ -78,18 +78,18 @@ export class InicioComponent {
   navigateTos(route: string) {
     this.navigateTo.navigateTo(route);
   }
-  verOferta(nombre: string, descripcion: string, precio: string, ruta: string,latitud: number,longitud: number) {
+  verOferta(nombre: string, descripcion: string, precio: string, ruta: string,latitud: number,longitud: number,id: number,nombreCategoria: string,idCategoria: number) {
     // Almacenar los detalles del producto en el servicio
-    this.verDetalle.setDetallesProducto({ nombre, descripcion, precio, ruta,latitud,longitud});
+    this.verDetalle.setDetallesProducto({ nombre, descripcion, precio, ruta,latitud,longitud,id,nombreCategoria,idCategoria});
     this.navigateTos('/detalles');
   }
   verOfertaCarousel(index: number) {
     if (index >= 0 && index < this.imagenes.length) {
       const cuponEnCarrusel = this.imagenes[index];
-      const { nombre, descripcion, precio, ruta, latitud, longitud } = cuponEnCarrusel;
+      const { nombre, descripcion, precio, ruta, latitud, longitud,id,nombreCategoria,idCategoria } = cuponEnCarrusel;
       console.log(cuponEnCarrusel);
       // Almacenar los detalles del producto en el servicio
-      this.verDetalle.setDetallesProducto({ nombre, descripcion, precio, ruta,latitud,longitud });
+      this.verDetalle.setDetallesProducto({ nombre, descripcion, precio, ruta,latitud,longitud,id,nombreCategoria,idCategoria });
       this.navigateTos('/detalles');
     } else {
       console.error('Índice de imagen fuera de rango:', index);

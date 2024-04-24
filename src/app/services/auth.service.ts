@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, signInWithPopup,GoogleAuthProvider, User, user, updateProfile} from '@angular/fire/auth';
-import { BehaviorSubject, Observable,first,map,of, switchMap } from 'rxjs';
+import { BehaviorSubject, Observable,first,from,map,of, switchMap } from 'rxjs';
 import { FirestoreService } from './firestore.service';
 import { Lugar } from '../interfaces/lugar';
 
@@ -24,14 +24,22 @@ export class AuthService {
   addCouponToUser(coupon: Lugar): Promise<void> {
     const currentUser = this.auth.currentUser;
     if (currentUser) {
-      // Obtener el ID del usuario actual
-      const userId = currentUser.uid;
-      // Actualizar el documento de usuario en Firestore para agregar el cupón
-      return this.firestore.addCouponToUser(userId, coupon);
+      return from(this.firestore.getUserIdByEmail(currentUser.email!)).pipe(
+        switchMap(userId => {
+          if(userId)
+            {
+              return this.firestore.addCouponToUser(userId, coupon);
+            }
+            else
+            {
+              return Promise.reject('No se encontró la ID del usuario en Firestore.');
+            }
+        })
+      ).toPromise();
     } else {
       return Promise.reject('No hay usuario autenticado.');
     }
-  }
+}
   actualizarDatosUsuario(firstName: string, lastName: string): Promise<void> {
     const currentUser = this.auth.currentUser;
     if (currentUser) {

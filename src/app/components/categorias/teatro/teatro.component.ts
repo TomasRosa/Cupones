@@ -23,9 +23,9 @@ export class TeatroComponent {
       this.teatro = data;
     })
   }
-  verOferta(id: number, nombre: string, descripcion: string, precio: string, ruta: string,latitud: number, longitud:number) {
+  verOferta(id: number, nombre: string, descripcion: string, precio: string, ruta: string,latitud: number, longitud:number,idCategoria: number,nombreCategoria: string) {
     // Almacenar los detalles del producto en el servicio
-    this.verDetalle.setDetallesProducto({ nombre, descripcion, precio, ruta,latitud,longitud});
+    this.verDetalle.setDetallesProducto({ id,nombre, descripcion, precio, ruta,latitud,longitud,idCategoria,nombreCategoria});
     this.navigateTo.navigateTo('/detalles/' + id);
   }
 }

@@ -23,9 +23,9 @@ export class EsteticaComponent {
       this.estetica = data;
     })
   }
-  verOferta(id: number, nombre: string, descripcion: string, precio: string, ruta: string, latitud: string, longitud: string) {
+  verOferta(id: number, nombre: string, descripcion: string, precio: string, ruta: string, latitud: string, longitud: string,idCategoria: string, nombreCategoria: string) {
     // Almacenar los detalles del producto en el servicio
-    this.verDetalle.setDetallesProducto({ nombre, descripcion, precio, ruta,latitud,longitud});
+    this.verDetalle.setDetallesProducto({ id, nombre, descripcion, precio, ruta,latitud,longitud,idCategoria,nombreCategoria});
     this.navigateTo.navigateTo('/detalles/' + id);
   }
 }
