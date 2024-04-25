@@ -21,6 +21,7 @@ export class AuthService {
       }
     });
   }
+  
   addCouponToUser(coupon: Lugar): Promise<void> {
     const currentUser = this.auth.currentUser;
     if (currentUser) {
