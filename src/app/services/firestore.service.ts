@@ -23,12 +23,7 @@ const PATH = "users";
   providedIn: "root",
 })
 export class FirestoreService {
-  getUserDocumentRef() {
-    throw new Error('Method not implemented.');
-  }
-  collection(arg0: string) {
-    throw new Error('Method not implemented.');
-  }
+
   constructor(private firestore: Firestore) {}
 
   private _collection = collection(this.firestore, PATH);
@@ -103,4 +98,20 @@ export class FirestoreService {
       })
     );
   }
+  getUserCupones(userId: string): Observable<Lugar[]> {
+    const userCollectionRef = collection(this.firestore, PATH);
+    const userQuery = query(userCollectionRef, where('id', '==', userId));
+  
+    return from(getDocs(userQuery)).pipe(
+      map((querySnapshot: QuerySnapshot<DocumentData>) => {
+        if (!querySnapshot.empty) {
+          const userData = querySnapshot.docs[0].data() as DocumentData;
+          const cupones: Lugar[] = userData['coupons'] || [];
+          return cupones as Lugar[];
+        } else {
+          return []; // El usuario no tiene cupones
+        }
+      })
+    );
+  } 
 }

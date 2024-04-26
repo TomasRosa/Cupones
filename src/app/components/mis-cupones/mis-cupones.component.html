@@ -22,8 +22,8 @@
           <tr *ngFor="let cupon of cuponesDisponibles">
             <td>{{ cupon.nombre }}</td>
             <td>{{ cupon.nombreCategoria }}</td>
-            <td>{{ cupon.fechaObtenido | date:'short' }}</td>
-            <td>{{ cupon.fechaVencimiento | date:'short' }}</td>
+            <td>{{ cupon.fechaObtenido}}</td>
+            <td>{{ cupon.fechaObtenido ? calcularFechaVencimiento(cupon.fechaObtenido) : 'Fecha no disponible' }}</td>
             <td><a href="#">Ver</a></td>
           </tr>
         </tbody>

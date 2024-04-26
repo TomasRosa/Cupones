@@ -51,7 +51,12 @@ export class DetallesComponent implements OnInit {
         this.detallesProducto.idCategoria 
       ) 
       {
-        // Crea el objeto Lugar con los detalles del producto actual
+        // Obtener la fecha actual
+        const fechaActual = new Date();
+        // Obtener el timestamp de la fecha actual en segundos
+        const timestamp = Math.floor(fechaActual.getTime() / 1000);
+        
+        // Crea el objeto Lugar con los detalles del producto actual y el timestamp
         const cupon: Lugar = {
           id: this.detallesProducto.id,
           nombre: this.detallesProducto.nombre,
@@ -62,24 +67,20 @@ export class DetallesComponent implements OnInit {
           precio: this.detallesProducto.precio,
           nombreCategoria: this.detallesProducto.nombreCategoria,
           idCategoria: this.detallesProducto.idCategoria,
-
+          fechaObtenido: fechaActual // Pasar la fecha actual como fechaObtenido
         }
        
-        // Agrega el cupón al usuario conectado
         this.auth.addCouponToUser(cupon)
           .then(() => {
             console.log("Cupón agregado al usuario correctamente.");
-            // Puedes mostrar un mensaje de éxito aquí si lo deseas
           })
           .catch(error => {
             console.error("Error al agregar el cupón al usuario:", error);
-            // Puedes mostrar un mensaje de error aquí si lo deseas
           });
       } 
       else 
       {
         console.error("Alguna propiedad de detallesProducto es undefined.");
-        // Puedes mostrar un mensaje de error aquí si lo deseas
       }
     }
   }
