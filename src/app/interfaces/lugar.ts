@@ -8,5 +8,5 @@ export interface Lugar {
   idCategoria: number;
   latitud: number;
   longitud: number;
-  fechaObtenido?: Date | null; // Cambiado a Date
+  fechaObtenido?: Date; // Mantenido como Date
 }

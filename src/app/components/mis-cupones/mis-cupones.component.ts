@@ -29,13 +29,10 @@ export class MisCuponesComponent implements OnInit {
       this.firestore.getUserCupones(currentUser.uid).subscribe((cupones: Lugar[]) => {
         console.log(cupones);
         this.cuponesDisponibles = cupones.map(cupon => {
-          // Asegurémonos de que la fecha de obtención esté en el formato adecuado
-          const fechaObtenido = cupon.fechaObtenido ? new Date(cupon.fechaObtenido) : null;
-          const fechaVencimiento = this.calcularFechaVencimiento(fechaObtenido); // Pasar la fecha de obtención
+          const fechaVencimiento = this.calcularFechaVencimiento(cupon.fechaObtenido);
           return {
             ...cupon,
-            fechaVencimiento: fechaVencimiento,
-            fechaObtenido: fechaObtenido // Asignar la fecha original al objeto, sin formatear
+            fechaVencimiento: fechaVencimiento
           };
         });
       }, (error: any) => {
@@ -43,6 +40,7 @@ export class MisCuponesComponent implements OnInit {
       });
     }
   }
+
 
   calcularFechaVencimiento(fechaObtenido: Date | null | undefined): string {
     if (fechaObtenido) {

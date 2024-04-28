@@ -22,7 +22,7 @@
           <tr *ngFor="let cupon of cuponesDisponibles">
             <td>{{ cupon.nombre }}</td>
             <td>{{ cupon.nombreCategoria }}</td>
-            <td>{{ cupon.fechaObtenido }}</td>
+            <td>{{ formatearFecha(cupon.fechaObtenido) }}</td>
             <td>{{ calcularFechaVencimiento(cupon.fechaObtenido) }}</td>
             <td><a href="#">Ver</a></td>
           </tr>
