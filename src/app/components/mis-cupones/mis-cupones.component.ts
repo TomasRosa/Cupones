@@ -26,16 +26,16 @@ export class MisCuponesComponent implements OnInit {
   loadCupones(): void {
     const currentUser = this.auth.currentUser;
     if (currentUser) {
-      // Obtener los cupones del usuario actual
       this.firestore.getUserCupones(currentUser.uid).subscribe((cupones: Lugar[]) => {
         console.log(cupones);
         this.cuponesDisponibles = cupones.map(cupon => {
-          const fechaObtenido = cupon.fechaObtenido ? cupon.fechaObtenido : null;
-          const fechaVencimiento = this.calcularFechaVencimiento(fechaObtenido); // Pasar el timestamp convertido a número
+          // Asegurémonos de que la fecha de obtención esté en el formato adecuado
+          const fechaObtenido = cupon.fechaObtenido ? new Date(cupon.fechaObtenido) : null;
+          const fechaVencimiento = this.calcularFechaVencimiento(fechaObtenido); // Pasar la fecha de obtención
           return {
             ...cupon,
-            fechaObtenido: fechaObtenido,
-            fechaVencimiento: fechaVencimiento
+            fechaVencimiento: fechaVencimiento,
+            fechaObtenido: fechaObtenido // Asignar la fecha original al objeto, sin formatear
           };
         });
       }, (error: any) => {
@@ -43,33 +43,23 @@ export class MisCuponesComponent implements OnInit {
       });
     }
   }
-  
-  
-  convertirMarcaTiempo(timestamp: any): string {
-    if (timestamp && timestamp.seconds) {
-      const fecha = new Date(timestamp.seconds * 1000);
+
+  calcularFechaVencimiento(fechaObtenido: Date | null | undefined): string {
+    if (fechaObtenido) {
+      const fechaVencimiento = new Date(fechaObtenido); // Crear una nueva instancia de la fecha de obtención
+      fechaVencimiento.setDate(fechaVencimiento.getDate() + 7); // Sumar 7 días a la fecha de obtención
+      
+      // Formatear la fecha de vencimiento como "DD de MMMM de AAAA"
       const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: 'long', year: 'numeric' };
-      return fecha.toLocaleDateString('es-ES', options);
+      return fechaVencimiento.toLocaleDateString('es-ES', options);
     } else {
-      // Devuelve una cadena de texto si la marca de tiempo no es válida
       return 'Fecha no disponible';
     }
   }
-
-  calcularFechaVencimiento(fechaObtenido: Date | null): string {
-    if (fechaObtenido) {
-      const fechaObtenidoDate = new Date(fechaObtenido); // No es necesario multiplicar por 1000
-      
-      // Verificar si la conversión a Date fue exitosa
-      if (!isNaN(fechaObtenidoDate.getTime())) {
-        fechaObtenidoDate.setDate(fechaObtenidoDate.getDate() + 7);
-        
-        // Formatear la fecha de vencimiento como "DD de MMMM de AAAA"
-        const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: 'long', year: 'numeric' };
-        return fechaObtenidoDate.toLocaleDateString('es-ES', options);
-      } else {
-        return 'Fecha no disponible';
-      }
+  formatearFecha(fecha: Date | null | undefined): string {
+    if (fecha) {
+      const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: 'long', year: 'numeric' };
+      return fecha.toLocaleDateString('es-ES', options);
     } else {
       return 'Fecha no disponible';
     }

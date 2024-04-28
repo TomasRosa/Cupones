@@ -53,8 +53,6 @@ export class DetallesComponent implements OnInit {
       {
         // Obtener la fecha actual
         const fechaActual = new Date();
-        // Obtener el timestamp de la fecha actual en segundos
-        const timestamp = Math.floor(fechaActual.getTime() / 1000);
         
         // Crea el objeto Lugar con los detalles del producto actual y el timestamp
         const cupon: Lugar = {

@@ -16,6 +16,7 @@ import { Observable, from } from "rxjs";
 import { map } from "rxjs/operators";
 import { User } from "../models/user";
 import { Lugar } from "../interfaces/lugar";
+import { Timestamp } from "@angular/fire/firestore";
 
 const PATH = "users";
 
@@ -107,7 +108,19 @@ export class FirestoreService {
         if (!querySnapshot.empty) {
           const userData = querySnapshot.docs[0].data() as DocumentData;
           const cupones: Lugar[] = userData['coupons'] || [];
-          return cupones as Lugar[];
+          
+          // Convertir Timestamp a Date para cada cupón
+          return cupones.map((cupon: Lugar) => {
+            const fechaObtenido = cupon.fechaObtenido;
+            if (fechaObtenido instanceof Timestamp) {
+              return {
+                ...cupon,
+                fechaObtenido: fechaObtenido.toDate()
+              };
+            } else {
+              return cupon;
+            }
+          });
         } else {
           return []; // El usuario no tiene cupones
         }
