@@ -99,7 +99,7 @@ export class FirestoreService {
       })
     );
   }
-  getUserCupones(userId: string): Observable<Lugar[]> {
+  getUserCupones(userId: string): Observable<{ disponibles: Lugar[], utilizados: Lugar[] }> {
     const userCollectionRef = collection(this.firestore, PATH);
     const userQuery = query(userCollectionRef, where('id', '==', userId));
   
@@ -107,10 +107,11 @@ export class FirestoreService {
       map((querySnapshot: QuerySnapshot<DocumentData>) => {
         if (!querySnapshot.empty) {
           const userData = querySnapshot.docs[0].data() as DocumentData;
-          const cupones: Lugar[] = userData['coupons'] || [];
+          const cuponesDisponibles: Lugar[] = userData['coupons'] || [];
+          const cuponesUtilizados: Lugar[] = userData['couponsUtilizados'] || [];
           
           // Convertir Timestamp a Date para cada cupón
-          return cupones.map((cupon: Lugar) => {
+          const cuponesDisponiblesFormateados = cuponesDisponibles.map((cupon: Lugar) => {
             const fechaObtenido = cupon.fechaObtenido;
             if (fechaObtenido instanceof Timestamp) {
               return {
@@ -121,10 +122,44 @@ export class FirestoreService {
               return cupon;
             }
           });
+  
+          const cuponesUtilizadosFormateados = cuponesUtilizados.map((cupon: Lugar) => {
+            const fechaObtenido = cupon.fechaObtenido;
+            if (fechaObtenido instanceof Timestamp) {
+              return {
+                ...cupon,
+                fechaObtenido: fechaObtenido.toDate()
+              };
+            } else {
+              return cupon;
+            }
+          });
+  
+          return {
+            disponibles: cuponesDisponiblesFormateados,
+            utilizados: cuponesUtilizadosFormateados
+          };
         } else {
-          return []; // El usuario no tiene cupones
+          return {
+            disponibles: [], // El usuario no tiene cupones disponibles
+            utilizados: []   // El usuario no tiene cupones utilizados
+          };
         }
       })
     );
   } 
+  
+  addCouponToUserUtilizados(userId: string, coupon: Lugar): Promise<void> {
+    const userRef = doc(this.firestore, PATH, userId);
+    return updateDoc(userRef, {
+      couponsUtilizados: arrayUnion(coupon), // Agrega el cupón al arreglo de cupones utilizados del usuario
+    })
+    .then(() => {
+      console.log("Cupón agregado a utilizados del usuario en Firestore.");
+    })
+    .catch((error) => {
+      console.error("Error al agregar el cupón a utilizados del usuario en Firestore:", error);
+      throw error;
+    });
+  }
 }

@@ -1,32 +1,54 @@
 <div class="mis-cupones-card">
-    <div class="header">
-      <h2>Mis cupones</h2>
-      <div class="checkboxes">
-        <label><input type="checkbox" [(ngModel)]="disponibles"> Disponibles</label>
-        <label><input type="checkbox" [(ngModel)]="utilizados"> Utilizados</label>
-      </div>
-    </div>
-    <div class="cupones-list">
-      <h3>Disponibles</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Nombre del cupón</th>
-            <th>Categoría</th>
-            <th>Fecha obtenido</th>
-            <th>Fecha vencimiento</th>
-            <th>Enlace</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let cupon of cuponesDisponibles">
-            <td>{{ cupon.nombre }}</td>
-            <td>{{ cupon.nombreCategoria }}</td>
-            <td>{{ formatearFecha(cupon.fechaObtenido) }}</td>
-            <td>{{ calcularFechaVencimiento(cupon.fechaObtenido) }}</td>
-            <td><a href="#">Ver</a></td>
-          </tr>
-        </tbody>
-      </table>
+  <div class="header">
+    <h2>Mis cupones</h2>
+    <div class="checkboxes">
+      <label><input type="checkbox" [(ngModel)]="disponibles" (change)="onChangeDisponibles()"> Disponibles</label>
+      <label><input type="checkbox" [(ngModel)]="utilizados" (change)="onChangeUtilizados()"> Utilizados</label>
     </div>
   </div>
+  <div *ngIf="disponibles" class="cupones-list">
+    <h3>Disponibles</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre del cupón</th>
+          <th>Categoría</th>
+          <th>Fecha obtenido</th>
+          <th>Fecha vencimiento</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cupon of cuponesDisponibles">
+          <td>{{ cupon.nombre }}</td>
+          <td>{{ cupon.nombreCategoria }}</td>
+          <td>{{ formatearFecha(cupon.fechaObtenido) }}</td>
+          <td>{{ calcularFechaVencimiento(cupon.fechaObtenido) }}</td>
+          <td><button (click)="moverACuponesUtilizados(cupon)">Utilizado</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="utilizados" class="cupones-list">
+    <h3>Utilizados</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre del cupón</th>
+          <th>Categoría</th>
+          <th>Fecha obtenido</th>
+          <th>Fecha vencimiento</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cupon of cuponesUtilizados">
+          <td>{{ cupon.nombre }}</td>
+          <td>{{ cupon.nombreCategoria }}</td>
+          <td>{{ formatearFecha(cupon.fechaObtenido) }}</td>
+          <td>{{ calcularFechaVencimiento(cupon.fechaObtenido) }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

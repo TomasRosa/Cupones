@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FirestoreService } from '../../services/firestore.service';
 import { AuthService } from '../../services/auth.service';
 import { FormsModule } from '@angular/forms';
+import { switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-mis-cupones',
@@ -16,6 +17,7 @@ export class MisCuponesComponent implements OnInit {
   disponibles: boolean = true;
   utilizados: boolean = false;
   cuponesDisponibles: Lugar[] = [];
+  cuponesUtilizados: Lugar[] = [];
 
   constructor(private auth: AuthService, private firestore: FirestoreService) { }
 
@@ -26,9 +28,16 @@ export class MisCuponesComponent implements OnInit {
   loadCupones(): void {
     const currentUser = this.auth.currentUser;
     if (currentUser) {
-      this.firestore.getUserCupones(currentUser.uid).subscribe((cupones: Lugar[]) => {
+      this.firestore.getUserCupones(currentUser.uid).subscribe((cupones: { disponibles: Lugar[], utilizados: Lugar[] }) => {
         console.log(cupones);
-        this.cuponesDisponibles = cupones.map(cupon => {
+        this.cuponesDisponibles = cupones.disponibles.map(cupon => {
+          const fechaVencimiento = this.calcularFechaVencimiento(cupon.fechaObtenido);
+          return {
+            ...cupon,
+            fechaVencimiento: fechaVencimiento
+          };
+        });
+        this.cuponesUtilizados = cupones.utilizados.map(cupon => {
           const fechaVencimiento = this.calcularFechaVencimiento(cupon.fechaObtenido);
           return {
             ...cupon,
@@ -60,6 +69,46 @@ export class MisCuponesComponent implements OnInit {
       return fecha.toLocaleDateString('es-ES', options);
     } else {
       return 'Fecha no disponible';
+    }
+  }
+  onChangeDisponibles(): void {
+    if (this.disponibles) {
+      this.utilizados = false;
+    }
+  }
+
+  onChangeUtilizados(): void {
+    if (this.utilizados) {
+      this.disponibles = false;
+    }
+  }
+
+  moverACuponesUtilizados(cupon: Lugar): void {
+    // Remover el cupón de la lista de disponibles
+    this.cuponesDisponibles = this.cuponesDisponibles.filter(c => c !== cupon);
+    // Agregar el cupón a la lista de utilizados
+    this.cuponesUtilizados.push(cupon);
+    
+    // Obtener el ID del usuario actual
+    const currentUser = this.auth.currentUser;
+    if (currentUser && currentUser.email) { // Verificar que currentUser y currentUser.email no sean nulos
+      this.firestore.getUserIdByEmail(currentUser.email).pipe(
+        switchMap(userId => {
+          if (userId) {
+            // Llamar a addCouponToUserUtilizados dentro del contexto de switchMap
+            return this.firestore.addCouponToUserUtilizados(userId, cupon);
+          } else {
+            console.error("No se encontró el ID del usuario con el correo electrónico proporcionado.");
+            throw new Error("ID de usuario no encontrado");
+          }
+        })
+      ).subscribe(() => {
+        console.log("Cupón movido a utilizados en Firestore.");
+      }, error => {
+        console.error("Error al mover el cupón a utilizados en Firestore:", error);
+      });
+    } else {
+      console.error("No se pudo obtener el usuario actual o el correo electrónico es nulo.");
     }
   }
 }
