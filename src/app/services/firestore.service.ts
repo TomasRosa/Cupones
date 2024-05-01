@@ -11,6 +11,9 @@ import {
   doc,
   updateDoc,
   arrayUnion,
+  DocumentReference,
+  runTransaction,
+  arrayRemove
 } from "@angular/fire/firestore";
 import { Observable, from } from "rxjs";
 import { map } from "rxjs/operators";
@@ -149,17 +152,35 @@ export class FirestoreService {
     );
   } 
   
-  addCouponToUserUtilizados(userId: string, coupon: Lugar): Promise<void> {
+  addCouponToUserUtilizados(userId: string, coupon: Lugar, cuponesDisponibles: Lugar[]): Promise<void> {
     const userRef = doc(this.firestore, PATH, userId);
-    return updateDoc(userRef, {
-      couponsUtilizados: arrayUnion(coupon), // Agrega el cupón al arreglo de cupones utilizados del usuario
-    })
-    .then(() => {
+
+    // Usa runTransaction para ejecutar la transacción
+    return runTransaction(this.firestore, async transaction => {
+      const userDoc = await transaction.get(userRef);
+
+      if (!userDoc.exists()) {
+        throw new Error("Usuario no encontrado en Firestore.");
+      }
+
+      const userData = userDoc.data();
+
+      // Agregar el cupón a la lista de utilizados
+      const cuponesUtilizados = [...(userData?.["couponsUtilizados"] || []), coupon];
+
+      // Eliminar el cupón de la lista de disponibles
+      cuponesDisponibles = cuponesDisponibles.filter(c => c !== coupon);
+
+      // Actualizar el documento del usuario en Firestore
+      transaction.update(userRef, {
+        couponsUtilizados: cuponesUtilizados,
+        coupons: cuponesDisponibles // Actualizar la lista de cupones disponibles en Firestore
+      });
+
       console.log("Cupón agregado a utilizados del usuario en Firestore.");
-    })
-    .catch((error) => {
-      console.error("Error al agregar el cupón a utilizados del usuario en Firestore:", error);
-      throw error;
+
+      return;
     });
-  }
+}
+
 }

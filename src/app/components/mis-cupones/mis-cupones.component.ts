@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FirestoreService } from '../../services/firestore.service';
 import { AuthService } from '../../services/auth.service';
 import { FormsModule } from '@angular/forms';
-import { switchMap } from 'rxjs';
+import { switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-mis-cupones',
@@ -92,20 +92,19 @@ export class MisCuponesComponent implements OnInit {
     // Obtener el ID del usuario actual
     const currentUser = this.auth.currentUser;
     if (currentUser && currentUser.email) { // Verificar que currentUser y currentUser.email no sean nulos
-      this.firestore.getUserIdByEmail(currentUser.email).pipe(
-        switchMap(userId => {
-          if (userId) {
-            // Llamar a addCouponToUserUtilizados dentro del contexto de switchMap
-            return this.firestore.addCouponToUserUtilizados(userId, cupon);
-          } else {
-            console.error("No se encontró el ID del usuario con el correo electrónico proporcionado.");
-            throw new Error("ID de usuario no encontrado");
-          }
-        })
-      ).subscribe(() => {
-        console.log("Cupón movido a utilizados en Firestore.");
-      }, error => {
-        console.error("Error al mover el cupón a utilizados en Firestore:", error);
+      this.firestore.getUserIdByEmail(currentUser.email).subscribe(userId => {
+        if (userId) {
+          // Llamar a addCouponToUserUtilizados
+          this.firestore.addCouponToUserUtilizados(userId, cupon, this.cuponesDisponibles).then(() => {
+            console.log("Cupón movido a utilizados en Firestore.");
+            // Actualizar la lista de cupones disponibles después de que se haya completado la transacción
+            this.cuponesDisponibles = this.cuponesDisponibles.filter(c => c !== cupon);
+          }).catch(error => {
+            console.error("Error al mover el cupón a utilizados en Firestore:", error);
+          });
+        } else {
+          console.error("No se encontró el ID del usuario con el correo electrónico proporcionado.");
+        }
       });
     } else {
       console.error("No se pudo obtener el usuario actual o el correo electrónico es nulo.");
