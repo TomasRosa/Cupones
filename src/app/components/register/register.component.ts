@@ -21,6 +21,9 @@ import { FirestoreService } from "../../services/firestore.service";
 })
 export class RegisterComponent {
   mensajeRegistro: string = "";
+  showPassword: boolean = false;
+  showConfirmPassword: boolean = false;
+
 
   constructor(
     private auth: AuthService,
@@ -52,7 +55,13 @@ export class RegisterComponent {
       ValidacionUserPersonalizada.coincideCampo("password"),
     ]),
   });
+  togglePassword(): void {
+    this.showPassword = !this.showPassword;
+  }
 
+  toggleConfirmPassword(): void {
+    this.showConfirmPassword = !this.showConfirmPassword;
+  }
   get firstName() {
     return this.userForm.get("firstName");
   }
@@ -183,4 +192,5 @@ export class RegisterComponent {
       this.navigateTos.navigateTo("/inicio"); // Restablecer el mensaje después del retraso
     }, delay);
   }
+
 }

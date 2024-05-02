@@ -52,7 +52,12 @@
               <div class="mb-3 row">
                 <div class="col">
                   <label for="password" class="form-label">Contraseña</label>
-                  <input type="password" class="form-control" id="password" name="password" formControlName="password" placeholder="Ingrese su contraseña" value="" required>
+                  <div style="position: relative;">
+                    <input type="{{ showPassword ? 'text' : 'password' }}" class="form-control" id="password" name="password" formControlName="password" placeholder="Ingrese su contraseña" value="" required style="padding-right: 40px;">
+                    <button class="btn btn-outline-secondary" type="button" (click)="togglePassword()" style="position: absolute; right: 10px; top: 25%; transform: translateY(-50%); border: none; background: none; padding: 0; z-index: 1;">
+                      <i [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'" style="font-size: 1rem;"></i>
+                    </button>
+                  </div>
                   <span class="text-danger" *ngIf="userForm && userForm.get('password') && userForm.get('password')?.invalid && (userForm.get('password')?.dirty || userForm.get('password')?.touched)">
                     <div *ngIf="password?.hasError('required')">La contraseña es requerida</div>
                     <div *ngIf="password?.hasError('minDosNumeros')">La contraseña debe contener mínimo 2 números</div>
@@ -60,15 +65,20 @@
                   </span>
                 </div>
               </div>
-  
+              
               <div class="mb-3 row">
                 <div class="col">
                   <label for="passwordConfirm" class="form-label">Confirmar Contraseña</label>
-                  <input type="password" class="form-control" id="password-confirm" name="password-confirm" formControlName="confirmPassword" placeholder="Confirme su contraseña" value="" required>
-                <span class="text-danger" *ngIf="userForm && userForm.get('confirmPassword') && userForm.get('confirmPassword')?.invalid && (userForm.get('confirmPassword')?.dirty || userForm.get('confirmPassword')?.touched)">
-                  <div *ngIf="userForm.get('confirmPassword')?.hasError('required')">La confirmación de contraseña es requerida</div> 
-                  <div *ngIf="confirmPassword?.hasError('coincideCampo')">Las contraseñas no coinciden.</div>
-                </span>
+                  <div style="position: relative;">
+                    <input type="{{ showConfirmPassword ? 'text' : 'password' }}" class="form-control" id="password-confirm" name="password-confirm" formControlName="confirmPassword" placeholder="Confirme su contraseña" value="" required style="padding-right: 40px;">
+                    <button class="btn btn-outline-secondary" type="button" (click)="toggleConfirmPassword()" style="position: absolute; right: 10px; top: 25%; transform: translateY(-50%); border: none; background: none; padding: 0; z-index: 1;">
+                      <i [ngClass]="showConfirmPassword ? 'bi-eye-slash' : 'bi-eye'" style="font-size: 1rem;"></i>
+                    </button>
+                  </div>
+                  <span class="text-danger" *ngIf="userForm && userForm.get('confirmPassword') && userForm.get('confirmPassword')?.invalid && (userForm.get('confirmPassword')?.dirty || userForm.get('confirmPassword')?.touched)">
+                    <div *ngIf="userForm.get('confirmPassword')?.hasError('required')">La confirmación de contraseña es requerida</div> 
+                    <div *ngIf="confirmPassword?.hasError('coincideCampo')">Las contraseñas no coinciden.</div>
+                  </span>
                 </div>
               </div>
   
