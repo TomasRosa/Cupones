@@ -26,6 +26,9 @@ export class PopupComponent
 
     isUserLoggedIn$: Observable<boolean> | undefined; // Definir el tipo de la propiedad
     private authSubscription: Subscription | undefined;
+    showPassword: boolean = false;
+    mensajeLogin: string = ''; 
+
 
     constructor(private navigateTo: NavigateToService,
     public popupService: PopupService,
@@ -52,7 +55,9 @@ export class PopupComponent
         this.authSubscription.unsubscribe();
     }
   }
-    mensajeLogin: string = ''; 
+  togglePassword(): void {
+    this.showPassword = !this.showPassword;
+  }
     loginWithGoogle() {
       this.auth.loginWithGoogle()
         .then(response => {
