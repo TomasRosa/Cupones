@@ -79,18 +79,20 @@ export class InicioComponent {
     this.navigateTo.navigateTo(route);
   }
   verOferta(nombre: string, descripcion: string, precio: string, ruta: string,latitud: number,longitud: number,id: number,nombreCategoria: string,idCategoria: number) {
+    
     // Almacenar los detalles del producto en el servicio
+    const url = `/detalles/${id}`;
     this.verDetalle.setDetallesProducto({ nombre, descripcion, precio, ruta,latitud,longitud,id,nombreCategoria,idCategoria});
-    this.navigateTos('/detalles');
+    this.navigateTos(url);
   }
   verOfertaCarousel(index: number) {
     if (index >= 0 && index < this.imagenes.length) {
       const cuponEnCarrusel = this.imagenes[index];
       const { nombre, descripcion, precio, ruta, latitud, longitud,id,nombreCategoria,idCategoria } = cuponEnCarrusel;
-      console.log(cuponEnCarrusel);
+      const url = `/detalles/${id}`;
       // Almacenar los detalles del producto en el servicio
       this.verDetalle.setDetallesProducto({ nombre, descripcion, precio, ruta,latitud,longitud,id,nombreCategoria,idCategoria });
-      this.navigateTos('/detalles');
+      this.navigateTos(url);
     } else {
       console.error('Índice de imagen fuera de rango:', index);
     }
