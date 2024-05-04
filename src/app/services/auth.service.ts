@@ -8,6 +8,7 @@ import {
   GoogleAuthProvider,
   User,
   updateProfile,
+  sendPasswordResetEmail,
 } from "@angular/fire/auth";
 import {
   BehaviorSubject,
@@ -38,6 +39,9 @@ export class AuthService {
         this.setUserLoggedIn(false);
       }
     });
+  }
+  sendPasswordResetEmail(email: string): Observable<void> {
+    return from(sendPasswordResetEmail(this.auth,email));
   }
   addCouponToUser(coupon: Lugar): Promise<void> {
     const currentUser = this.auth.currentUser;
@@ -183,6 +187,7 @@ export class AuthService {
       this.userSubject.next(value);
     }
   }
+  
   register(email: any, password: any) {
     return createUserWithEmailAndPassword(this.auth, email, password);
   }
