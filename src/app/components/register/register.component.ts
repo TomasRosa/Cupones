@@ -192,5 +192,4 @@ export class RegisterComponent {
       this.navigateTos.navigateTo("/inicio"); // Restablecer el mensaje después del retraso
     }, delay);
   }
-
 }

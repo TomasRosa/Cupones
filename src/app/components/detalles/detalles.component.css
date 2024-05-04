@@ -1,25 +1,78 @@
-.container {
-    max-width: 800px;
-  }
-  
-  img {
-    max-width: 100%;
-  }
-  
-  h2 {
-    color: #333;
-  }
-  
-  p {
-    color: #666;
-  }
-  
-  .btn-primary {
-    background-color: #007bff;
-    border-color: #007bff;
-  }
-  
-  .btn-primary:hover {
-    background-color: #0056b3;
-    border-color: #0056b3;
-  }
+.img-container {
+  height: 100%; /* La imagen ocupa todo el alto de su contenedor */
+  width: 100%;
+  display: flex; /* Utilizamos flexbox para alinear verticalmente */
+  justify-content: center; /* Centramos la imagen verticalmente */
+  align-items: center; /* Centramos la imagen horizontalmente */
+  overflow: hidden; /* Ocultamos cualquier parte de la imagen que se desborde */
+}
+
+.img-container img {
+  width: 100%; /* La imagen ocupa todo el ancho del contenedor */
+  height: auto; /* La altura se ajusta automáticamente para mantener la proporción de aspecto */
+}
+
+.card-primary .card-body .card-title {
+  text-align: center; /* Centramos el texto horizontalmente */
+}
+
+/* Estilos para el precio */
+.card-primary .card-body .fw-bold {
+  text-align: center; /* Centramos el texto horizontalmente */
+}
+
+/* Estilos para el botón de obtener cupón */
+.card-primary .card-body .btn-secondary {
+  margin-top: 10px; /* Espacio superior para separar del precio */
+  margin-bottom: 10px; /* Espacio inferior para separar del contenido siguiente */
+  display: block; /* Convertimos el botón en un bloque para que pueda centrarse horizontalmente */
+  margin-left: auto; /* Centramos horizontalmente */
+  margin-right: auto; /* Centramos horizontalmente */
+}
+/* Estilos para las cards de lugares similares */
+.similar-card {
+  width: 350px; /* Ancho deseado para las cards de lugares similares */
+  margin-bottom: 20px; /* Espacio entre las cards */
+  text-align: center;
+}
+
+/* Estilos para la imagen de las cards de lugares similares */
+.similar-card .card-img-top {
+  height: 200px; /* Altura deseada para la imagen */
+  object-fit: cover; /* Ajusta la imagen para cubrir el espacio asignado */
+}
+
+/* Estilos para el cuerpo de las cards de lugares similares */
+.similar-card .card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Espacio entre los elementos dentro del cuerpo de la card */
+  height: 100%; /* Ocupa el 100% de la altura disponible */
+}
+
+/* Estilos para el título de las cards de lugares similares */
+.similar-card .card-title {
+  margin-bottom: 10px; /* Espacio inferior para separar el título del resto del contenido */
+}
+
+/* Estilos para la sección de la calificación de las cards de lugares similares */
+.similar-card .star-container {
+  margin-top: auto; /* Coloca la sección de la calificación en la parte inferior */
+}
+
+/* Estilos para el precio de las cards de lugares similares */
+.similar-card .card-text {
+  margin-bottom: 10px; /* Espacio inferior para separar el precio del resto del contenido */
+}
+.star-rating {
+  color: gold; /* Puedes ajustar el color aquí */
+  font-size: 24px; /* Puedes ajustar el tamaño aquí */
+}
+.star-filled::before {
+  content: "\2605"; /* Carácter Unicode para la estrella rellena */
+}
+.alert {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

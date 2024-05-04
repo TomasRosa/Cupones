@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 export class NavigateToService {
 
   constructor(private router: Router) { }
+  
   navigateTo(route: string) {
     this.router.navigate([`/${route}`]);
   }
