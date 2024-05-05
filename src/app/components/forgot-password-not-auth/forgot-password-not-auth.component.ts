@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { FirestoreService } from '../../services/firestore.service';
 
 @Component({
   selector: 'app-forgot-password-not-auth',
@@ -9,47 +10,52 @@ import { FormsModule } from '@angular/forms';
   imports: [CommonModule,
     FormsModule
   ],
-  templateUrl: './forgot-password-not-auth.component.html',
-  styleUrl: './forgot-password-not-auth.component.css'
+  styleUrls: ['./forgot-password-not-auth.component.css'],
+  templateUrl: './forgot-password-not-auth.component.html'
 })
 export class ForgotPasswordNotAuthComponent {
   email: string = '';
   errorMessage: string= '';
   succesfullMessage: string = '';
 
-  constructor(private auth: AuthService) { }
+  constructor(private auth: AuthService,
+    private firestore: FirestoreService
+  ) { }
 
   async sendPasswordResetEmail() {
     try {
       // Verificar si el correo electrónico existe en Firestore
-      console.log("ANTES ASINCRONIAA");
-      const exists = await this.auth.checkEmailExists(this.email);
+      const exists = await this.firestore.checkEmailExists(this.email);
       if (exists) {
         // Si el correo electrónico existe, enviar el correo electrónico de restablecimiento de contraseña
         await this.auth.sendPasswordResetEmail(this.email).toPromise();
         console.log('Correo electrónico de restablecimiento de contraseña enviado.');
-        this.email = '';
+         this.email = '';
          this.succesfullMessage = 'Correo electrónico de restablecimiento de contraseña enviado.';
-         this.hideMessageAfterDelay(2000,this.succesfullMessage);
+         this.hideMessageAfterDelaySuccesfull(2000);
       } 
       else 
       {
         // Si el correo electrónico no existe, mostrar un mensaje de error
-        console.log('El correo electrónico ingresado no está registrado.')
+         console.log('El correo electrónico ingresado no está registrado.')
          this.errorMessage = 'El correo electrónico ingresado no está registrado.';
-         this.hideMessageAfterDelay(2000,this.errorMessage);
+         this.hideMessageAfterDelayError(2000);
       }
     } catch (error) {
       console.error('Error al enviar el correo electrónico de restablecimiento de contraseña:', error);
       // Mostrar el mensaje de error recibido del servicio de autenticación
-       this.errorMessage = 'Error al enviar el correo electrónico de restablecimiento de contraseña.';
-      this.hideMessageAfterDelay(2000,this.errorMessage);
+      this.errorMessage = 'Error al enviar el correo electrónico de restablecimiento de contraseña.';
+      this.hideMessageAfterDelayError(2000);
     }
-    console.log("LUEGO ASINCRONIAA");
   }
-  hideMessageAfterDelay(delay: number, message: string) {
+  hideMessageAfterDelaySuccesfull(delay: number) {
     setTimeout(() => {
-      message = "";
+      this.succesfullMessage = "";
+    }, delay);
+  }
+  hideMessageAfterDelayError(delay: number) {
+    setTimeout(() => {
+      this.errorMessage = "";
     }, delay);
   }
 }

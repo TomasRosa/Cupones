@@ -32,5 +32,5 @@ export const routes: Routes = [{path:'', title: 'Inicio',component: InicioCompon
 {path: 'detalles', title:'Detalles', component: DetallesComponent},
 {path: 'mis-datos', title:'Mis datos', component: MisDatosComponent},
 {path: 'detalles/:id', title:'Detalles', component: DetallesComponent},
-{path: 'new-password',title: 'Olvide mi contraseña', component: ForgotPasswordNotAuthComponent},
+{path: 'new-password',title: 'Olvide mi contraseña', component:ForgotPasswordNotAuthComponent},
 {path: 'mis-cupones', title:'Mis cupones', component: MisCuponesComponent}];

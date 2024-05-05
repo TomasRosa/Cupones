@@ -11,9 +11,7 @@ import {
   doc,
   updateDoc,
   arrayUnion,
-  DocumentReference,
-  runTransaction,
-  arrayRemove,
+  runTransaction
 } from "@angular/fire/firestore";
 import { Observable, from } from "rxjs";
 import { map } from "rxjs/operators";
@@ -196,14 +194,13 @@ export class FirestoreService {
     });
   }
   checkEmailExists(email: string): Observable<boolean> {
-    const userQuery = query(
-      collection(this.firestore, PATH),
-      where("email", "==", email)
-    );
-
+    const usersRef = collection(this.firestore, PATH);
+    const userQuery = query(usersRef, where("email", "==", email));
+      
     return from(getDocs(userQuery)).pipe(
       map((snapshot: QuerySnapshot<DocumentData>) => {
-        return !snapshot.empty;
+        console.log("Snapshot:", snapshot); // Agrega este console.log para ver el contenido del snapshot
+        return snapshot.size > 0; // Devuelve true si hay al menos un documento coincidente
       })
     );
   }

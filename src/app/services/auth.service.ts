@@ -177,9 +177,6 @@ export class AuthService {
       return of(null);
     }
   }
-  checkEmailExists(email: string): Observable<boolean> {
-    return this.firestore.checkEmailExists(email);
-  }
   isLoggedIn(): Observable<boolean> {
     return this.userSubject.asObservable();
   }
