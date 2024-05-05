@@ -4,6 +4,7 @@ import { RouterLink, RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { RecaptchaModule} from 'ng-recaptcha';
 import { FooterComponent } from './components/footer/footer.component';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +16,8 @@ import { FooterComponent } from './components/footer/footer.component';
     RouterOutlet,
     RouterLink,
     NavbarComponent,
-    FooterComponent
+    FooterComponent,
+    ForgotPasswordComponent
   ]
 })
 export class AppComponent {

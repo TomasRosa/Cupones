@@ -13,7 +13,7 @@ import {
   arrayUnion,
   DocumentReference,
   runTransaction,
-  arrayRemove
+  arrayRemove,
 } from "@angular/fire/firestore";
 import { Observable, from } from "rxjs";
 import { map } from "rxjs/operators";
@@ -27,7 +27,6 @@ const PATH = "users";
   providedIn: "root",
 })
 export class FirestoreService {
-
   constructor(private firestore: Firestore) {}
 
   private _collection = collection(this.firestore, PATH);
@@ -102,61 +101,72 @@ export class FirestoreService {
       })
     );
   }
-  getUserCupones(userId: string): Observable<{ disponibles: Lugar[], utilizados: Lugar[] }> {
+  getUserCupones(
+    userId: string
+  ): Observable<{ disponibles: Lugar[]; utilizados: Lugar[] }> {
     const userCollectionRef = collection(this.firestore, PATH);
-    const userQuery = query(userCollectionRef, where('id', '==', userId));
-  
+    const userQuery = query(userCollectionRef, where("id", "==", userId));
+
     return from(getDocs(userQuery)).pipe(
       map((querySnapshot: QuerySnapshot<DocumentData>) => {
         if (!querySnapshot.empty) {
           const userData = querySnapshot.docs[0].data() as DocumentData;
-          const cuponesDisponibles: Lugar[] = userData['coupons'] || [];
-          const cuponesUtilizados: Lugar[] = userData['couponsUtilizados'] || [];
-          
+          const cuponesDisponibles: Lugar[] = userData["coupons"] || [];
+          const cuponesUtilizados: Lugar[] =
+            userData["couponsUtilizados"] || [];
+
           // Convertir Timestamp a Date para cada cupón
-          const cuponesDisponiblesFormateados = cuponesDisponibles.map((cupon: Lugar) => {
-            const fechaObtenido = cupon.fechaObtenido;
-            if (fechaObtenido instanceof Timestamp) {
-              return {
-                ...cupon,
-                fechaObtenido: fechaObtenido.toDate()
-              };
-            } else {
-              return cupon;
+          const cuponesDisponiblesFormateados = cuponesDisponibles.map(
+            (cupon: Lugar) => {
+              const fechaObtenido = cupon.fechaObtenido;
+              if (fechaObtenido instanceof Timestamp) {
+                return {
+                  ...cupon,
+                  fechaObtenido: fechaObtenido.toDate(),
+                };
+              } else {
+                return cupon;
+              }
             }
-          });
-  
-          const cuponesUtilizadosFormateados = cuponesUtilizados.map((cupon: Lugar) => {
-            const fechaObtenido = cupon.fechaObtenido;
-            if (fechaObtenido instanceof Timestamp) {
-              return {
-                ...cupon,
-                fechaObtenido: fechaObtenido.toDate()
-              };
-            } else {
-              return cupon;
+          );
+
+          const cuponesUtilizadosFormateados = cuponesUtilizados.map(
+            (cupon: Lugar) => {
+              const fechaObtenido = cupon.fechaObtenido;
+              if (fechaObtenido instanceof Timestamp) {
+                return {
+                  ...cupon,
+                  fechaObtenido: fechaObtenido.toDate(),
+                };
+              } else {
+                return cupon;
+              }
             }
-          });
-  
+          );
+
           return {
             disponibles: cuponesDisponiblesFormateados,
-            utilizados: cuponesUtilizadosFormateados
+            utilizados: cuponesUtilizadosFormateados,
           };
         } else {
           return {
             disponibles: [], // El usuario no tiene cupones disponibles
-            utilizados: []   // El usuario no tiene cupones utilizados
+            utilizados: [], // El usuario no tiene cupones utilizados
           };
         }
       })
     );
-  } 
-  
-  addCouponToUserUtilizados(userId: string, coupon: Lugar, cuponesDisponibles: Lugar[]): Promise<void> {
+  }
+
+  addCouponToUserUtilizados(
+    userId: string,
+    coupon: Lugar,
+    cuponesDisponibles: Lugar[]
+  ): Promise<void> {
     const userRef = doc(this.firestore, PATH, userId);
 
     // Usa runTransaction para ejecutar la transacción
-    return runTransaction(this.firestore, async transaction => {
+    return runTransaction(this.firestore, async (transaction) => {
       const userDoc = await transaction.get(userRef);
 
       if (!userDoc.exists()) {
@@ -166,21 +176,35 @@ export class FirestoreService {
       const userData = userDoc.data();
 
       // Agregar el cupón a la lista de utilizados
-      const cuponesUtilizados = [...(userData?.["couponsUtilizados"] || []), coupon];
+      const cuponesUtilizados = [
+        ...(userData?.["couponsUtilizados"] || []),
+        coupon,
+      ];
 
       // Eliminar el cupón de la lista de disponibles
-      cuponesDisponibles = cuponesDisponibles.filter(c => c !== coupon);
+      cuponesDisponibles = cuponesDisponibles.filter((c) => c !== coupon);
 
       // Actualizar el documento del usuario en Firestore
       transaction.update(userRef, {
         couponsUtilizados: cuponesUtilizados,
-        coupons: cuponesDisponibles // Actualizar la lista de cupones disponibles en Firestore
+        coupons: cuponesDisponibles, // Actualizar la lista de cupones disponibles en Firestore
       });
 
       console.log("Cupón agregado a utilizados del usuario en Firestore.");
 
       return;
     });
-}
+  }
+  checkEmailExists(email: string): Observable<boolean> {
+    const userQuery = query(
+      collection(this.firestore, PATH),
+      where("email", "==", email)
+    );
 
+    return from(getDocs(userQuery)).pipe(
+      map((snapshot: QuerySnapshot<DocumentData>) => {
+        return !snapshot.empty;
+      })
+    );
+  }
 }

@@ -14,14 +14,19 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './forgot-password.component.css'
 })
 export class ForgotPasswordComponent {
-  email: string = '';
 
   constructor(private auth: AuthService) { }
 
   async sendPasswordResetEmail() {
     try {
-      await this.auth.sendPasswordResetEmail(this.email).toPromise();
-      console.log('Correo electrónico de restablecimiento de contraseña enviado.');
+      // Utilizar directamente el correo electrónico del usuario autenticado
+      const email = this.auth.currentUser?.email;
+      if (email) {
+        await this.auth.sendPasswordResetEmail(email).toPromise();
+        console.log('Correo electrónico de restablecimiento de contraseña enviado.');
+      } else {
+        console.error('No se pudo obtener el correo electrónico del usuario autenticado.');
+      }
     } catch (error) {
       console.error('Error al enviar el correo electrónico de restablecimiento de contraseña:', error);
     }

@@ -14,6 +14,7 @@ import { ForgotPasswordComponent } from './components/forgot-password/forgot-pas
 import { DetallesComponent } from './components/detalles/detalles.component';
 import { MisDatosComponent } from './components/mis-datos/mis-datos.component';
 import { MisCuponesComponent } from './components/mis-cupones/mis-cupones.component';
+import { ForgotPasswordNotAuthComponent } from './components/forgot-password-not-auth/forgot-password-not-auth.component';
 
 export const routes: Routes = [{path:'', title: 'Inicio',component: InicioComponent},
 {path:'inicio', title: 'Inicio',component: InicioComponent},
@@ -27,8 +28,9 @@ export const routes: Routes = [{path:'', title: 'Inicio',component: InicioCompon
 {path:'salud',title:'Salud',component: SaludComponent},
 {path:'estetica',title:'Estética',component: EsteticaComponent},
 {path:'entretenimiento',title:'Entretenimiento',component: EntretenimientoComponent},
-{path: 'forgot-password', title:'Recuperar Contraseña', component:ForgotPasswordComponent},
+{path: 'forgot-password', title:'Recuperar contraseña', component:ForgotPasswordComponent},
 {path: 'detalles', title:'Detalles', component: DetallesComponent},
-{path: 'mis-datos', title:'Mis Datos', component: MisDatosComponent},
+{path: 'mis-datos', title:'Mis datos', component: MisDatosComponent},
 {path: 'detalles/:id', title:'Detalles', component: DetallesComponent},
-{path: 'mis-cupones', title:'Mis Cupones', component: MisCuponesComponent}];
+{path: 'new-password',title: 'Olvide mi contraseña', component: ForgotPasswordNotAuthComponent},
+{path: 'mis-cupones', title:'Mis cupones', component: MisCuponesComponent}];
