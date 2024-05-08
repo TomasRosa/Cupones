@@ -16,35 +16,51 @@ import { ActivatedRoute } from "@angular/router";
   imports: [CommonModule],
 })
 export class DetallesComponent implements OnInit {
-  detallesProducto: any;
+  detallesProducto: any = {};
   // @ts-ignore
   map: google.maps.Map | null;
   marker: google.maps.Marker | null = null;
   lugaresSimilares: Lugar[] = [];
-  mensajeObtenerCupon: string = '';
+  mensajeObtenerCupon: string = "";
 
   constructor(
     private verDetallesService: VerDetallesService,
     private auth: AuthService,
     private share: ShareDataService,
     private navigateTo: NavigateToService,
-    private activatedRoute: ActivatedRoute,
+    private activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    // Suscribirse al observable para obtener los detalles del producto
-    this.verDetallesService.detallesProducto$.subscribe((detalles) => {
-      this.detallesProducto = detalles;
-      console.log(this.detallesProducto);
+    this.activatedRoute.params.subscribe((params) => {
+      const productId = params["id"];
 
-      // Inicializar el mapa cada vez que se actualicen los detalles del producto
-      this.initMap();
-      
-      const categoriaActual = this.detallesProducto.idCategoria;
-      this.obtenerLugaresSimilares(categoriaActual,this.detallesProducto.id);
+      // Obtener detalles del producto y lugares similares
+      this.obtenerDetallesYLugares(productId);
     });
   }
+  obtenerDetallesYLugares(productId: number): void {
+    this.share.obtenerDatosSegunId(productId).subscribe(
+      (detalles) => {
+        this.detallesProducto = detalles;
+        // Actualizar los detalles del producto en el servicio
+        this.verDetallesService.setDetallesProducto(detalles);
+        
+        // Inicializar el mapa una vez que se obtengan los detalles
+        this.initMap();
 
+        // Obtener lugares similares después de obtener los detalles
+        this.obtenerLugaresSimilares(
+          this.detallesProducto.idCategoria,
+          productId
+        );
+      },
+      (error) => {
+        console.error("Error al obtener detalles del producto:", error);
+        // Manejar el error aquí si es necesario
+      }
+    );
+  }
   ngAfterViewInit(): void {
     if (this.detallesProducto) {
       this.initMap();
@@ -56,12 +72,16 @@ export class DetallesComponent implements OnInit {
       .obtenerDatosSegunIdCategoria(categoriaActual)
       .subscribe((lugares) => {
         // Filtrar el lugar actual de los lugares similares
-        this.lugaresSimilares = lugares.filter(lugar => lugar.id !== idActual);
+        this.lugaresSimilares = lugares.filter(
+          (lugar) => lugar.id !== idActual
+        );
       });
   }
   verOferta(id: number) {
     // Obtener los detalles del producto por su ID
-    const productoSeleccionado = this.lugaresSimilares.find(lugar => lugar.id === id);
+    const productoSeleccionado = this.lugaresSimilares.find(
+      (lugar) => lugar.id === id
+    );
     // Verificar si se encontraron los detalles del producto
     if (productoSeleccionado) {
       // Almacenar los detalles del producto en el servicio
@@ -75,51 +95,52 @@ export class DetallesComponent implements OnInit {
     }
   }
   obtenerCupon(): void {
-      if (this.detallesProducto) {
-        // Verifica que todas las propiedades necesarias estén definidas
-        if (
-          this.detallesProducto.id &&
-          this.detallesProducto.nombre &&
-          this.detallesProducto.descripcion &&
-          this.detallesProducto.latitud &&
-          this.detallesProducto.longitud &&
-          this.detallesProducto.ruta &&
-          this.detallesProducto.precio &&
-          this.detallesProducto.nombreCategoria &&
-          this.detallesProducto.idCategoria
-        ) {
-          // Obtener la fecha actual
-          const fechaActual = new Date();
-  
-          // Crea el objeto Lugar con los detalles del producto actual y el timestamp
-          const cupon: Lugar = {
-            id: this.detallesProducto.id,
-            nombre: this.detallesProducto.nombre,
-            descripcion: this.detallesProducto.descripcion,
-            latitud: this.detallesProducto.latitud,
-            longitud: this.detallesProducto.longitud,
-            ruta: this.detallesProducto.ruta,
-            precio: this.detallesProducto.precio,
-            nombreCategoria: this.detallesProducto.nombreCategoria,
-            idCategoria: this.detallesProducto.idCategoria,
-            fechaObtenido: fechaActual, // Pasar la fecha actual como fechaObtenido
-          };
-          this.auth
-            .addCouponToUser(cupon)
-            .then(() => {
-              this.mensajeObtenerCupon = 'Cupon obtenido correctamente!';
-              this.hideMessageAfterDelay(2000);
-            })
-            .catch((error) => {
-              this.mensajeObtenerCupon = 'Debes iniciar sesión para realizar esta acción.';
-              console.error("Error al agregar el cupón al usuario:", error);
-              this.hideMessageAfterDelay(2000);
-            });
-        } else {
-          console.error("Alguna propiedad de detallesProducto es undefined.");
-        }
-      }  
-}
+    if (this.detallesProducto) {
+      // Verifica que todas las propiedades necesarias estén definidas
+      if (
+        this.detallesProducto.id &&
+        this.detallesProducto.nombre &&
+        this.detallesProducto.descripcion &&
+        this.detallesProducto.latitud &&
+        this.detallesProducto.longitud &&
+        this.detallesProducto.ruta &&
+        this.detallesProducto.precio &&
+        this.detallesProducto.nombreCategoria &&
+        this.detallesProducto.idCategoria
+      ) {
+        // Obtener la fecha actual
+        const fechaActual = new Date();
+
+        // Crea el objeto Lugar con los detalles del producto actual y el timestamp
+        const cupon: Lugar = {
+          id: this.detallesProducto.id,
+          nombre: this.detallesProducto.nombre,
+          descripcion: this.detallesProducto.descripcion,
+          latitud: this.detallesProducto.latitud,
+          longitud: this.detallesProducto.longitud,
+          ruta: this.detallesProducto.ruta,
+          precio: this.detallesProducto.precio,
+          nombreCategoria: this.detallesProducto.nombreCategoria,
+          idCategoria: this.detallesProducto.idCategoria,
+          fechaObtenido: fechaActual, // Pasar la fecha actual como fechaObtenido
+        };
+        this.auth
+          .addCouponToUser(cupon)
+          .then(() => {
+            this.mensajeObtenerCupon = "Cupon obtenido correctamente!";
+            this.hideMessageAfterDelay(2000);
+          })
+          .catch((error) => {
+            this.mensajeObtenerCupon =
+              "Debes iniciar sesión para realizar esta acción.";
+            console.error("Error al agregar el cupón al usuario:", error);
+            this.hideMessageAfterDelay(2000);
+          });
+      } else {
+        console.error("Alguna propiedad de detallesProducto es undefined.");
+      }
+    }
+  }
   initMap(): void {
     // Eliminar el mapa existente si lo hay
     if (this.map) {
