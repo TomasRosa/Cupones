@@ -8,7 +8,7 @@
 </section>
 
 <section
-  *ngIf="mensajeObtenerCupon === 'Hubo un error al obtener el cupon.'"
+  *ngIf="mensajeObtenerCupon === 'Hubo un error al obtener el cupon.' || mensajeObtenerCupon === 'Debes iniciar sesión para realizar esta acción.'"
   class="alert alert-danger"
   role="alert"
 >

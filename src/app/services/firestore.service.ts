@@ -187,9 +187,6 @@ export class FirestoreService {
         couponsUtilizados: cuponesUtilizados,
         coupons: cuponesDisponibles, // Actualizar la lista de cupones disponibles en Firestore
       });
-
-      console.log("Cupón agregado a utilizados del usuario en Firestore.");
-
       return;
     });
   }
