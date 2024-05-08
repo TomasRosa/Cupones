@@ -15,6 +15,8 @@ import { DetallesComponent } from './components/detalles/detalles.component';
 import { MisDatosComponent } from './components/mis-datos/mis-datos.component';
 import { MisCuponesComponent } from './components/mis-cupones/mis-cupones.component';
 import { ForgotPasswordNotAuthComponent } from './components/forgot-password-not-auth/forgot-password-not-auth.component';
+import { AuthGuard } from './guards/auth-guard';
+import { AuthRedirectComponent } from './components/auth-redirect/auth-redirect.component';
 
 export const routes: Routes = [{path:'', title: 'Inicio',component: InicioComponent},
 {path:'inicio', title: 'Inicio',component: InicioComponent},
@@ -28,9 +30,10 @@ export const routes: Routes = [{path:'', title: 'Inicio',component: InicioCompon
 {path:'salud',title:'Salud',component: SaludComponent},
 {path:'estetica',title:'Estética',component: EsteticaComponent},
 {path:'entretenimiento',title:'Entretenimiento',component: EntretenimientoComponent},
-{path: 'forgot-password', title:'Recuperar contraseña', component:ForgotPasswordComponent},
+{path: 'forgot-password', canActivate: [AuthGuard] ,title:'Recuperar contraseña', component:ForgotPasswordComponent},///ESTE
 {path: 'detalles', title:'Detalles', component: DetallesComponent},
-{path: 'mis-datos', title:'Mis datos', component: MisDatosComponent},
+{path: 'mis-datos',canActivate:[AuthGuard], title:'Mis datos', component: MisDatosComponent}, ///ESTE
 {path: 'detalles/:id', title:'Detalles', component: DetallesComponent},
 {path: 'new-password',title: 'Olvide mi contraseña', component:ForgotPasswordNotAuthComponent},
-{path: 'mis-cupones', title:'Mis cupones', component: MisCuponesComponent}];
+{path: 'no-auth',title:'Debes iniciar sesion',component:AuthRedirectComponent},
+{path: 'mis-cupones',canActivate:[AuthGuard],title:'Mis cupones', component: MisCuponesComponent}]; ///ESTE
