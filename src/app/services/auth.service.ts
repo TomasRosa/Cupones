@@ -143,6 +143,23 @@ export class AuthService {
       })
     );
   }
+  getCantTickets(): Observable<number | null>
+  {
+    return this.getUserId().pipe(
+      switchMap((userId) => {
+        if(userId)
+        {
+          return this.firestore
+          .getUserData(userId)
+          .pipe(map((userData)=>(userData ? userData.cantTickets : null)));
+        }
+        else
+        {
+          return of(null);
+        }
+      })
+    );
+  }
   getUserId(): Observable<string | null> {
     const currentUser = this.auth.currentUser;
     if (currentUser) {

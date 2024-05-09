@@ -18,5 +18,3 @@
   .star-filled::before {
     content: "\2605"; /* Carácter Unicode para la estrella rellena */
   }
-
-  

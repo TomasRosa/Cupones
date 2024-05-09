@@ -101,7 +101,8 @@ export class RegisterComponent {
             email: usuario.email,
             id: userId,
             coupons: usuario.coupons,
-            couponsUtilizados: usuario.couponsUtilizados
+            couponsUtilizados: usuario.couponsUtilizados,
+            cantTickets: usuario.cantTickets
           };
 
           this.firestore
@@ -158,7 +159,8 @@ export class RegisterComponent {
                 email: user.email || '',
                 id: userId,
                 coupons: [],
-                couponsUtilizados:[] // Inicializar como un array vacío
+                couponsUtilizados:[],
+                cantTickets: 0 // Inicializar como un array vacío
               };
   
               this.firestore.createUser(userData).then(() => {

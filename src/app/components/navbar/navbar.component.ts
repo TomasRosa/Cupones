@@ -38,6 +38,7 @@ export class NavbarComponent implements OnInit {
   apellidoUsuario$!: Observable<string | null>;
   nombreUsuario$: Observable<string | null> | null = null;
   emailUsuario$: Observable<string | null> | null = null;
+  cantTickets$: Observable<number | null> | null = null;
 
   ngOnInit(): void {
     this.isUserLoggedIn$ = this.auth.isLoggedIn();
@@ -66,6 +67,21 @@ export class NavbarComponent implements OnInit {
       })
     ).subscribe(email => {
       this.emailUsuario$ = of(email);
+    });
+
+    this.isUserLoggedIn$.pipe(
+      switchMap(isLoggedIn => {
+        if(isLoggedIn)
+        {
+          return this.auth.getCantTickets().pipe(take(1));
+        }
+        else
+        {
+          return of(null);
+        }
+      })
+    ).subscribe(cantTickets => {
+      this.cantTickets$ = of(cantTickets);
     });
   }
 

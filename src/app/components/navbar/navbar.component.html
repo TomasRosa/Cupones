@@ -1,105 +1,164 @@
 <app-popup></app-popup>
 <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
   <div class="container-fluid mt-4">
-    <div class="row justify-content-center align-items-center"> <!-- Añade la clase justify-content-center -->
-        <!-- Logo y botón de inicio -->
-        <div class="col-md-2 logo-container">
-            <button class="button-with-image navbar-brand" (click)="navigateTos('inicio')">
-                <img src="./assets/images/gocupon-logo.png" alt="logo" />
-            </button>
-        </div>
-        <!-- Barra de búsqueda -->
-        <div class="col-md-2 order-md-1 search-bar text-center">
-            <input
-                type="text"
-                class="form-control text-center"
-                placeholder="Buscar cupones..."
-                [(ngModel)]="terminoBusqueda"
-                (input)="filtrarLugares()"
-            />
-            <div class="search-results" *ngIf="resultadosBusqueda.length > 0">
-                <div *ngFor="let lugar of resultadosBusqueda" class="search-result" (click)="verDetalles(lugar.id)">
-                    <!-- Imagen del lugar -->
-                    <div class="search-result-image">
-                        <img src="{{ lugar.ruta }}" alt="{{ lugar.nombre }}" class="img-fluid resultado-imagen">
-                    </div>
-                    <!-- Nombre del lugar -->
-                    <div class="search-result-details">
-                        <p>{{ lugar.nombre }}</p>
-                    </div>
-                </div>
+    <div class="row justify-content-center align-items-center">
+      <!-- Añade la clase justify-content-center -->
+      <!-- Logo y botón de inicio -->
+      <div class="col-md-2 logo-container">
+        <button
+          class="button-with-image navbar-brand"
+          (click)="navigateTos('inicio')"
+        >
+          <img src="./assets/images/gocupon-logo.png" alt="logo" />
+        </button>
+      </div>
+      <!-- Barra de búsqueda -->
+      <div class="col-md-2 order-md-1 search-bar text-center">
+        <input
+          type="text"
+          class="form-control text-center"
+          placeholder="Buscar cupones..."
+          [(ngModel)]="terminoBusqueda"
+          (input)="filtrarLugares()"
+        />
+        <div class="search-results" *ngIf="resultadosBusqueda.length > 0">
+          <div
+            *ngFor="let lugar of resultadosBusqueda"
+            class="search-result"
+            (click)="verDetalles(lugar.id)"
+          >
+            <!-- Imagen del lugar -->
+            <div class="search-result-image">
+              <img
+                src="{{ lugar.ruta }}"
+                alt="{{ lugar.nombre }}"
+                class="img-fluid resultado-imagen"
+              />
             </div>
-        </div>
-        <!-- Botones de categorías -->
-        <div class="col-md-6 order-md-2">
-            <div class="row mt-2 category-buttons justify-content-center">
-                <div class="col-md-12">
-                    <div class="d-flex justify-content-between">
-                        <button class="btn btn-primary btn-sm" (click)="navigateTos('gastronomia')">
-                            Gastronomía
-                        </button>
-                        <button class="btn btn-primary btn-sm" (click)="navigateTos('supermercado')">
-                            Supermercado
-                        </button>
-                        <button class="btn btn-primary btn-sm" (click)="navigateTos('cine')">
-                            Cine
-                        </button>
-                        <button class="btn btn-primary btn-sm" (click)="navigateTos('vehiculos')">
-                            Vehículos
-                        </button>
-                        <button class="btn btn-primary btn-sm" (click)="navigateTos('teatro')">
-                            Teatro
-                        </button>
-                        <button class="btn btn-primary btn-sm" (click)="navigateTos('escapadas')">
-                            Escapadas y Hoteles
-                        </button>
-                        <button class="btn btn-primary btn-sm" (click)="navigateTos('salud')">
-                            Salud
-                        </button>
-                        <button class="btn btn-primary btn-sm" (click)="navigateTos('estetica')">
-                            Estética
-                        </button>
-                        <button class="btn btn-primary btn-sm" (click)="navigateTos('entretenimiento')">
-                            Entretenimiento
-                        </button>
-                    </div>
-                </div>
+            <!-- Nombre del lugar -->
+            <div class="search-result-details">
+              <p>{{ lugar.nombre }}</p>
             </div>
+          </div>
         </div>
-        <div class="col-md-2 order-md-3 d-flex pe-4" style="margin-left: auto;">
-            <!-- Botón de Registrarse -->
-            <button *ngIf="!(isUserLoggedIn$ | async)" class="btn btn-success btn-sm me-2 register-btn" (click)="navigateTos('register')">
-                <i class="bi bi-person"></i> Registrarse
-            </button>
-            
-            <!-- Botón de Iniciar Sesión -->
-            <button *ngIf="!(isUserLoggedIn$ | async)" class="btn btn-success btn-sm login-btn" (click)="openPopup()">
-                <i class="bi bi-door-open"></i> Iniciar Sesión
-            </button>
-            
-            <!-- Contenedor de botones de perfil y ticket -->
-            <div *ngIf="(isUserLoggedIn$ | async)" class="buttons-container">
-                <!-- Botón de Perfil -->
-                <button class="btn btn-success btn-sm profile-button" (click)="toggleMenu()">
-                    <i class="bi bi-person"></i> <!-- Bootstrap Icons icono de perfil -->
-                </button>
+      </div>
+      <!-- Botones de categorías -->
+      <div class="col-md-6 order-md-2">
+        <div class="row mt-2 category-buttons justify-content-center">
+          <div class="col-md-12">
+            <div class="d-flex justify-content-between">
+              <button
+                class="btn btn-primary btn-sm"
+                (click)="navigateTos('gastronomia')"
+              >
+                Gastronomía
+              </button>
+              <button
+                class="btn btn-primary btn-sm"
+                (click)="navigateTos('supermercado')"
+              >
+                Supermercado
+              </button>
+              <button
+                class="btn btn-primary btn-sm"
+                (click)="navigateTos('cine')"
+              >
+                Cine
+              </button>
+              <button
+                class="btn btn-primary btn-sm"
+                (click)="navigateTos('vehiculos')"
+              >
+                Vehículos
+              </button>
+              <button
+                class="btn btn-primary btn-sm"
+                (click)="navigateTos('teatro')"
+              >
+                Teatro
+              </button>
+              <button
+                class="btn btn-primary btn-sm"
+                (click)="navigateTos('escapadas')"
+              >
+                Escapadas y Hoteles
+              </button>
+              <button
+                class="btn btn-primary btn-sm"
+                (click)="navigateTos('salud')"
+              >
+                Salud
+              </button>
+              <button
+                class="btn btn-primary btn-sm"
+                (click)="navigateTos('estetica')"
+              >
+                Estética
+              </button>
+              <button
+                class="btn btn-primary btn-sm"
+                (click)="navigateTos('entretenimiento')"
+              >
+                Entretenimiento
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-2 order-md-3 d-flex pe-4" style="margin-left: auto;">
+        <!-- Botón de Registrarse -->
+        <button
+          *ngIf="!(isUserLoggedIn$ | async)"
+          class="btn btn-success btn-sm me-2 register-btn"
+          (click)="navigateTos('register')"
+        >
+          <i class="bi bi-person"></i> Registrarse
+        </button>
+
+        <!-- Botón de Iniciar Sesión -->
+        <button
+          *ngIf="!(isUserLoggedIn$ | async)"
+          class="btn btn-success btn-sm login-btn"
+          (click)="openPopup()"
+        >
+          <i class="bi bi-door-open"></i> Iniciar Sesión
+        </button>
+
+        <!-- Contenedor de botones de perfil y ticket -->
+        <div *ngIf="(isUserLoggedIn$ | async)" class="buttons-container">
+          <!-- Botón de Perfil -->
+          <button
+            class="btn btn-success btn-sm profile-button"
+            (click)="toggleMenu()"
+          >
+            <i class="bi bi-person"></i>
+            <!-- Bootstrap Icons icono de perfil -->
+          </button>
+
+          <!-- Menú Hamburguesa -->
+        <div class="menu bg-success" [ngClass]="{ 'show': isMenuOpen }">
+            <p class="greeting mr-3">¡Hola {{ nombreUsuario$ | async }}!</p>
+            <button class="btn btn-primary menu-item mb-2" (click)="navigateTos('mis-datos')">Mis datos</button>
+            <button class="btn btn-primary menu-item mb-2" (click)="navigateTos('mis-cupones')">Mis cupones</button>
+            <button class="btn btn-primary menu-item" (click)="logout()">Cerrar sesión</button>
+        </div>
         
-                <!-- Menú Hamburguesa -->
-                <div class="menu bg-success" [ngClass]="{ 'show': isMenuOpen }">
-                    <p class="greeting">¡Hola {{ nombreUsuario$ | async }}!</p>
-                    <button class="btn btn-primary menu-item mb-2" (click)="navigateTos('mis-datos')">Mis datos</button>
-                    <button class="btn btn-primary menu-item" (click)="logout()">Logout</button>
-                </div>
-        
-                <!-- Botón de Ticket -->
-                <button class="btn btn-success btn-sm ticket-button">
-                    <i class="bi bi-ticket" (click)="navigateTos('mis-cupones')"></i> <!-- Bootstrap Icons icono de ticket -->
-                </button>
-            </div>
+        <!-- Logo ticket + cantTickets -->
+        <div class="ticket-info">
+            <!-- Icono de ticket -->
+            <i class="bi bi-ticket ticket-icon"></i> <!-- Bootstrap Icons icono de ticket -->
+            <!-- Cantidad de tickets -->
+            <span class="ticket-count">{{ cantTickets$ | async }}</span>
         </div>
+        </div>
+      </div>
     </div>
-    </div>
+  </div>
 </nav>
-<section *ngIf="mensajeLogout === '¡Hasta luego!'"  class="alert alert-dismissible alert-light text-center" role="alert">
-    {{ mensajeLogout }}
+<section
+  *ngIf="mensajeLogout === '¡Hasta luego!'"
+  class="alert alert-dismissible alert-light text-center"
+  role="alert"
+>
+  {{ mensajeLogout }}
 </section>

@@ -101,3 +101,12 @@ body
 .menu.show {
   display: flex;
 }
+.ticket-info {
+  display: flex;
+  align-items: center;
+}
+
+.ticket-icon {
+  font-size: 1rem; /* Ajusta el tamaño del icono según sea necesario */
+  margin-right: 5px; /* Ajusta el margen derecho para separarlo del contador */
+}

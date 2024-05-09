@@ -9,6 +9,7 @@ export class User {
     password?: string = '';
     coupons: Lugar[] = []; // Campo para almacenar los cupones del usuario
     couponsUtilizados: Lugar[] = [];
+    cantTickets: number = 0;
      constructor(firstName: string, lastName: string, email: string, password: string, coupons?: Lugar[],couponsUtilizados?: Lugar[]) {
         this.id = uuidv4(); // Genera un UUID único
         this.firstName = firstName;
