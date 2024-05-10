@@ -7,6 +7,7 @@ import { Lugar } from "../../interfaces/lugar";
 import { ShareDataService } from "../../services/share-data.service";
 import { NavigateToService } from "../../services/navigate-to.service";
 import { ActivatedRoute } from "@angular/router";
+import { Observable, of } from "rxjs";
 
 @Component({
   selector: "app-detalles",
@@ -17,11 +18,13 @@ import { ActivatedRoute } from "@angular/router";
 })
 export class DetallesComponent implements OnInit {
   detallesProducto: any = {};
+  infoUsuario: any = {};
   // @ts-ignore
   map: google.maps.Map | null;
   marker: google.maps.Marker | null = null;
   lugaresSimilares: Lugar[] = [];
   mensajeObtenerCupon: string = "";
+  cantTickets$: Observable<number | null> | null = null;
 
   constructor(
     private verDetallesService: VerDetallesService,
@@ -30,14 +33,26 @@ export class DetallesComponent implements OnInit {
     private navigateTo: NavigateToService,
     private activatedRoute: ActivatedRoute
   ) {}
-
   ngOnInit(): void {
     this.activatedRoute.params.subscribe((params) => {
       const productId = params["id"];
+      this.cantTickets$ = this.auth.getCantTickets();
 
       // Obtener detalles del producto y lugares similares
       this.obtenerDetallesYLugares(productId);
     });
+  }
+  
+  obtenerLugaresSimilares(categoriaActual: number, idActual: number): void {
+    // Obtener los lugares similares del servicio ShareDataService
+    this.share
+      .obtenerDatosSegunIdCategoria(categoriaActual)
+      .subscribe((lugares) => {
+        // Filtrar el lugar actual de los lugares similares
+        this.lugaresSimilares = lugares.filter(
+          (lugar) => lugar.id !== idActual
+        );
+      });
   }
   obtenerDetallesYLugares(productId: number): void {
     this.share.obtenerDatosSegunId(productId).subscribe(
@@ -48,11 +63,11 @@ export class DetallesComponent implements OnInit {
         
         // Inicializar el mapa una vez que se obtengan los detalles
         this.initMap();
-
+  
         // Obtener lugares similares después de obtener los detalles
         this.obtenerLugaresSimilares(
           this.detallesProducto.idCategoria,
-          productId
+          this.detallesProducto.id
         );
       },
       (error) => {
@@ -65,17 +80,6 @@ export class DetallesComponent implements OnInit {
     if (this.detallesProducto) {
       this.initMap();
     }
-  }
-  obtenerLugaresSimilares(categoriaActual: number, idActual: number): void {
-    // Obtener los lugares similares del servicio ShareDataService
-    this.share
-      .obtenerDatosSegunIdCategoria(categoriaActual)
-      .subscribe((lugares) => {
-        // Filtrar el lugar actual de los lugares similares
-        this.lugaresSimilares = lugares.filter(
-          (lugar) => lugar.id !== idActual
-        );
-      });
   }
   verOferta(id: number) {
     // Obtener los detalles del producto por su ID
@@ -95,52 +99,93 @@ export class DetallesComponent implements OnInit {
     }
   }
   obtenerCupon(): void {
-    if (this.detallesProducto) {
-      // Verifica que todas las propiedades necesarias estén definidas
-      if (
-        this.detallesProducto.id &&
-        this.detallesProducto.nombre &&
-        this.detallesProducto.descripcion &&
-        this.detallesProducto.latitud &&
-        this.detallesProducto.longitud &&
-        this.detallesProducto.ruta &&
-        this.detallesProducto.precio &&
-        this.detallesProducto.nombreCategoria &&
-        this.detallesProducto.idCategoria
-      ) {
-        // Obtener la fecha actual
-        const fechaActual = new Date();
-
-        // Crea el objeto Lugar con los detalles del producto actual y el timestamp
-        const cupon: Lugar = {
-          id: this.detallesProducto.id,
-          nombre: this.detallesProducto.nombre,
-          descripcion: this.detallesProducto.descripcion,
-          latitud: this.detallesProducto.latitud,
-          longitud: this.detallesProducto.longitud,
-          ruta: this.detallesProducto.ruta,
-          precio: this.detallesProducto.precio,
-          nombreCategoria: this.detallesProducto.nombreCategoria,
-          idCategoria: this.detallesProducto.idCategoria,
-          fechaObtenido: fechaActual, // Pasar la fecha actual como fechaObtenido
-        };
-        this.auth
-          .addCouponToUser(cupon)
-          .then(() => {
-            this.mensajeObtenerCupon = "Cupon obtenido correctamente!";
-            this.hideMessageAfterDelay(2000);
-          })
-          .catch((error) => {
-            this.mensajeObtenerCupon =
-              "Debes iniciar sesión para realizar esta acción.";
-            console.error("Error al agregar el cupón al usuario:", error);
-            this.hideMessageAfterDelay(2000);
-          });
+    // Verificar si el usuario está autenticado
+    this.auth.isLoggedIn().subscribe((loggedIn) => {
+      if (loggedIn) {
+        // El usuario está autenticado, continuar con la lógica para obtener el cupón
+        if (this.detallesProducto) {
+          // Verificar que todas las propiedades necesarias estén definidas
+          if (
+            this.detallesProducto.id &&
+            this.detallesProducto.nombre &&
+            this.detallesProducto.descripcion &&
+            this.detallesProducto.latitud &&
+            this.detallesProducto.longitud &&
+            this.detallesProducto.ruta &&
+            this.detallesProducto.precio &&
+            this.detallesProducto.nombreCategoria &&
+            this.detallesProducto.idCategoria
+          ) {
+            // Obtener la cantidad actual de cupones del usuario
+            this.auth.getCantTickets().subscribe((cantTickets) => {
+              if (cantTickets !== null && cantTickets !== undefined) {
+                if (cantTickets < this.detallesProducto.precio) {
+                  this.mensajeObtenerCupon =
+                    "No tienes la cantidad suficiente de tickets para obtener este cupón.";
+                  this.hideMessageAfterDelay(2000);
+                } else {
+                  // Calcular la nueva cantidad de cupones después de la compra
+                  const nuevaCantidad = cantTickets - this.detallesProducto.precio;
+                  // Actualizar la cantidad de cupones del usuario en la base de datos
+                  this.auth.updateCantTickets(nuevaCantidad).then(() => {
+                    // Una vez actualizado en Firestore, actualizar localmente en la interfaz de usuario
+                    this.cantTickets$ = of(nuevaCantidad); // Actualizar observable
+                    // Obtener la fecha actual
+                    const fechaActual = new Date();
+            
+                    // Crear el objeto Lugar con los detalles del producto actual y el timestamp
+                    const cupon: Lugar = {
+                      id: this.detallesProducto.id,
+                      nombre: this.detallesProducto.nombre,
+                      descripcion: this.detallesProducto.descripcion,
+                      latitud: this.detallesProducto.latitud,
+                      longitud: this.detallesProducto.longitud,
+                      ruta: this.detallesProducto.ruta,
+                      precio: this.detallesProducto.precio,
+                      nombreCategoria: this.detallesProducto.nombreCategoria,
+                      idCategoria: this.detallesProducto.idCategoria,
+                      fechaObtenido: fechaActual, // Pasar la fecha actual como fechaObtenido
+                    };
+                    this.auth
+                      .addCouponToUser(cupon)
+                      .then(() => {
+                        this.mensajeObtenerCupon = "Cupon obtenido correctamente!";
+                        this.hideMessageAfterDelay(2000);
+                      })
+                      .catch((error) => {
+                        this.mensajeObtenerCupon =
+                          "Hubo un error al obtener el cupón.";
+                        console.error(
+                          "Error al agregar el cupón al usuario:",
+                          error
+                        );
+                        this.hideMessageAfterDelay(2000);
+                      });
+                  }).catch((error) => {
+                    console.error("Error al actualizar la cantidad de cupones del usuario:", error);
+                    this.mensajeObtenerCupon = "Hubo un error al realizar la compra.";
+                    this.hideMessageAfterDelay(2000);
+                  });
+                }
+              } else {
+                console.error(
+                  "No se pudo obtener la cantidad de tickets del usuario."
+                );
+              }
+            });
+          } else {
+            console.error("Alguna propiedad de detallesProducto es undefined.");
+          }
+        }
       } else {
-        console.error("Alguna propiedad de detallesProducto es undefined.");
+        // El usuario no está autenticado, mostrar un mensaje de error
+        this.mensajeObtenerCupon = "Debes iniciar sesión para realizar esta acción.";
+        this.hideMessageAfterDelay(2000);
       }
-    }
+    });
   }
+  
+  
   initMap(): void {
     // Eliminar el mapa existente si lo hay
     if (this.map) {

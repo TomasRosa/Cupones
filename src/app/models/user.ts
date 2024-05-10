@@ -9,8 +9,9 @@ export class User {
     password?: string = '';
     coupons: Lugar[] = []; // Campo para almacenar los cupones del usuario
     couponsUtilizados: Lugar[] = [];
+    couponsVencidos: Lugar[] = [];
     cantTickets: number = 0;
-     constructor(firstName: string, lastName: string, email: string, password: string, coupons?: Lugar[],couponsUtilizados?: Lugar[]) {
+     constructor(firstName: string, lastName: string, email: string, password: string, coupons?: Lugar[],couponsUtilizados?: Lugar[], couponsVencidos?: Lugar[]) {
         this.id = uuidv4(); // Genera un UUID único
         this.firstName = firstName;
         this.lastName = lastName;
@@ -18,5 +19,6 @@ export class User {
         this.password = password;
         this.coupons = coupons || [];
         this.couponsUtilizados = couponsUtilizados || [];
+        this.couponsVencidos = couponsVencidos || [];
     }
 }

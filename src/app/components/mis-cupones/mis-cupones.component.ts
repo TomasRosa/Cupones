@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { FirestoreService } from '../../services/firestore.service';
 import { AuthService } from '../../services/auth.service';
 import { FormsModule } from '@angular/forms';
-import { switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-mis-cupones',
@@ -16,8 +15,12 @@ import { switchMap, tap } from 'rxjs';
 export class MisCuponesComponent implements OnInit {
   disponibles: boolean = true;
   utilizados: boolean = false;
+  vencidos: boolean = false;
+
   cuponesDisponibles: Lugar[] = [];
   cuponesUtilizados: Lugar[] = [];
+  cuponesVencidos: Lugar [] = [];
+
 
   constructor(private auth: AuthService, private firestore: FirestoreService) { }
 
@@ -50,7 +53,24 @@ export class MisCuponesComponent implements OnInit {
     }
   }
 
-
+  verificarCuponesVencidos(): void {
+    // Obtener la fecha actual
+    const fechaActual = new Date();
+    // Filtrar los cupones disponibles que están vencidos
+    const cuponesVencidos = this.cuponesDisponibles.filter(cupon => {
+      if (cupon.fechaObtenido) { // Verificar si fechaObtenido no es undefined
+        const fechaVencimiento = new Date(cupon.fechaObtenido);
+        fechaVencimiento.setDate(fechaVencimiento.getDate() + 7); // Sumar 7 días a la fecha de obtención
+        return fechaVencimiento < fechaActual; // Verificar si la fecha de vencimiento es anterior a la fecha actual
+      } else {
+        return false; // Si fechaObtenido es undefined, el cupón no está vencido
+      }
+    });
+    // Mover los cupones vencidos a la lista de cupones vencidos
+    this.cuponesVencidos.push(...cuponesVencidos);
+    // Remover los cupones vencidos de la lista de cupones disponibles
+    this.cuponesDisponibles = this.cuponesDisponibles.filter(cupon => !cuponesVencidos.includes(cupon));
+  }
   calcularFechaVencimiento(fechaObtenido: Date | null | undefined): string {
     if (fechaObtenido) {
       const fechaVencimiento = new Date(fechaObtenido); // Crear una nueva instancia de la fecha de obtención
@@ -74,15 +94,24 @@ export class MisCuponesComponent implements OnInit {
   onChangeDisponibles(): void {
     if (this.disponibles) {
       this.utilizados = false;
+      this.vencidos = false;
     }
   }
 
   onChangeUtilizados(): void {
     if (this.utilizados) {
       this.disponibles = false;
+      this.vencidos = false;
     }
   }
 
+  onChangeVencidos(): void {
+    if(this.vencidos)
+    {
+      this.disponibles = false;
+      this.utilizados = false;
+    }
+  }
   moverACuponesUtilizados(cupon: Lugar): void {
     // Remover el cupón de la lista de disponibles
     this.cuponesDisponibles = this.cuponesDisponibles.filter(c => c !== cupon);

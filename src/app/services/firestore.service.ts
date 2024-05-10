@@ -65,6 +65,19 @@ export class FirestoreService {
         throw error;
       });
   }
+  updateCantTicket(cantTickets: number, userId: string): Promise<void>
+  {
+    const userRef = doc(this.firestore,PATH,userId);
+
+    return updateDoc(userRef,{ cantTickets })
+    .then(() => {
+      console.log("Datos actualizados en Firestore.");
+    })
+    .catch((error) => {
+      console.error("Error al actualizar los datos en Firestore:", error);
+      throw error;
+    });
+  }
   addCouponToUser(userId: string, coupon: Lugar): Promise<void> {
     const userRef = doc(this.firestore, PATH, userId);
     console.log(userId);

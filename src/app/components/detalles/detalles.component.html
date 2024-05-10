@@ -8,7 +8,7 @@
 </section>
 
 <section
-  *ngIf="mensajeObtenerCupon === 'Hubo un error al obtener el cupon.' || mensajeObtenerCupon === 'Debes iniciar sesión para realizar esta acción.'"
+  *ngIf="mensajeObtenerCupon === 'Hubo un error al obtener el cupon.' || mensajeObtenerCupon === 'Debes iniciar sesión para realizar esta acción.' || mensajeObtenerCupon === 'No tienes la cantidad suficiente de tickets para obtener este cupón.'"
   class="alert alert-danger"
   role="alert"
 >
@@ -29,6 +29,7 @@
         <div class="card-body">
           <h2 class="card-title">{{ detallesProducto.nombre }}</h2>
           <p class="card-text">{{ detallesProducto.descripcion }}</p>
+          <p class="card-text" style="font-style: italic; font-weight: bold;">{{ detallesProducto.beneficio }}</p>
           <p class="card-text fw-bold">Precio: <i class="bi bi-ticket"></i>{{ detallesProducto.precio }}</p>
           <button class="btn btn-secondary" (click)="obtenerCupon()">
             Obtener Cupón <i class="bi bi-ticket-fill"></i>

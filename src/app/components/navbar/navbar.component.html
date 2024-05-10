@@ -148,8 +148,8 @@
             <!-- Icono de ticket -->
             <i class="bi bi-ticket ticket-icon"></i> <!-- Bootstrap Icons icono de ticket -->
             <!-- Cantidad de tickets -->
-            <span class="ticket-count">{{ cantTickets$ | async }}</span>
-        </div>
+            <span class="ticket-count" *ngIf="cantTickets$ | async as cantTickets">{{ cantTickets }}</span>
+          </div>
         </div>
       </div>
     </div>
