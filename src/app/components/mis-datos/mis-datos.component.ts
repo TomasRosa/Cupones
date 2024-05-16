@@ -6,6 +6,7 @@ import { FirestoreService } from '../../services/firestore.service';
 import { FormControl, FormGroup, FormsModule, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ValidacionUserPersonalizada } from '../../validaciones/validacion-user-personalizada';
+import { SharedMisDatosService } from '../../services/shared-mis-datos.service';
 
 
 @Component({
@@ -28,6 +29,9 @@ export class MisDatosComponent implements OnInit {
   
   mensajeMisDatos: string = '';
 
+  nombreUsuario$: Observable<string | null> | null = null;
+
+
   misDatosForm = new FormGroup({
     firstName: new FormControl(this.nombreUsuario,[
       Validators.required,
@@ -41,7 +45,8 @@ export class MisDatosComponent implements OnInit {
 
   constructor(private auth: AuthService,
   private navigateTo: NavigateToService,
-  private firestore: FirestoreService
+  private firestore: FirestoreService,
+  private sharedMisDatos: SharedMisDatosService
   ) { }
 
   get firstName() 
@@ -56,6 +61,7 @@ export class MisDatosComponent implements OnInit {
     this.editando = false; // Inicializar editando como false
 
     this.isUserLoggedIn$ = this.auth.isLoggedIn();
+    this.nombreUsuario$ = this.auth.getName();
 
     this.cargarDatosUsuario();
   }
@@ -132,6 +138,7 @@ export class MisDatosComponent implements OnInit {
                 // Actualizar datos en Firestore
                 this.firestore.actualizarDatosUsuario(userId, this.nombreUsuario!, this.apellidoUsuario!)
                   .then(() => {
+                    this.sharedMisDatos.setNombreUsuario(this.nombreUsuario);
                     console.log('Datos actualizados en Firestore.');
                     this.mensajeMisDatos = 'Haz actualizado tus datos con éxito!';
                     this.hideMessageAfterDelay(2000);

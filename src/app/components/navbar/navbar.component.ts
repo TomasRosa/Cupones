@@ -9,6 +9,8 @@ import { FormsModule } from "@angular/forms";
 import { VerDetallesService } from "../../services/ver-detalles.service";
 import { AuthService } from "../../services/auth.service";
 import { Observable, switchMap, take, of} from "rxjs";
+import { SharedTicketService } from "../../services/shared-ticket.service";
+import { SharedMisDatosService } from "../../services/shared-mis-datos.service";
 
 
 @Component({
@@ -25,6 +27,8 @@ export class NavbarComponent implements OnInit {
     private shareData: ShareDataService,
     private verDetalle: VerDetallesService,
     private auth: AuthService,
+    private sharedTicketService: SharedTicketService,
+    private sharedMisDatos: SharedMisDatosService
   ) {}
 
   terminoBusqueda: string = "";
@@ -43,6 +47,9 @@ export class NavbarComponent implements OnInit {
   ngOnInit(): void {
     this.isUserLoggedIn$ = this.auth.isLoggedIn();
 
+    
+    this.nombreUsuario$ = this.sharedMisDatos.nombreUsuario$;
+
     this.isUserLoggedIn$.pipe(
       switchMap(isLoggedIn => {
         if (isLoggedIn) {
@@ -54,8 +61,9 @@ export class NavbarComponent implements OnInit {
         }
       })
     ).subscribe(name => {
-      this.nombreUsuario$ = of(name);
+      this.sharedMisDatos.setNombreUsuario(name);
     });
+
 
     this.isUserLoggedIn$.pipe(
       switchMap(isLoggedIn => {
@@ -69,19 +77,18 @@ export class NavbarComponent implements OnInit {
       this.emailUsuario$ = of(email);
     });
 
+    this.cantTickets$ = this.sharedTicketService.cantTickets$;
+
     this.isUserLoggedIn$.pipe(
       switchMap(isLoggedIn => {
-        if(isLoggedIn)
-        {
+        if (isLoggedIn) {
           return this.auth.getCantTickets().pipe(take(1));
-        }
-        else
-        {
+        } else {
           return of(null);
         }
       })
     ).subscribe(cantTickets => {
-      this.cantTickets$ = of(cantTickets);
+      this.sharedTicketService.setCantTickets(cantTickets ?? 0); // Inicializar el cantTickets en el SharedTicketService
     });
   }
 

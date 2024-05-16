@@ -33,7 +33,19 @@ export class AuthService {
       }
     });
   }
-
+  getCantTickets(): Observable<number | null> {
+    return this.getUserId().pipe(
+      switchMap((userId) => {
+        if (userId) {
+          return this.firestore
+            .getUserData(userId)
+            .pipe(map((userData) => (userData ? userData.cantTickets : null)));
+        } else {
+          return of(null);
+        }
+      })
+    );
+  }
   sendPasswordResetEmail(email: string): Observable<void> {
     return from(sendPasswordResetEmail(this.auth, email));
   }
@@ -154,19 +166,6 @@ export class AuthService {
           return this.firestore
             .getUserData(userId)
             .pipe(map((userData) => (userData ? userData.email : null)));
-        } else {
-          return of(null);
-        }
-      })
-    );
-  }
-  getCantTickets(): Observable<number | null> {
-    return this.getUserId().pipe(
-      switchMap((userId) => {
-        if (userId) {
-          return this.firestore
-            .getUserData(userId)
-            .pipe(map((userData) => (userData ? userData.cantTickets : null)));
         } else {
           return of(null);
         }
