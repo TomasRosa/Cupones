@@ -61,7 +61,6 @@ export class MisDatosComponent implements OnInit {
     this.editando = false; // Inicializar editando como false
 
     this.isUserLoggedIn$ = this.auth.isLoggedIn();
-    this.nombreUsuario$ = this.auth.getName();
 
     this.cargarDatosUsuario();
   }
