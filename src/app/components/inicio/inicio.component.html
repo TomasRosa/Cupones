@@ -49,7 +49,10 @@
                     </div>
                 </div>
                 <div class="d-flex justify-content-start align-items-center me-2">
-                    <span class="text-decoration-line-through"><i class="bi bi-ticket"></i>1000</span>
+                  <span class="text-decoration-line-through">
+                    <i class="bi bi-ticket"></i>
+                    {{ lugar.precio * 1.55 }}
+                  </span>                
                 </div>
                 <p class="card-text text-center">Precio: <i class="bi bi-ticket"></i> {{ lugar.precio }}</p>
                 <button class="btn btn-primary align-self-center mb-2" (click)="verOferta(lugar.nombre,lugar.descripcion,lugar.precio,lugar.ruta,lugar.latitud,lugar.longitud,lugar.id,lugar.nombreCategoria,lugar.idCategoria)">Ver oferta</button>

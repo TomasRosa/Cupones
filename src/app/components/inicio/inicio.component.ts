@@ -78,7 +78,7 @@ export class InicioComponent {
   navigateTos(route: string) {
     this.navigateTo.navigateTo(route);
   }
-  verOferta(nombre: string, descripcion: string, precio: string, ruta: string,latitud: number,longitud: number,id: number,nombreCategoria: string,idCategoria: number) {
+  verOferta(nombre: string, descripcion: string, precio: number, ruta: string,latitud: number,longitud: number,id: number,nombreCategoria: string,idCategoria: number) {
     
     // Almacenar los detalles del producto en el servicio
     const url = `/detalles/${id}`;

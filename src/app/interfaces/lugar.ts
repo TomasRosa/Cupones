@@ -3,7 +3,7 @@ export interface Lugar {
   ruta: string;
   descripcion: string;
   nombre: string;
-  precio: string;
+  precio: number;
   nombreCategoria: string;
   idCategoria: number;
   latitud: number;

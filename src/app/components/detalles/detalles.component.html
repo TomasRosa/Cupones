@@ -30,6 +30,10 @@
           <h2 class="card-title">{{ detallesProducto.nombre }}</h2>
           <p class="card-text">{{ detallesProducto.descripcion }}</p>
           <p class="card-text" style="font-style: italic; font-weight: bold;">{{ detallesProducto.beneficio }}</p>
+          <span class="text-decoration-line-through">
+            <i class="bi bi-ticket"></i>
+            {{ detallesProducto.precio * 1.55 }}
+          </span>
           <p class="card-text fw-bold">Precio: <i class="bi bi-ticket"></i>{{ detallesProducto.precio }}</p>
           <button class="btn btn-secondary" (click)="obtenerCupon()">
             Obtener Cupón <i class="bi bi-ticket-fill"></i>
@@ -64,8 +68,10 @@
               </div>
             </div>
             <div class="d-flex justify-content-start align-items-center me-2">
-              <span class="text-decoration-line-through"><i class="bi bi-ticket"></i>1000</span>
-            </div>
+              <span class="text-decoration-line-through">
+                <i class="bi bi-ticket"></i>
+                {{ lugar.precio * 1.55 }}
+              </span>             </div>
             <p class="card-text">Precio: <i class="bi bi-ticket"></i>{{ lugar.precio }}</p>
             <button
               class="btn btn-primary align-self-center"
