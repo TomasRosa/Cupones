@@ -4,7 +4,7 @@
     <div class="checkboxes">
       <label><input type="checkbox" [(ngModel)]="disponibles" (change)="onChangeDisponibles()"> Disponibles</label>
       <label><input type="checkbox" [(ngModel)]="utilizados" (change)="onChangeUtilizados()"> Utilizados</label>
-      <label><input type="checkbox" [(ngModel)]="vencidos" (change)="onChangeVencidos()">Vencidos</label>
+      <label><input type="checkbox" [(ngModel)]="vencidos" (change)="onChangeVencidos()"> Vencidos</label>
     </div>
   </div>
   <div *ngIf="disponibles" class="cupones-list">
@@ -69,7 +69,8 @@
           <td>{{ cupon.nombre }}</td>
           <td>{{ cupon.nombreCategoria }}</td>
           <td>{{ formatearFecha(cupon.fechaObtenido) }}</td>
-          <td>{{ calcularFechaVencimiento(cupon.fechaObtenido) }}</td></tr>
+          <td>{{ calcularFechaVencimiento(cupon.fechaObtenido) }}</td>
+        </tr>
       </tbody>
     </table>
   </div>

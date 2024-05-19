@@ -114,7 +114,7 @@ export class FirestoreService {
   }
   getUserCupones(
     userId: string
-  ): Observable<{ disponibles: Lugar[]; utilizados: Lugar[] }> {
+  ): Observable<{ disponibles: Lugar[]; utilizados: Lugar[], vencidos: Lugar[] }> {
     const userCollectionRef = collection(this.firestore, PATH);
     const userQuery = query(userCollectionRef, where("id", "==", userId));
 
@@ -125,6 +125,8 @@ export class FirestoreService {
           const cuponesDisponibles: Lugar[] = userData["coupons"] || [];
           const cuponesUtilizados: Lugar[] =
             userData["couponsUtilizados"] || [];
+          const cuponesVencidos: Lugar[] = 
+            userData["couponsVencidos"] || [];
 
           // Convertir Timestamp a Date para cada cupón
           const cuponesDisponiblesFormateados = cuponesDisponibles.map(
@@ -155,20 +157,38 @@ export class FirestoreService {
             }
           );
 
+          const cuponesVencidosFormateados = cuponesVencidos.map(
+            (cupon: Lugar) =>{
+              const fechaObtenido = cupon.fechaObtenido;
+              if(fechaObtenido instanceof Timestamp)
+                {
+                  return{
+                    ...cupon,
+                    fechaObtenido: fechaObtenido.toDate(),
+                  };
+                }
+              else
+              {
+                return cupon;
+              }
+            }
+          );
+
           return {
             disponibles: cuponesDisponiblesFormateados,
             utilizados: cuponesUtilizadosFormateados,
+            vencidos: cuponesVencidosFormateados
           };
         } else {
           return {
             disponibles: [], // El usuario no tiene cupones disponibles
             utilizados: [], // El usuario no tiene cupones utilizados
+            vencidos: []
           };
         }
       })
     );
   }
-
   addCouponToUserUtilizados(
     userId: string,
     coupon: Lugar,
@@ -213,5 +233,37 @@ export class FirestoreService {
         return snapshot.size > 0; // Devuelve true si hay al menos un documento coincidente
       })
     );
+  }
+  moverCuponesVencidos(userId: string, cuponesVencidos: Lugar[]): Promise<void> {
+    const userRef = doc(this.firestore, PATH, userId);
+  
+    // Usa runTransaction para ejecutar la transacción
+    return runTransaction(this.firestore, async (transaction) => {
+      const userDoc = await transaction.get(userRef);
+  
+      if (!userDoc.exists()) {
+        throw new Error("Usuario no encontrado en Firestore.");
+      }
+  
+      const userData = userDoc.data();
+  
+      // Agregar los cupones vencidos a la lista de cupones vencidos
+      const cuponesVencidosActualizados = [
+        ...(userData?.["couponsVencidos"] || []),
+        ...cuponesVencidos,
+      ];
+  
+      // Filtrar los cupones disponibles para eliminar los vencidos
+      const cuponesDisponiblesActualizados = (userData?.["coupons"] || []).filter(
+        (cupon: Lugar) => !cuponesVencidos.includes(cupon)
+      );
+  
+      // Actualizar el documento del usuario en Firestore
+      transaction.update(userRef, {
+        couponsVencidos: cuponesVencidosActualizados,
+        coupons: cuponesDisponiblesActualizados, // Actualizar la lista de cupones disponibles en Firestore
+      });
+      return;
+    });
   }
 }

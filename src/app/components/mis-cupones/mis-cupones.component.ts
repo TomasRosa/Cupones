@@ -31,8 +31,7 @@ export class MisCuponesComponent implements OnInit {
   loadCupones(): void {
     const currentUser = this.auth.currentUser;
     if (currentUser) {
-      this.firestore.getUserCupones(currentUser.uid).subscribe((cupones: { disponibles: Lugar[], utilizados: Lugar[] }) => {
-        console.log(cupones);
+      this.firestore.getUserCupones(currentUser.uid).subscribe((cupones: { disponibles: Lugar[], utilizados: Lugar[], vencidos: Lugar[] }) => {
         this.cuponesDisponibles = cupones.disponibles.map(cupon => {
           const fechaVencimiento = this.calcularFechaVencimiento(cupon.fechaObtenido);
           return {
@@ -40,6 +39,7 @@ export class MisCuponesComponent implements OnInit {
             fechaVencimiento: fechaVencimiento
           };
         });
+        this.verificarCuponesVencidos();
         this.cuponesUtilizados = cupones.utilizados.map(cupon => {
           const fechaVencimiento = this.calcularFechaVencimiento(cupon.fechaObtenido);
           return {
@@ -47,12 +47,20 @@ export class MisCuponesComponent implements OnInit {
             fechaVencimiento: fechaVencimiento
           };
         });
+        
+        this.cuponesVencidos = cupones.vencidos.map(cupon =>{
+          const fechaVencimiento = this.calcularFechaVencimiento(cupon.fechaObtenido);
+          return{
+            ...cupon,
+            fechaVencimiento: fechaVencimiento
+          };
+        });
+        
       }, (error: any) => {
         console.error("Error al cargar los cupones del usuario:", error);
       });
     }
   }
-
   verificarCuponesVencidos(): void {
     // Obtener la fecha actual
     const fechaActual = new Date();
@@ -66,10 +74,30 @@ export class MisCuponesComponent implements OnInit {
         return false; // Si fechaObtenido es undefined, el cupón no está vencido
       }
     });
-    // Mover los cupones vencidos a la lista de cupones vencidos
-    this.cuponesVencidos.push(...cuponesVencidos);
-    // Remover los cupones vencidos de la lista de cupones disponibles
-    this.cuponesDisponibles = this.cuponesDisponibles.filter(cupon => !cuponesVencidos.includes(cupon));
+  
+    if (cuponesVencidos.length > 0) {
+      // Obtener el ID del usuario actual
+      const currentUser = this.auth.currentUser;
+      if (currentUser && currentUser.email) {
+        this.firestore.getUserIdByEmail(currentUser.email).subscribe(userId => {
+          if (userId) {
+            this.firestore.moverCuponesVencidos(userId, cuponesVencidos).then(() => {
+              console.log("Cupones vencidos movidos en Firestore.");
+              // Mover los cupones vencidos a la lista de cupones vencidos localmente
+              this.cuponesVencidos.push(...cuponesVencidos);
+              // Remover los cupones vencidos de la lista de cupones disponibles localmente
+              this.cuponesDisponibles = this.cuponesDisponibles.filter(cupon => !cuponesVencidos.includes(cupon));
+            }).catch(error => {
+              console.error("Error al mover los cupones vencidos en Firestore:", error);
+            });
+          } else {
+            console.error("No se encontró el ID del usuario con el correo electrónico proporcionado.");
+          }
+        });
+      } else {
+        console.error("No se pudo obtener el usuario actual o el correo electrónico es nulo.");
+      }
+    }
   }
   calcularFechaVencimiento(fechaObtenido: Date | null | undefined): string {
     if (fechaObtenido) {
@@ -140,4 +168,3 @@ export class MisCuponesComponent implements OnInit {
     }
   }
 }
-

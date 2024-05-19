@@ -30,7 +30,8 @@ export class MisDatosComponent implements OnInit {
   mensajeMisDatos: string = '';
 
   nombreUsuario$: Observable<string | null> | null = null;
-
+  botonEditarDeshabilitado: boolean = false;
+  botonActualizarDeshabilitado: boolean = true;
 
   misDatosForm = new FormGroup({
     firstName: new FormControl(this.nombreUsuario,[
@@ -59,9 +60,7 @@ export class MisDatosComponent implements OnInit {
   }
   ngOnInit(): void {
     this.editando = false; // Inicializar editando como false
-
     this.isUserLoggedIn$ = this.auth.isLoggedIn();
-
     this.cargarDatosUsuario();
   }
   cargarDatosUsuario() {
@@ -122,6 +121,8 @@ export class MisDatosComponent implements OnInit {
   }
   toggleEdicion() {
     this.editando = !this.editando;
+    this.botonEditarDeshabilitado = this.editando;
+    this.botonActualizarDeshabilitado = !this.editando;
   }
   ///Al mostrarlo, recargar pagina lueg ode ir a inicio.
   actualizarDatos() {
@@ -155,6 +156,8 @@ export class MisDatosComponent implements OnInit {
               .finally(() => {
                 // Deshabilitar el botón "Actualizar"
                 this.editando = false;
+                this.botonEditarDeshabilitado = false;
+                this.botonActualizarDeshabilitado = true;
               });
           }
         });
@@ -168,7 +171,6 @@ export class MisDatosComponent implements OnInit {
   hideMessageAfterDelay(delay: number) {
     setTimeout(() => {
       this.mensajeMisDatos = "";
-      this.navigateTos("/inicio"); // Restablecer el mensaje después del retraso
     }, delay);
   }
 }
