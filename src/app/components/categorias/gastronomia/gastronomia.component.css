@@ -9,3 +9,32 @@
 .star-filled::before {
   content: "\2605"; /* Carácter Unicode para la estrella rellena */
 }
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.star-container {
+  margin-bottom: auto; /* Ensure stars stay at the top */
+}
+
+.card-text {
+  flex-grow: 1; /* This makes sure that the text takes up the remaining space */
+}
+
+.btn {
+  margin-top: auto; /* This pushes the button to the bottom */
+}
