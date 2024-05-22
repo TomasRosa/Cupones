@@ -11,14 +11,15 @@ import { AuthService } from "../../services/auth.service";
 import { Observable, switchMap, take, of} from "rxjs";
 import { SharedTicketService } from "../../services/shared-ticket.service";
 import { SharedMisDatosService } from "../../services/shared-mis-datos.service";
-
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { WheelComponent } from "../wheel/wheel.component";
 
 @Component({
   selector: "app-navbar",
   standalone: true,
   templateUrl: "./navbar.component.html",
   styleUrls: ["./navbar.component.css"],
-  imports: [PopupComponent, CommonModule, FormsModule],
+  imports: [PopupComponent, CommonModule, FormsModule,WheelComponent],
 })
 export class NavbarComponent implements OnInit {
   constructor(
@@ -28,7 +29,8 @@ export class NavbarComponent implements OnInit {
     private verDetalle: VerDetallesService,
     private auth: AuthService,
     private sharedTicketService: SharedTicketService,
-    private sharedMisDatos: SharedMisDatosService
+    private sharedMisDatos: SharedMisDatosService,
+    private modalService: NgbModal
   ) {}
 
   terminoBusqueda: string = "";
@@ -91,7 +93,9 @@ export class NavbarComponent implements OnInit {
       this.sharedTicketService.setCantTickets(cantTickets ?? 0); // Inicializar el cantTickets en el SharedTicketService
     });
   }
-
+  openWheel() {
+    const modalRef = this.modalService.open(WheelComponent);
+  }
   isLoggedIn(): Observable<boolean> {
     return this.auth.isLoggedIn();
   }
