@@ -1,20 +1,22 @@
 <div class="modal-header">
-    <h4 class="modal-title">Gira y Gana</h4>
-    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
-      <span aria-hidden="true">&times;</span>
-    </button>
+  <h4 class="modal-title">Gira y Gana</h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+    <span aria-hidden="true">&times;</span>
+  </button>
 </div>
 <div class="modal-body">
-    <div class="wheel-container">
-      <div class="wheel" [class.spinning]="isSpinning">
-        <div class="wheel-inner">
-          <div class="wheel-segment" *ngFor="let segment of segments; let i = index" 
-               [style.background-color]="getSegmentColor(i)" 
-               [style.transform]="getSegmentTransform(i)">
-            {{ segment }}
-          </div>
+  <div class="wheel-container">
+    <!-- Marcador rojo -->
+    <div class="marker" #marker></div>
+
+    <div class="wheel" #wheel [class.spinning]="isSpinning">
+      <div class="wheel-inner">
+        <div class="wheel-segment" *ngFor="let segment of segments; let i = index"
+             [style.background-color]="getSegmentColor(i)" [style.transform]="getSegmentTransform(i)">
+          <span class="segment-value">{{ segment }}</span>
         </div>
       </div>
-      <button (click)="spinWheel()" [disabled]="isSpinning">Girar</button>
     </div>
+    <button (click)="spinWheel()" [disabled]="isSpinning">Girar</button>
+  </div>
 </div>

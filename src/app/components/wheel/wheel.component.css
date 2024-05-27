@@ -3,6 +3,7 @@
   flex-direction: column;
   align-items: center;
   margin: 20px;
+  position: relative; /* Asegura que los elementos hijos se posicionen relativamente al contenedor */
 }
 
 .wheel {
@@ -20,7 +21,7 @@
 }
 
 .wheel-inner {
-  position: absolute;
+  position: relative;
   width: 100%;
   height: 100%;
   transform-origin: 50% 50%;
@@ -28,15 +29,21 @@
 
 .wheel-segment {
   position: absolute;
-  width: 50%;
-  height: 50%;
-  left: 50%;
-  top: 0;
-  transform-origin: 0% 100%;
-  text-align: center;
-  line-height: 300px;
+  width: 100%;
+  height: 100%;
+  transform-origin: 50% 50%;
+  clip-path: polygon(50% 50%, 100% 0, 100% 100%);
+}
+
+.segment-value {
+  position: absolute;
+  top: 50%;
+  left: 75%;
+  transform: translate(-50%, -50%) rotate(0deg);
+  transform-origin: 0 0;
   font-size: 18px;
-  clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
+  color: white;
+  z-index: 1;
 }
 
 @keyframes rotateWheel {
@@ -45,5 +52,31 @@
   }
   to {
     transform: rotate(1080deg);
+  }
+}
+
+/* Estilos para el marcador rojo */
+.marker {
+  position: absolute;
+  top: -10px; /* Ajuste menor para centrarlo en la parte superior de la rueda */
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 20px solid red; /* Apunta hacia abajo */
+  z-index: 10;
+  animation: rotateMarker 3s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+@keyframes rotateMarker {
+  0% {
+    transform: translateX(-50%) translateY(-10px) rotate(0deg);
+  }
+  50% {
+    transform: translateX(-50%) translateY(10px) rotate(45deg);
+  }
+  100% {
+    transform: translateX(-50%) translateY(-10px) rotate(0deg);
   }
 }
