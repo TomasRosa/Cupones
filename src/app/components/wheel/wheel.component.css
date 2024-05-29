@@ -51,14 +51,14 @@
     transform: rotate(0deg);
   }
   to {
-    transform: rotate(1080deg);
+    transform: rotate(var(--random-degrees, 0deg)); /* Usar variable CSS */
   }
 }
 
 /* Estilos para el marcador rojo */
 .marker {
   position: absolute;
-  top: -10px; /* Ajuste menor para centrarlo en la parte superior de la rueda */
+  top: -5px;
   left: 50%;
   width: 0;
   height: 0;
@@ -66,17 +66,5 @@
   border-right: 10px solid transparent;
   border-top: 20px solid red; /* Apunta hacia abajo */
   z-index: 10;
-  animation: rotateMarker 3s cubic-bezier(0.33, 1, 0.68, 1);
-}
-
-@keyframes rotateMarker {
-  0% {
-    transform: translateX(-50%) translateY(-10px) rotate(0deg);
-  }
-  50% {
-    transform: translateX(-50%) translateY(10px) rotate(45deg);
-  }
-  100% {
-    transform: translateX(-50%) translateY(-10px) rotate(0deg);
-  }
+  transform: translateX(-50%) translateY(-10px); /* Asegura que el marcador esté centrado */
 }
