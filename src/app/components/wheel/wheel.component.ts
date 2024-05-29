@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, ViewChild, ElementRef } from "@angular/core";
+import { Component, ViewChild, ElementRef, AfterViewInit } from "@angular/core";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
@@ -7,24 +7,28 @@ import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
   templateUrl: "./wheel.component.html",
   styleUrls: ["./wheel.component.css"],
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule]
 })
-export class WheelComponent {
+export class WheelComponent implements AfterViewInit {
   segments: number[] = [1500, 500, 650, 800, 1000, 300];
   isSpinning: boolean = false;
   @ViewChild("wheel") wheel: ElementRef<HTMLDivElement> | undefined;
   @ViewChild("marker") marker: ElementRef<HTMLDivElement> | undefined;
 
-  constructor(public activeModal: NgbActiveModal) {
-    // Obtener el ángulo de rotación por segmento
-    const anglePerSegment = 360 / this.segments.length;
-    
-    // Calcular el ángulo inicial del marcador en el centro del primer segmento
-    const initialMarkerAngle = anglePerSegment / 2;
-    
-    if (this.marker) {
-      // Aplicar el ángulo inicial del marcador
-      this.marker.nativeElement.style.transform = `rotate(${initialMarkerAngle}deg)`;
+  constructor(public activeModal: NgbActiveModal) {}
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.adjustSegmentIndices();
+    }, 100); // Ajusta después de 100 milisegundos
+  }
+
+  adjustSegmentIndices() {
+    if (this.wheel) {
+      const segmentIndices = this.wheel.nativeElement.querySelectorAll(".segment-index");
+      segmentIndices.forEach((index: Element, i: number) => {
+        console.log("Index:", i, "Text:", (index as HTMLElement).textContent);
+        (index as HTMLElement).textContent = `${i}`;
+      });
     }
   }
 
@@ -33,90 +37,88 @@ export class WheelComponent {
       return;
     }
     this.isSpinning = true;
-
-    // Generar un ángulo de rotación aleatorio entre 3 y 8 vueltas completas
+  
     const randomRotations = Math.floor(Math.random() * 5) + 3;
     const randomAngle = randomRotations * 360 + Math.floor(Math.random() * 360);
-
+  
     document.documentElement.style.setProperty('--random-degrees', `${randomAngle}deg`);
-
-    console.log(
-      `Random Rotations: ${randomRotations}, Random Angle: ${randomAngle}`
-    );
-
+  
     if (this.wheel) {
       this.wheel.nativeElement.style.transition = "none";
       this.wheel.nativeElement.style.transform = `rotate(0deg)`;
-
+  
       setTimeout(() => {
-        this.wheel!.nativeElement.style.transition =
-          "transform 4s cubic-bezier(0.33, 1, 0.68, 1)";
+        this.wheel!.nativeElement.style.transition = "transform 4s cubic-bezier(0.33, 1, 0.68, 1)";
         this.wheel!.nativeElement.style.transform = `rotate(${randomAngle}deg)`;
-
-        // Verificar el valor aplicado
+  
         setTimeout(() => {
-          const appliedTransform = window
-            .getComputedStyle(this.wheel!.nativeElement)
-            .getPropertyValue("transform");
+          const appliedTransform = window.getComputedStyle(this.wheel!.nativeElement).getPropertyValue("transform");
           console.log(`Applied Transform: ${appliedTransform}`);
+          setTimeout(() => {
+            this.stopWheel(); // Llama a stopWheel después de un pequeño retraso
+          }, 3250); // Espera 100ms para asegurarte de que el marcador esté disponible
         }, 0);
       }, 50);
     }
-
-    setTimeout(() => {
-      this.stopWheel(randomAngle);
-    }, 4000); // 4 segundos de duración de la animación
   }
-
-  stopWheel(finalRotation: number) {
-    if (this.wheel && this.marker) {
-      const anglePerSegment = 360 / this.segments.length;
+  calculateSegmentAngles(): number[] {
+    const total = this.segments.reduce((acc, curr) => acc + curr, 0);
+    return this.segments.map(segment => (360 * segment) / total);
+  }
+  stopWheel() {
+    if (this.marker && this.wheel) {
+      const wheelElement = this.wheel.nativeElement;
+      const wheelRadius = wheelElement.clientWidth / 2;
+      const markerElement = this.marker.nativeElement;
   
-      // Normalizar la rotación de la ruleta
-      const normalizedRotation = ((finalRotation % 360) + 360) % 360;
+      const markerRect = markerElement.getBoundingClientRect();
+      const markerCenterX = markerRect.left + markerRect.width / 2;
+      const markerCenterY = markerRect.top + markerRect.height / 2;
+      const wheelCenterX = wheelElement.getBoundingClientRect().left + wheelRadius;
+      const wheelCenterY = wheelElement.getBoundingClientRect().top + wheelRadius;
+      const deltaX = markerCenterX - wheelCenterX;
+      const deltaY = markerCenterY - wheelCenterY;
+      let markerAngle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
   
-      // Calcular el ángulo de rotación del marcador
-      const markerRotation = 360 - normalizedRotation;
+      // Ajustamos el ángulo para que esté en el rango de 0 a 360 grados
+      markerAngle = (markerAngle < 0 ? markerAngle + 360 : markerAngle);
   
-      // Aplicar el ángulo de rotación al marcador
-      this.marker.nativeElement.style.transform = `rotate(${markerRotation}deg)`;
+      // Obtenemos los ángulos de cada segmento
+      const segmentAngles = this.calculateSegmentAngles();
   
-      // Calcular el índice del segmento ganador
-      let winningIndex = Math.floor(normalizedRotation / anglePerSegment);
-      if (winningIndex < 0) {
-        winningIndex += this.segments.length;
+      // Convertimos el ángulo del marcador al índice del segmento
+      let cumulativeAngle = 0;
+      let winningIndex = 0;
+      for (let i = 0; i < segmentAngles.length; i++) {
+        cumulativeAngle += segmentAngles[i];
+        if (markerAngle <= cumulativeAngle) {
+          winningIndex = i;
+          break;
+        }
       }
   
-      // Mostrar alerta con el segmento ganador
-      const winningSegment = this.segments[winningIndex];
-      alert(`¡Ganaste ${winningSegment}!`);
-  
-      // Restablecer el estado de la ruleta
+      // Obtenemos el valor del segmento ganador
+      const winningSegmentValue = this.segments[winningIndex];
+      console.log("Segmento que salió: ", winningIndex);
+      console.log("Valor que salió:", winningSegmentValue);
+      alert(`¡Ganaste ${winningSegmentValue}!`);
       this.isSpinning = false;
       this.activeModal.close();
+    } else {
+      console.error('El marcador o el elemento de la rueda no se han encontrado en el DOM');
     }
   }
-
-
+  
+  
+  
   getSegmentColor(index: number): string {
-    return index % 2 === 0 ? "#0d6efd" : "#292b2c";
+    const colors = ["#ff0000", "#00ff00", "#0000ff", "#ffff00", "#00ffff", "#ff00ff"];
+    return colors[index % colors.length];
   }
 
   getSegmentTransform(index: number): string {
     const angle = 360 / this.segments.length;
     const rotation = angle * index;
     return `rotate(${rotation}deg)`;
-  }
-
-  getRotationDegrees(wheel: HTMLDivElement): number {
-    const transform = window
-      .getComputedStyle(wheel)
-      .getPropertyValue("transform");
-    const regex = /rotate\(([-\d.]+)deg\)/;
-    const match = transform.match(regex);
-    if (match) {
-      return parseFloat(match[1]);
-    }
-    return 0;
   }
 }

@@ -14,6 +14,7 @@
         <div class="wheel-segment" *ngFor="let segment of segments; let i = index"
              [style.background-color]="getSegmentColor(i)" [style.transform]="getSegmentTransform(i)">
           <span class="segment-value">{{ segment }}</span>
+          <span class="segment-index">{{ i }}</span>
         </div>
       </div>
     </div>
