@@ -8,13 +8,13 @@
   <div class="wheel-container">
     <!-- Marcador rojo -->
     <div class="marker" #marker></div>
-
     <div class="wheel" #wheel [class.spinning]="isSpinning">
       <div class="wheel-inner">
         <div class="wheel-segment" *ngFor="let segment of segments; let i = index"
-             [style.background-color]="getSegmentColor(i)" [style.transform]="getSegmentTransform(i)">
-          <span class="segment-value">{{ segment }}</span>
-          <span class="segment-index">{{ i }}</span>
+          [style.background-color]="getSegmentColor(i)" [style.transform]="getSegmentTransform(i)">
+          <div class="segment-value">
+            <span class="text">{{ segment }}</span>
+          </div>
         </div>
       </div>
     </div>

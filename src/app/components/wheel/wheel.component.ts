@@ -10,23 +10,21 @@ import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
   imports: [CommonModule]
 })
 export class WheelComponent implements AfterViewInit {
-  segments: number[] = [1500, 500, 650, 800, 1000, 300];
+  segments: number[] = [1500, 500, 650, 800, 1000, 300, 1250, 1700];
   isSpinning: boolean = false;
   @ViewChild("wheel") wheel: ElementRef<HTMLDivElement> | undefined;
   @ViewChild("marker") marker: ElementRef<HTMLDivElement> | undefined;
 
   constructor(public activeModal: NgbActiveModal) {}
+
   ngAfterViewInit() {
-    setTimeout(() => {
-      this.adjustSegmentIndices();
-    }, 100); // Ajusta después de 100 milisegundos
+    this.adjustSegmentIndices();
   }
 
   adjustSegmentIndices() {
     if (this.wheel) {
       const segmentIndices = this.wheel.nativeElement.querySelectorAll(".segment-index");
       segmentIndices.forEach((index: Element, i: number) => {
-        console.log("Index:", i, "Text:", (index as HTMLElement).textContent);
         (index as HTMLElement).textContent = `${i}`;
       });
     }
@@ -44,81 +42,73 @@ export class WheelComponent implements AfterViewInit {
     document.documentElement.style.setProperty('--random-degrees', `${randomAngle}deg`);
   
     if (this.wheel) {
-      this.wheel.nativeElement.style.transition = "none";
-      this.wheel.nativeElement.style.transform = `rotate(0deg)`;
+      // Establecer la transformación de la rueda y la transición
+      this.wheel.nativeElement.style.transition = "transform 4s cubic-bezier(0.33, 1, 0.68, 1)";
+      this.wheel.nativeElement.style.transform = `rotate(${randomAngle}deg)`;
   
+      // Obtener la duración de la animación de transformación
+      const animationDuration = 4 * 1000; // Convertir segundos a milisegundos
+  
+      // Llamar a la función stopWheel() después de que la animación haya terminado
       setTimeout(() => {
-        this.wheel!.nativeElement.style.transition = "transform 4s cubic-bezier(0.33, 1, 0.68, 1)";
-        this.wheel!.nativeElement.style.transform = `rotate(${randomAngle}deg)`;
-  
-        setTimeout(() => {
-          const appliedTransform = window.getComputedStyle(this.wheel!.nativeElement).getPropertyValue("transform");
-          console.log(`Applied Transform: ${appliedTransform}`);
-          setTimeout(() => {
-            this.stopWheel(); // Llama a stopWheel después de un pequeño retraso
-          }, 3250); // Espera 100ms para asegurarte de que el marcador esté disponible
-        }, 0);
-      }, 50);
+        this.stopWheel();
+      }, animationDuration);
     }
   }
-  calculateSegmentAngles(): number[] {
-    const total = this.segments.reduce((acc, curr) => acc + curr, 0);
-    return this.segments.map(segment => (360 * segment) / total);
-  }
+
   stopWheel() {
-    if (this.marker && this.wheel) {
-      const wheelElement = this.wheel.nativeElement;
-      const wheelRadius = wheelElement.clientWidth / 2;
+    if (this.marker) {
       const markerElement = this.marker.nativeElement;
   
-      const markerRect = markerElement.getBoundingClientRect();
-      const markerCenterX = markerRect.left + markerRect.width / 2;
-      const markerCenterY = markerRect.top + markerRect.height / 2;
-      const wheelCenterX = wheelElement.getBoundingClientRect().left + wheelRadius;
-      const wheelCenterY = wheelElement.getBoundingClientRect().top + wheelRadius;
-      const deltaX = markerCenterX - wheelCenterX;
-      const deltaY = markerCenterY - wheelCenterY;
-      let markerAngle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
+      // Obtener el ángulo de rotación del marcador
+      const markerTransform = window.getComputedStyle(markerElement).getPropertyValue("transform");
+      if (markerTransform !== 'none') {
+        // Calcular el ángulo del marcador
+        const markerMatrixValues = markerTransform.split('(')[1].split(')')[0].split(',');
+        const markerA = parseFloat(markerMatrixValues[0]);
+        const markerB = parseFloat(markerMatrixValues[1]);
+        let markerAngle = Math.atan2(markerB, markerA) * (180 / Math.PI);
+        if (markerAngle < 0) markerAngle += 360;
   
-      // Ajustamos el ángulo para que esté en el rango de 0 a 360 grados
-      markerAngle = (markerAngle < 0 ? markerAngle + 360 : markerAngle);
+        // Calcular el ángulo de cada segmento
+        const anglePerSegment = 360 / this.segments.length;
   
-      // Obtenemos los ángulos de cada segmento
-      const segmentAngles = this.calculateSegmentAngles();
+        // Calcular el índice del segmento en el que se encuentra el marcador
+        const segmentIndex = Math.floor(markerAngle / anglePerSegment);
   
-      // Convertimos el ángulo del marcador al índice del segmento
-      let cumulativeAngle = 0;
-      let winningIndex = 0;
-      for (let i = 0; i < segmentAngles.length; i++) {
-        cumulativeAngle += segmentAngles[i];
-        if (markerAngle <= cumulativeAngle) {
-          winningIndex = i;
-          break;
-        }
+        // Obtener el valor del segmento ganador
+        const winningSegmentValue = this.segments[segmentIndex];
+  
+        // Mostrar el resultado en una alerta
+        alert(`¡Ganaste ${winningSegmentValue}!`);
+  
+        // Resetear el estado de la ruleta
+        this.isSpinning = false;
+        this.activeModal.close();
+      } else {
+        console.error('No se pudo obtener el ángulo de rotación del marcador');
       }
-  
-      // Obtenemos el valor del segmento ganador
-      const winningSegmentValue = this.segments[winningIndex];
-      console.log("Segmento que salió: ", winningIndex);
-      console.log("Valor que salió:", winningSegmentValue);
-      alert(`¡Ganaste ${winningSegmentValue}!`);
-      this.isSpinning = false;
-      this.activeModal.close();
     } else {
-      console.error('El marcador o el elemento de la rueda no se han encontrado en el DOM');
+      console.error('El elemento del marcador no se ha encontrado en el DOM');
     }
   }
   
   
   
   getSegmentColor(index: number): string {
-    const colors = ["#ff0000", "#00ff00", "#0000ff", "#ffff00", "#00ffff", "#ff00ff"];
+    const colors = ["#ff0000", "#00ff00", "#0000ff", "#ffff00", "#00ffff", "#ff00ff", "#ffffff", "#0f0f0f"];
     return colors[index % colors.length];
   }
 
   getSegmentTransform(index: number): string {
     const angle = 360 / this.segments.length;
     const rotation = angle * index;
-    return `rotate(${rotation}deg)`;
+    return `rotate(${rotation}deg) skewY(${90 - angle}deg)`;
+  }
+
+  getSegmentRotation(index: number): string {
+    const angle = 360 / this.segments.length;
+    const rotation = -1 * angle * index; // Rotación inversa para centrar el texto
+    return `${rotation}deg`;
   }
 }
