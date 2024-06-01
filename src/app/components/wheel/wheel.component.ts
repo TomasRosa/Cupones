@@ -65,11 +65,11 @@ export class WheelComponent implements AfterViewInit {
       const totalRotation = finalAngle % 360;
       const normalizedRotation = (360 - totalRotation) % 360;
 
-      // Ajustar el ángulo para corregir el desfase
+      // Ajustar el ángulo para corregir el desfase, considerando los 45 grados por segmento
       const adjustedAngle = normalizedRotation + anglePerSegment / 2;
-      
+
       // Calcular el índice del segmento debajo del marcador
-      const segmentIndex = Math.floor(adjustedAngle / anglePerSegment) % this.segments.length;
+      let segmentIndex = Math.floor((adjustedAngle + anglePerSegment / 2) / anglePerSegment) % this.segments.length;
 
       // Obtener el valor del segmento ganador
       const winningSegmentValue = this.segments[segmentIndex];
