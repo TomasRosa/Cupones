@@ -51,50 +51,38 @@ export class WheelComponent implements AfterViewInit {
   
       // Llamar a la función stopWheel() después de que la animación haya terminado
       setTimeout(() => {
-        this.stopWheel();
+        this.stopWheel(randomAngle);
       }, animationDuration);
     }
   }
 
-  stopWheel() {
-    if (this.marker) {
-      const markerElement = this.marker.nativeElement;
-  
-      // Obtener el ángulo de rotación del marcador
-      const markerTransform = window.getComputedStyle(markerElement).getPropertyValue("transform");
-      if (markerTransform !== 'none') {
-        // Calcular el ángulo del marcador
-        const markerMatrixValues = markerTransform.split('(')[1].split(')')[0].split(',');
-        const markerA = parseFloat(markerMatrixValues[0]);
-        const markerB = parseFloat(markerMatrixValues[1]);
-        let markerAngle = Math.atan2(markerB, markerA) * (180 / Math.PI);
-        if (markerAngle < 0) markerAngle += 360;
-  
-        // Calcular el ángulo de cada segmento
-        const anglePerSegment = 360 / this.segments.length;
-  
-        // Calcular el índice del segmento en el que se encuentra el marcador
-        const segmentIndex = Math.floor(markerAngle / anglePerSegment);
-  
-        // Obtener el valor del segmento ganador
-        const winningSegmentValue = this.segments[segmentIndex];
-  
-        // Mostrar el resultado en una alerta
-        alert(`¡Ganaste ${winningSegmentValue}!`);
-  
-        // Resetear el estado de la ruleta
-        this.isSpinning = false;
-        this.activeModal.close();
-      } else {
-        console.error('No se pudo obtener el ángulo de rotación del marcador');
-      }
-    } else {
-      console.error('El elemento del marcador no se ha encontrado en el DOM');
+  stopWheel(finalAngle: number) {
+    if (this.wheel) {
+      // Calcular el ángulo de cada segmento
+      const anglePerSegment = 360 / this.segments.length;
+
+      // Calcular el ángulo final de la ruleta
+      const totalRotation = finalAngle % 360;
+      const normalizedRotation = (360 - totalRotation) % 360;
+
+      // Ajustar el ángulo para corregir el desfase
+      const adjustedAngle = normalizedRotation + anglePerSegment / 2;
+      
+      // Calcular el índice del segmento debajo del marcador
+      const segmentIndex = Math.floor(adjustedAngle / anglePerSegment) % this.segments.length;
+
+      // Obtener el valor del segmento ganador
+      const winningSegmentValue = this.segments[segmentIndex];
+
+      // Mostrar el resultado en una alerta
+      alert(`¡Ganaste ${winningSegmentValue}!`);
+
+      // Resetear el estado de la ruleta
+      this.isSpinning = false;
+      this.activeModal.close();
     }
   }
-  
-  
-  
+
   getSegmentColor(index: number): string {
     const colors = ["#ff0000", "#00ff00", "#0000ff", "#ffff00", "#00ffff", "#ff00ff", "#ffffff", "#0f0f0f"];
     return colors[index % colors.length];
