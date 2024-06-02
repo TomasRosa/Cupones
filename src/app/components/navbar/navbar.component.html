@@ -150,7 +150,7 @@
           <!-- Logo ticket + cantTickets -->
           <div class="ticket-info">
             <i class="bi bi-ticket ticket-icon"></i>
-            <span class="ticket-count" *ngIf="cantTickets$ | async as cantTickets">{{ cantTickets }}</span>
+            <span class="ticket-count" *ngIf="(cantTickets$ | async) !== null">{{ cantTickets$ | async }}</span>
           </div>
         </div>
       </div>

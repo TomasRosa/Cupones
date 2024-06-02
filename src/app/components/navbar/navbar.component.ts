@@ -93,6 +93,7 @@ export class NavbarComponent implements OnInit {
       this.sharedTicketService.setCantTickets(cantTickets ?? 0); // Inicializar el cantTickets en el SharedTicketService
     });
   }
+  
   openWheel() {
     const modalRef = this.modalService.open(WheelComponent);
   }

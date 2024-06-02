@@ -1,23 +1,31 @@
-<div class="modal-header">
-  <h4 class="modal-title">Gira y Gana</h4>
-  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
-    <span aria-hidden="true">&times;</span>
+<div class="modal-header" style="background-color: rgb(44, 62, 80); display: flex; align-items: center; padding: 10px;">
+  <h4 class="modal-title" style="color: white; margin: 0; flex-grow: 1; text-align: center;">Gira y Gana!</h4>
+  <button type="button" class="close-button" aria-label="Close" (click)="activeModal.dismiss()" style="margin-right: 10px;">
+    <span aria-hidden="true" style="color: white;">&times;</span>
   </button>
 </div>
-<div class="modal-body">
+
+<div class="modal-body" style="background-color: rgb(59, 89, 152);">
   <div class="wheel-container">
     <!-- Marcador rojo -->
     <div class="marker" #marker></div>
     <div class="wheel" #wheel [class.spinning]="isSpinning">
       <div class="wheel-inner">
         <div class="wheel-segment" *ngFor="let segment of segments; let i = index"
-          [style.background-color]="getSegmentColor(i)" [style.transform]="getSegmentTransform(i)">
+          [style.backgroundColor]="getSegmentColor(i)" [style.transform]="getSegmentTransform(i)">
           <div class="segment-value">
             <span class="text">{{ segment }}</span>
           </div>
         </div>
       </div>
     </div>
-    <button (click)="spinWheel()" [disabled]="isSpinning">Girar</button>
+    <button (click)="spinWheel()" [disabled]="isSpinning" style="margin-top: 20px;" class="btn btn-success">Girar</button>
+  </div>
+
+  <!-- Contenedor para la alerta con margen superior -->
+  <div class="alert-container" *ngIf="showAlert">
+    <section class="alert alert-success" role="alert">
+      {{ message }}
+    </section>
   </div>
 </div>

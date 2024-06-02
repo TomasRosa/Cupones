@@ -7,7 +7,7 @@ import { Lugar } from "../../interfaces/lugar";
 import { ShareDataService } from "../../services/share-data.service";
 import { NavigateToService } from "../../services/navigate-to.service";
 import { ActivatedRoute } from "@angular/router";
-import { Observable, of } from "rxjs";
+import { Observable } from "rxjs";
 import { SharedTicketService } from "../../services/shared-ticket.service";
 
 @Component({

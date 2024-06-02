@@ -103,7 +103,7 @@ export class RegisterComponent {
             coupons: usuario.coupons,
             couponsUtilizados: usuario.couponsUtilizados,
             couponsVencidos: usuario.couponsVencidos,
-            cantTickets: usuario.cantTickets
+            cantTickets: 0
           };
 
           this.firestore

@@ -1,3 +1,23 @@
+.modal-header {
+  background-color: rgb(44, 62, 80);
+  display: flex;
+  justify-content: space-between;
+}
+
+.modal-title {
+  color: white;
+  margin: 0 auto;
+}
+
+.close {
+  color: white;
+}
+
+.modal-body {
+  padding-top: 20px;
+  background-color: rgb(59, 89, 152);
+}
+
 .wheel-container {
   display: flex;
   flex-direction: column;
@@ -13,7 +33,7 @@
   border-radius: 50%;
   overflow: hidden;
   margin-bottom: 20px;
-  border: 5px solid #ccc;
+  border: 5px solid #000000;
 }
 
 .wheel-inner {
@@ -33,6 +53,8 @@
   justify-content: center;
   align-items: center;
   text-align: center;
+  border: none;
+  background-color: inherit;
 }
 
 .segment-value, .segment-index {
@@ -66,17 +88,48 @@
   position: absolute;
   top: 50%;
   left: 75%;
-  transform: translate(-50%, -50%) rotate(-45deg); /* Translate for centering, rotate to align with the segment */
+  transform: translate(-50%, -50%) rotate(-45deg);
   z-index: 1;
-  font-size: 16px; /* Ajustar el tamaño de la fuente si es necesario */
-  color: rgb(245, 133, 6); /* Cambiar el color de la fuente si es necesario */
-  font-weight: bold; /* Ajustar el peso de la fuente si es necesario */
+  font-size: 16px;
+  color: rgb(255, 255, 255);
+  font-weight: bold;
 }
 
 .segment-value .text {
-  transform: rotate(45deg); /* Rotate text back to be horizontal */
+  transform: rotate(45deg);
+}
+.close-button {
+  background: none;
+  border: none;
+  padding: 10px;
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+  position: relative;
+  top: -10px;
+  right: -10px;
 }
 
+.close-button:focus {
+  outline: none;
+}
+
+.close-button:hover {
+  color: #f1c40f; /* Cambia el color al pasar el mouse por encima */
+}
+
+.close-button span {
+  position: relative;
+  top: 2px;
+}
+.alert {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.alert-container {
+  margin-top: 20px; /* Agregar margen superior a la alerta */
+}
 @keyframes rotateWheel {
   from {
     transform: rotate(0deg);

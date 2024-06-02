@@ -6,7 +6,11 @@
   align-items: center; /* Centramos la imagen horizontalmente */
   overflow: hidden; /* Ocultamos cualquier parte de la imagen que se desborde */
 }
-
+.alert {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .img-container img {
   width: 100%; /* La imagen ocupa todo el ancho del contenedor */
   height: auto; /* La altura se ajusta automáticamente para mantener la proporción de aspecto */
@@ -70,9 +74,4 @@
 }
 .star-filled::before {
   content: "\2605"; /* Carácter Unicode para la estrella rellena */
-}
-.alert {
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }

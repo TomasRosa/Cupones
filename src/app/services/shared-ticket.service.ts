@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class SharedTicketService {
-  private cantTicketsSubject: BehaviorSubject<number | null> = new BehaviorSubject<number | null>(null);
+  private cantTicketsSubject: BehaviorSubject<number> = new BehaviorSubject<number>(0);
   cantTickets$: Observable<number | null> = this.cantTicketsSubject.asObservable();
 
   setCantTickets(cantTickets: number) {

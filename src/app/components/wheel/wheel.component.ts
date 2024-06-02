@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, ViewChild, ElementRef, AfterViewInit } from "@angular/core";
+import { Component, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef } from "@angular/core";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
@@ -14,8 +14,12 @@ export class WheelComponent implements AfterViewInit {
   isSpinning: boolean = false;
   @ViewChild("wheel") wheel: ElementRef<HTMLDivElement> | undefined;
   @ViewChild("marker") marker: ElementRef<HTMLDivElement> | undefined;
+  message: string = '';
+  showAlert: boolean = false;
 
-  constructor(public activeModal: NgbActiveModal) {}
+  constructor(public activeModal: NgbActiveModal,
+  private changeDetectorRef: ChangeDetectorRef
+  ) {}
 
   ngAfterViewInit() {
     this.adjustSegmentIndices();
@@ -30,7 +34,7 @@ export class WheelComponent implements AfterViewInit {
     }
   }
 
-  spinWheel() {
+spinWheel() {
     if (this.isSpinning) {
       return;
     }
@@ -48,7 +52,7 @@ export class WheelComponent implements AfterViewInit {
   
       // Obtener la duración de la animación de transformación
       const animationDuration = 4 * 1000; // Convertir segundos a milisegundos
-  
+
       // Llamar a la función stopWheel() después de que la animación haya terminado
       setTimeout(() => {
         this.stopWheel(randomAngle);
@@ -60,32 +64,38 @@ export class WheelComponent implements AfterViewInit {
     if (this.wheel) {
       // Calcular el ángulo de cada segmento
       const anglePerSegment = 360 / this.segments.length;
-
+  
       // Calcular el ángulo final de la ruleta
       const totalRotation = finalAngle % 360;
       const normalizedRotation = (360 - totalRotation) % 360;
-
+  
       // Ajustar el ángulo para corregir el desfase, considerando los 45 grados por segmento
       const adjustedAngle = normalizedRotation + anglePerSegment / 2;
-
+  
       // Calcular el índice del segmento debajo del marcador
       let segmentIndex = Math.floor((adjustedAngle + anglePerSegment / 2) / anglePerSegment) % this.segments.length;
-
+  
       // Obtener el valor del segmento ganador
       const winningSegmentValue = this.segments[segmentIndex];
-
-      // Mostrar el resultado en una alerta
-      alert(`¡Ganaste ${winningSegmentValue}!`);
-
+      
+      this.message = `¡Ganaste ${winningSegmentValue} tickets!`;
+      this.showAlert = true;
+      console.log("Message:", this.message);
+  
+      // Cerrar el modal después de 3 segundos
+      setTimeout(() => {
+        this.activeModal.close();
+      }, 3000);
+  
       // Resetear el estado de la ruleta
       this.isSpinning = false;
-      this.activeModal.close();
     }
   }
 
   getSegmentColor(index: number): string {
-    const colors = ["#ff0000", "#00ff00", "#0000ff", "#ffff00", "#00ffff", "#ff00ff", "#ffffff", "#0f0f0f"];
-    return colors[index % colors.length];
+    const color1 = "rgb(59, 89, 152)";
+    const color2 = "rgb(44, 62, 80)";
+    return index % 2 === 0 ? color1 : color2;
   }
 
   getSegmentTransform(index: number): string {
