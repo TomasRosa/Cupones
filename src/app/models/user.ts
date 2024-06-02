@@ -11,7 +11,9 @@ export class User {
     couponsUtilizados: Lugar[] = [];
     couponsVencidos: Lugar[] = [];
     cantTickets: number = 0;
-     constructor(firstName: string, lastName: string, email: string, password: string, coupons?: Lugar[],couponsUtilizados?: Lugar[], couponsVencidos?: Lugar[]) {
+    ultimoGiro: Date | null = null; // Campo para almacenar la fecha y hora del último giro
+
+    constructor(firstName: string, lastName: string, email: string, password: string, coupons?: Lugar[], couponsUtilizados?: Lugar[], couponsVencidos?: Lugar[]) {
         this.id = uuidv4(); // Genera un UUID único
         this.firstName = firstName;
         this.lastName = lastName;

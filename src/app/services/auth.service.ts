@@ -33,6 +33,22 @@ export class AuthService {
       }
     });
   }
+  async getUltimoGiro(): Promise<Date | null> {
+    if (!this.currentUser) {
+      return null;
+    }
+    const userId = this.currentUser.uid;
+    return this.firestore.getUltimoGiro(userId);
+  }
+
+  async updateUltimoGiro(ultimoGiro: Date): Promise<void> {
+    if (!this.currentUser) {
+      throw new Error("No hay usuario autenticado.");
+    }
+    const userId = this.currentUser.uid;
+    await this.firestore.updateUltimoGiro(userId, ultimoGiro);
+  }
+
   getCantTickets(): Observable<number | null> {
     return this.getUserId().pipe(
       switchMap((userId) => {
@@ -180,6 +196,22 @@ export class AuthService {
     } else {
       return of(null);
     }
+  }
+  async getNextSpinTime(): Promise<number> {
+    const userId = await this.getUserId().toPromise(); // Convertir el observable a una promesa
+
+    if (userId) {
+      // Obtener el último tiempo de giro del usuario desde Firestore
+      const lastSpinTime = await this.firestore.getUltimoGiro(userId);
+      if (lastSpinTime) {
+        // Calcular el próximo tiempo de giro sumando 24 horas al último tiempo de giro
+        const nextSpinTime = lastSpinTime.getTime() + (24 * 60 * 60 * 1000);
+        return nextSpinTime;
+      }
+    }
+    
+    // Si no se puede obtener el usuario o su último giro, devolver el tiempo actual
+    return new Date().getTime();
   }
   getNameFromGoogle(): Observable<string | null> {
     // Obtén el nombre del usuario actual si ha iniciado sesión con Google

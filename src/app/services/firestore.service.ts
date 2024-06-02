@@ -11,13 +11,14 @@ import {
   doc,
   updateDoc,
   arrayUnion,
-  runTransaction
+  runTransaction,
+  getDoc,
+  Timestamp
 } from "@angular/fire/firestore";
 import { Observable, from } from "rxjs";
 import { map } from "rxjs/operators";
 import { User } from "../models/user";
 import { Lugar } from "../interfaces/lugar";
-import { Timestamp } from "@angular/fire/firestore";
 
 const PATH = "users";
 
@@ -28,6 +29,19 @@ export class FirestoreService {
   constructor(private firestore: Firestore) {}
 
   private _collection = collection(this.firestore, PATH);
+
+  async getUltimoGiro(userId: string): Promise<Date | null> {
+    const userDoc = doc(this.firestore, PATH, userId);
+    const docSnapshot = await getDoc(userDoc);
+    const userData = docSnapshot.data() as User;
+    return userData.ultimoGiro;
+  }
+
+  // Método para actualizar el campo 'ultimoGiro' de un usuario
+  async updateUltimoGiro(userId: string, ultimoGiro: Date): Promise<void> {
+    const userDoc = doc(this.firestore, PATH, userId);
+    await updateDoc(userDoc, { ultimoGiro });
+  }
 
   createUser(user: User) {
     return addDoc(this._collection, user);
