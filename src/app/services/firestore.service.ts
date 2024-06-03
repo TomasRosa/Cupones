@@ -19,6 +19,7 @@ import { Observable,from } from "rxjs";
 import { map } from "rxjs/operators";
 import { User } from "../models/user";
 import { Lugar } from "../interfaces/lugar";
+import { Time } from "@angular/common";
 
 const PATH = "users";
 
@@ -30,25 +31,9 @@ export class FirestoreService {
 
   private _collection = collection(this.firestore, PATH);
 
-  getUltimoGiro(userId: string): Observable<Date | null> {
-    const userDoc = doc(this.firestore, PATH, userId);
-    return new Observable<Date | null>((observer) => {
-      getDoc(userDoc)
-        .then((docSnapshot) => {
-          if (docSnapshot.exists()) {
-            const userData = docSnapshot.data() as User;
-            observer.next(userData.ultimoGiro);
-          } else {
-            observer.next(null);
-          }
-        })
-        .catch((error) => {
-          observer.error(error);
-        });
-    });
-  }
+ 
   // Método para actualizar el campo 'ultimoGiro' de un usuario
-  updateUltimoGiro(userId: string, ultimoGiro: Date): Promise<void> {
+  updateUltimoGiro(userId: string, ultimoGiro: Timestamp): Promise<void> {
     const userDoc = doc(this.firestore, PATH, userId);
     console.log(userId);
     return updateDoc (userDoc, { ultimoGiro })

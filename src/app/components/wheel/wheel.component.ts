@@ -3,7 +3,8 @@ import { Component, ViewChild, ElementRef, AfterViewInit, OnInit } from "@angula
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { AuthService } from "../../services/auth.service";
 import { SharedTicketService } from "../../services/shared-ticket.service";
-import { Observable, catchError, map, of, switchMap } from "rxjs";
+import { Observable, of, switchMap, map, combineLatest } from "rxjs";
+import { Timestamp } from "@angular/fire/firestore";
 
 @Component({
   selector: "app-wheel",
@@ -12,145 +13,132 @@ import { Observable, catchError, map, of, switchMap } from "rxjs";
   standalone: true,
   imports: [CommonModule]
 })
-export class WheelComponent implements AfterViewInit, OnInit   {
+export class WheelComponent implements AfterViewInit, OnInit {
   segments: number[] = [1500, 500, 650, 800, 1000, 300, 1250, 1700];
   isSpinning: boolean = false;
   message: string = '';
   showAlert: boolean = false;
 
-  isButtonDisabled: boolean = false; // Nueva variable para desactivar el botón
+  isButtonDisabled: boolean = false;
 
   cantTickets$: Observable<number | null> | null = null;
-
 
   @ViewChild("wheel") wheel: ElementRef<HTMLDivElement> | undefined;
   @ViewChild("marker") marker: ElementRef<HTMLDivElement> | undefined;
 
-  constructor(public activeModal: NgbActiveModal,
-  private auth: AuthService,
-  private sharedTicket: SharedTicketService
+  constructor(
+    public activeModal: NgbActiveModal,
+    private auth: AuthService,
+    private sharedTicket: SharedTicketService
   ) {}
 
   ngAfterViewInit() {
     this.adjustSegmentIndices();
   }
+
   ngOnInit(): void {
-    this.auth.getUserId().pipe(
-      switchMap(userId => {
-        if (userId) {
-          this.updateButtonState();
-          return this.auth.getUltimoGiro(); 
-        } else {
-          return of(null); 
-        }
-      })
-    )
-  }
-  updateButtonState() {
-    this.isButtonDisabled = !this.canSpinWheel(); // Desactiva el botón si no se puede girar la ruleta
-    if (!this.isButtonDisabled) {
-      this.message = ''; // Limpiar el mensaje si el botón no está desactivado
-    }
+    combineLatest([this.auth.getUserId(), this.auth.getUltimoGiro()]).subscribe(([userId, ultimoGiro]) => {
+      if (userId) {
+        console.log("oninit", ultimoGiro)
+        this.updateButtonState(ultimoGiro);
+        this.showMessage(ultimoGiro);
+      } else {
+        this.message = "No se pudo obtener el usuario.";
+        this.showAlert = true;
+        this.isButtonDisabled = true;
+      }
+    });
   }
   
-  canSpinWheel(): Observable<boolean> {
-    // Obtener el último giro del usuario autenticado
-    return this.auth.getUltimoGiro().pipe(
+  updateButtonState(ultimoGiro: Timestamp | null) {
+    this.canSpinWheel(ultimoGiro).subscribe(canSpin => {
+      this.isButtonDisabled = !canSpin;
+    });
+  }
+  
+  canSpinWheel(ultimoGiro: Timestamp | null): Observable<boolean> {
+    console.log("Ultimo giro en canSpinWheel: ", ultimoGiro);
+    return of(ultimoGiro).pipe(
       map(ultimoGiro => {
         if (ultimoGiro) {
-          // Calcular el tiempo transcurrido desde el último giro
-          const now = new Date();
-          const diff = now.getTime() - ultimoGiro.getTime();
-          const hoursPassed = diff / (1000 * 60 * 60);
+          const now = Timestamp.now();
+          const diff = now.seconds - ultimoGiro.seconds;
+          const hoursPassed = diff / (60 * 60); // Convertir a horas
+  
           return hoursPassed >= 24;
         } else {
-          return false;
+          return true;
         }
       })
     );
   }
+
   spinWheel() {
-    // Si no se puede girar la ruleta, mostrar el mensaje correspondiente
-    if (!this.canSpinWheel()) {
-      this.showMessage();
-      return;
-    }
-  
-    if (this.isSpinning || this.isButtonDisabled) {
-      return;
-    }
-    this.isSpinning = true;
-    this.isButtonDisabled = true;
-  
-    const randomRotations = Math.floor(Math.random() * 5) + 3;
-    const randomAngle = randomRotations * 360 + Math.floor(Math.random() * 360);
-  
-    document.documentElement.style.setProperty('--random-degrees', `${randomAngle}deg`);
-  
-    if (this.wheel) {
-      this.wheel.nativeElement.style.transition = "transform 4s cubic-bezier(0.33, 1, 0.68, 1)";
-      this.wheel.nativeElement.style.transform = `rotate(${randomAngle}deg)`;
-  
-      const animationDuration = 4 * 1000;
-  
-      setTimeout(() => {
-        this.stopWheel(randomAngle);
-      }, animationDuration);
-    }
+    this.auth.getUltimoGiro().pipe(
+      switchMap(ultimoGiro => this.canSpinWheel(ultimoGiro))  // No es necesario convertir Date a Timestamp
+    ).subscribe(canSpin => {
+      if (!canSpin) {
+        this.showMessage(null);
+        return;
+      }
+
+      if (this.isSpinning || this.isButtonDisabled) {
+        return;
+      }
+
+      this.isSpinning = true;
+      this.isButtonDisabled = true;
+
+      const randomRotations = Math.floor(Math.random() * 5) + 3;
+      const randomAngle = randomRotations * 360 + Math.floor(Math.random() * 360);
+
+      document.documentElement.style.setProperty('--random-degrees', `${randomAngle}deg`);
+
+      if (this.wheel) {
+        this.wheel.nativeElement.style.transition = "transform 4s cubic-bezier(0.33, 1, 0.68, 1)";
+        this.wheel.nativeElement.style.transform = `rotate(${randomAngle}deg)`;
+
+        const animationDuration = 4 * 1000;
+
+        setTimeout(() => {
+          this.stopWheel(randomAngle);
+        }, animationDuration);
+      }
+    });
   }
-  
+
   stopWheel(finalAngle: number) {
     if (this.wheel) {
-      // Calcular el ángulo de cada segmento
       const anglePerSegment = 360 / this.segments.length;
-  
-      // Calcular el ángulo final de la ruleta
       const totalRotation = finalAngle % 360;
       const normalizedRotation = (360 - totalRotation) % 360;
-  
-      // Ajustar el ángulo para corregir el desfase, considerando los 45 grados por segmento
       const adjustedAngle = normalizedRotation + anglePerSegment / 2;
-  
-      // Calcular el índice del segmento debajo del marcador
-      let segmentIndex = Math.floor((adjustedAngle + anglePerSegment / 2) / anglePerSegment) % this.segments.length;
-  
-      // Obtener el valor del segmento ganador
+      const segmentIndex = Math.floor((adjustedAngle + anglePerSegment / 2) / anglePerSegment) % this.segments.length;
       const winningSegmentValue = this.segments[segmentIndex];
-  
+
       this.message = `¡Ganaste ${winningSegmentValue} tickets!`;
       this.showAlert = true;
       console.log("Message:", this.message);
-  
+
       this.auth.getCantTickets().subscribe(currentTickets => {
         if (currentTickets != null) {
-          const newTicketCount = currentTickets + winningSegmentValue
+          const newTicketCount = currentTickets + winningSegmentValue;
           this.auth.updateCantTickets(newTicketCount);
           this.sharedTicket.setCantTickets(newTicketCount);
         }
-      })
-  
-      // Actualizar el campo ultimoGiro después de que la ruleta se detenga
-      const newGiroTime = new Date(); // Obtener el tiempo actual
+      });
+
+      const newGiroTime = Timestamp.now(); // Obtener un Timestamp para la nueva fecha
       this.auth.updateUltimoGiro(newGiroTime);
-  
-      // Cerrar el modal después de 3 segundos
+
       setTimeout(() => {
         this.activeModal.close();
       }, 3000);
-  
-      // Resetear el estado de la ruleta
+
       this.isSpinning = false;
     }
   }
-  getNextSpinTime(): Observable<number> {
-    return this.auth.getNextSpinTime().pipe(
-      catchError(error => {
-        console.error("Error al obtener el próximo tiempo de giro:", error);
-        // Si hay un error, devolver el tiempo actual
-        return of(new Date().getTime());
-      })
-    );
-  }
+
   adjustSegmentIndices() {
     if (this.wheel) {
       const segmentIndices = this.wheel.nativeElement.querySelectorAll(".segment-index");
@@ -159,6 +147,7 @@ export class WheelComponent implements AfterViewInit, OnInit   {
       });
     }
   }
+
   getSegmentColor(index: number): string {
     const color1 = "rgb(59, 89, 152)";
     const color2 = "rgb(44, 62, 80)";
@@ -173,22 +162,28 @@ export class WheelComponent implements AfterViewInit, OnInit   {
 
   getSegmentRotation(index: number): string {
     const angle = 360 / this.segments.length;
-    const rotation = -1 * angle * index; // Rotación inversa para centrar el texto
+    const rotation = -1 * angle * index;
     return `${rotation}deg`;
   }
-  showMessage() {
-    if (!this.canSpinWheel()) {
-      this.auth.getUltimoGiro().subscribe(ultimoGiro => {
-        const now = new Date();
-        const diff = now.getTime() - (ultimoGiro?.getTime() || 0); // Acceder directamente al campo del usuario
-        const hoursPassed = diff / (1000 * 60 * 60);
-        if (hoursPassed < 24) {
-          this.message = `Debes esperar ${Math.ceil(24 - hoursPassed)} horas antes de girar nuevamente.`;
-        } else {
-          this.message = "Puedes girar la ruleta";
-        }
-        this.showAlert = true;
-      });
+
+  showMessage(ultimoGiro: Timestamp | null) {
+    if (ultimoGiro) {
+      const now = Timestamp.now();
+      const diff = now.seconds - ultimoGiro.seconds;
+      const hoursPassed = diff / (60 * 60); // Convertir a horas
+      
+      if (hoursPassed < 24) {
+        this.message = `Debes esperar ${Math.ceil(24 - hoursPassed)} horas antes de girar nuevamente.`;
+        this.isButtonDisabled = true;
+      } else {
+        this.message = "Puedes girar la ruleta";
+        this.isButtonDisabled = false;
+      }
+    } else {
+      this.message = "Puedes girar la ruleta";
+      this.isButtonDisabled = false;
+      console.log("El campo 'ultimoGiro' es null");
     }
+    this.showAlert = true;
+  }
 }
-} 

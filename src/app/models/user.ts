@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Lugar } from '../interfaces/lugar';
+import { Timestamp } from '@angular/fire/firestore';
 
 export class User {
     id: string;
@@ -11,7 +12,7 @@ export class User {
     couponsUtilizados: Lugar[] = [];
     couponsVencidos: Lugar[] = [];
     cantTickets: number = 0;
-    ultimoGiro: Date | null = null; // Campo para almacenar la fecha y hora del último giro
+    ultimoGiro: Timestamp | null = null; // Campo para almacenar la fecha y hora del último giro
 
     constructor(firstName: string, lastName: string, email: string, password: string, coupons?: Lugar[], couponsUtilizados?: Lugar[], couponsVencidos?: Lugar[]) {
         this.id = uuidv4(); // Genera un UUID único
