@@ -15,7 +15,7 @@ import {
   getDoc,
   Timestamp
 } from "@angular/fire/firestore";
-import { Observable, from } from "rxjs";
+import { Observable, Observer, from } from "rxjs";
 import { map } from "rxjs/operators";
 import { User } from "../models/user";
 import { Lugar } from "../interfaces/lugar";
@@ -30,19 +30,37 @@ export class FirestoreService {
 
   private _collection = collection(this.firestore, PATH);
 
-  async getUltimoGiro(userId: string): Promise<Date | null> {
+  getUltimoGiro(userId: string): Observable<Date | null> {
     const userDoc = doc(this.firestore, PATH, userId);
-    const docSnapshot = await getDoc(userDoc);
-    const userData = docSnapshot.data() as User;
-    return userData.ultimoGiro;
+    return new Observable<Date | null>((observer) => {
+      getDoc(userDoc)
+        .then((docSnapshot) => {
+          if (docSnapshot.exists()) {
+            const userData = docSnapshot.data() as User;
+            observer.next(userData.ultimoGiro);
+          } else {
+            observer.next(null);
+          }
+        })
+        .catch((error) => {
+          observer.error(error);
+        });
+    });
   }
-
   // Método para actualizar el campo 'ultimoGiro' de un usuario
-  async updateUltimoGiro(userId: string, ultimoGiro: Date): Promise<void> {
+  updateUltimoGiro(userId: string, ultimoGiro: Date): Observable<void> {
     const userDoc = doc(this.firestore, PATH, userId);
-    await updateDoc(userDoc, { ultimoGiro });
+    return new Observable<void>((observer: Observer<void>) => {
+      updateDoc(userDoc, { ultimoGiro })
+        .then(() => {
+          observer.next();
+          observer.complete();
+        })
+        .catch((error) => {
+          observer.error(error);
+        });
+    });
   }
-
   createUser(user: User) {
     return addDoc(this._collection, user);
   }

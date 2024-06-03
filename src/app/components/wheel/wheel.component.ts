@@ -3,9 +3,7 @@ import { Component, ViewChild, ElementRef, AfterViewInit, OnInit } from "@angula
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { AuthService } from "../../services/auth.service";
 import { SharedTicketService } from "../../services/shared-ticket.service";
-import { Observable } from "rxjs";
-import { Timestamp } from "@angular/fire/firestore";
-import { User } from "../../models/user";
+import { Observable, catchError, of, switchMap } from "rxjs";
 
 @Component({
   selector: "app-wheel",
@@ -21,7 +19,7 @@ export class WheelComponent implements AfterViewInit, OnInit   {
   showAlert: boolean = false;
 
   isButtonDisabled: boolean = false; // Nueva variable para desactivar el botón
-  
+
   cantTickets$: Observable<number | null> | null = null;
   ultimoGiro: Date | null = null; // Variable para almacenar la última vez que se giró la ruleta
 
@@ -38,30 +36,36 @@ export class WheelComponent implements AfterViewInit, OnInit   {
     this.adjustSegmentIndices();
   }
   ngOnInit(): void {
-    this.auth.getUserId().subscribe(userId => {
-      if (userId) {
-        this.auth.getUltimoGiro().then(ultimoGiro => {
-          this.ultimoGiro = ultimoGiro;
-        });
-      }
+    this.auth.getUserId().pipe(
+      switchMap(userId => {
+        if (userId) {
+          return this.auth.getUltimoGiro();
+        } else {
+          return of(null); // Emitir null si no hay userId
+        }
+      })
+    ).subscribe(ultimoGiro => {
+      this.ultimoGiro = ultimoGiro;
+      this.updateButtonState();
     });
   }
-  
-  
-  canSpinWheel(): boolean {
-    if (this.ultimoGiro==null) {
-      // Si es la primera vez que el usuario gira la ruleta, permitir el giro
-      return true;
-    } else {
-      // Calcular el tiempo transcurrido desde el último giro
-      const now = new Date();
-      const diff = now.getTime() - this.ultimoGiro.getTime();
-      const hoursPassed = diff / (1000 * 60 * 60);
-      return hoursPassed >= 24;
+  updateButtonState() {
+    this.isButtonDisabled = !this.canSpinWheel(); // Desactiva el botón si no se puede girar la ruleta
+    if (!this.isButtonDisabled) {
+      this.message = ''; // Limpiar el mensaje si el botón no está desactivado
     }
   }
-  async spinWheel() {
-    if (this.isSpinning || !this.canSpinWheel()) { // Verifica si está girando o no se puede girar
+  
+  canSpinWheel(): boolean {
+      // Calcular el tiempo transcurrido desde el último giro
+      const now = new Date();
+      const diff = now.getTime() - (this.ultimoGiro?.getTime() || 0); // Si this.ultimoGiro es null, asigna 0
+      const hoursPassed = diff / (1000 * 60 * 60);
+      return hoursPassed >= 24;
+    
+  }
+  spinWheel() {
+    if (this.isSpinning || this.isButtonDisabled) { // Verifica si está girando o no se puede girar
       return;
     }
     this.isSpinning = true;
@@ -80,22 +84,30 @@ export class WheelComponent implements AfterViewInit, OnInit   {
       // Obtener la duración de la animación de transformación
       const animationDuration = 4 * 1000; // Convertir segundos a milisegundos
   
-      // Calcular el tiempo restante para el próximo giro
-      const now = new Date().getTime();
-      const nextSpinTime = this.getNextSpinTime(); // Obtener el tiempo del próximo giro
-      const timeLeft = await nextSpinTime - now;
-      const hoursLeft = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      // Obtener el tiempo del próximo giro y suscribirse para obtener el valor
+      this.getNextSpinTime().subscribe(nextSpinTime => {
+        // Calcular el tiempo restante para el próximo giro
+        const now = new Date().getTime();
+        const timeLeft = nextSpinTime - now;
+        const hoursLeft = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
   
-      // Llamar a la función stopWheel() después de que la animación haya terminado
-      setTimeout(() => {
-        this.stopWheel(randomAngle);
-      }, animationDuration);
+        // Llamar a la función stopWheel() después de que la animación haya terminado
+        setTimeout(() => {
+           this.stopWheel(randomAngle); // Espera a que se detenga la rueda para actualizar ultimoGiro
+        }, animationDuration);
   
-      // Actualizar el mensaje con el tiempo restante
-      this.message = `Debes esperar ${hoursLeft} horas antes de girar nuevamente.`;
-      this.showAlert = true;
+        // Actualizar el mensaje con el tiempo restante
+        this.message = `Debes esperar ${hoursLeft} horas antes de girar nuevamente.`;
+        this.showAlert = true;
+  
+        // Actualizar el campo 'ultimoGiro' en Firestore con el nuevo momento
+        const newGiroTime = new Date();
+        this.auth.updateUltimoGiro(newGiroTime);
+        this.ultimoGiro = newGiroTime; // Actualizar la variable local con el nuevo momento
+      });
     }
   }
+  
 
   stopWheel(finalAngle: number) {
     if (this.wheel) {
@@ -137,9 +149,14 @@ export class WheelComponent implements AfterViewInit, OnInit   {
       this.isSpinning = false;
     }
   }
-  async getNextSpinTime(): Promise<number> {
-    const nextSpinTime = await this.auth.getNextSpinTime();
-    return nextSpinTime;
+  getNextSpinTime(): Observable<number> {
+    return this.auth.getNextSpinTime().pipe(
+      catchError(error => {
+        console.error("Error al obtener el próximo tiempo de giro:", error);
+        // Si hay un error, devolver el tiempo actual
+        return of(new Date().getTime());
+      })
+    );
   }
   adjustSegmentIndices() {
     if (this.wheel) {
