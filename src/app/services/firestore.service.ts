@@ -15,7 +15,7 @@ import {
   getDoc,
   Timestamp
 } from "@angular/fire/firestore";
-import { Observable, Observer, from } from "rxjs";
+import { Observable,from } from "rxjs";
 import { map } from "rxjs/operators";
 import { User } from "../models/user";
 import { Lugar } from "../interfaces/lugar";
@@ -48,17 +48,29 @@ export class FirestoreService {
     });
   }
   // Método para actualizar el campo 'ultimoGiro' de un usuario
-  updateUltimoGiro(userId: string, ultimoGiro: Date): Observable<void> {
+  updateUltimoGiro(userId: string, ultimoGiro: Date): Promise<void> {
     const userDoc = doc(this.firestore, PATH, userId);
-    return new Observable<void>((observer: Observer<void>) => {
-      updateDoc(userDoc, { ultimoGiro })
-        .then(() => {
-          observer.next();
-          observer.complete();
-        })
-        .catch((error) => {
-          observer.error(error);
-        });
+    console.log(userId);
+    return updateDoc (userDoc, { ultimoGiro })
+    .then(() => {
+      console.log("Datos actualizados en Firestore.");
+    })
+    .catch((error) => {
+      console.error("Error al actualizar los datos en Firestore:", error);
+      throw error;
+    });
+  }
+  updateCantTicket(cantTickets: number, userId: string): Promise<void>
+  {
+    const userRef = doc(this.firestore,PATH,userId);
+
+    return updateDoc(userRef,{ cantTickets })
+    .then(() => {
+      console.log("Datos actualizados en Firestore.");
+    })
+    .catch((error) => {
+      console.error("Error al actualizar los datos en Firestore:", error);
+      throw error;
     });
   }
   createUser(user: User) {
@@ -97,19 +109,7 @@ export class FirestoreService {
         throw error;
       });
   }
-  updateCantTicket(cantTickets: number, userId: string): Promise<void>
-  {
-    const userRef = doc(this.firestore,PATH,userId);
-
-    return updateDoc(userRef,{ cantTickets })
-    .then(() => {
-      console.log("Datos actualizados en Firestore.");
-    })
-    .catch((error) => {
-      console.error("Error al actualizar los datos en Firestore:", error);
-      throw error;
-    });
-  }
+ 
   addCouponToUser(userId: string, coupon: Lugar): Promise<void> {
     const userRef = doc(this.firestore, PATH, userId);
     console.log(userId);

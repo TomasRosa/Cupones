@@ -10,7 +10,15 @@ import {
   updateProfile,
   sendPasswordResetEmail,
 } from "@angular/fire/auth";
-import { BehaviorSubject, Observable, from, map, of, switchMap, throwError } from "rxjs";
+import {
+  BehaviorSubject,
+  Observable,
+  from,
+  map,
+  of,
+  switchMap,
+  throwError,
+} from "rxjs";
 import { FirestoreService } from "./firestore.service";
 import { Lugar } from "../interfaces/lugar";
 
@@ -41,16 +49,55 @@ export class AuthService {
       return this.firestore.getUltimoGiro(userId);
     }
   }
-  
-  updateUltimoGiro(ultimoGiro: Date): Observable<void> {
-    if (!this.currentUser) {
-      return throwError(new Error("No hay usuario autenticado."));
-    } else {
-      const userId = this.currentUser.uid;
-      return this.firestore.updateUltimoGiro(userId, ultimoGiro);
+
+  updateUltimoGiro(ultimoGiro: Date): Promise<void> {
+    const currentUser = this.auth.currentUser;
+
+    if (currentUser) {
+      return this.firestore
+        .getUserIdByEmail(currentUser.email!)
+        .pipe(
+          switchMap((userId) => {
+            if (userId) {
+              return this.firestore.updateUltimoGiro(userId, ultimoGiro);
+            } else {
+              return Promise.reject(
+                "No se encontro la ID del usuario en Firestore."
+              );
+            }
+          })
+        )
+        .toPromise();
+    }
+    else
+    {
+      return Promise.reject("No se encontro un usuario autenticado.");
     }
   }
 
+  getNextSpinTime(): Observable<number> {
+    return this.getUserId().pipe(
+      switchMap((userId) => {
+        if (!userId) {
+          // Si no se puede obtener el userId, devolver el tiempo actual
+          return of(new Date().getTime());
+        } else {
+          // Obtener el último tiempo de giro del usuario desde Firestore
+          return this.firestore.getUltimoGiro(userId).pipe(
+            map((lastSpinTime) => {
+              if (lastSpinTime !== null) {
+                // Calcular el próximo tiempo de giro sumando 24 horas al último tiempo de giro
+                return lastSpinTime.getTime() + 24 * 60 * 60 * 1000;
+              } else {
+                // Si el último tiempo de giro es null, devolver el tiempo actual
+                return new Date().getTime();
+              }
+            })
+          );
+        }
+      })
+    );
+  }
   getCantTickets(): Observable<number | null> {
     return this.getUserId().pipe(
       switchMap((userId) => {
@@ -90,24 +137,21 @@ export class AuthService {
   updateCantTickets(cantTickets: number): Promise<void> {
     const currentUser = this.auth.currentUser;
     if (currentUser) {
-      return this.firestore.
-      getUserIdByEmail(currentUser.email!).
-      pipe(
-        switchMap((userId) => {
-          if (userId) {
-            return this.firestore.updateCantTicket(cantTickets, userId);
-          } 
-          else 
-          {
-            return Promise.reject(
-              "No se encontró la ID del usuario en Firestore."
-            );
-          }
-        })
-      ).toPromise();
-    }
-    else 
-    {
+      return this.firestore
+        .getUserIdByEmail(currentUser.email!)
+        .pipe(
+          switchMap((userId) => {
+            if (userId) {
+              return this.firestore.updateCantTicket(cantTickets, userId);
+            } else {
+              return Promise.reject(
+                "No se encontró la ID del usuario en Firestore."
+              );
+            }
+          })
+        )
+        .toPromise();
+    } else {
       return Promise.reject("No se encontró un usuario autenticado.");
     }
   }
@@ -199,29 +243,7 @@ export class AuthService {
       return of(null);
     }
   }
-  getNextSpinTime(): Observable<number> {
-    return this.getUserId().pipe(
-      switchMap(userId => {
-        if (!userId) {
-          // Si no se puede obtener el userId, devolver el tiempo actual
-          return of(new Date().getTime());
-        } else {
-          // Obtener el último tiempo de giro del usuario desde Firestore
-          return this.firestore.getUltimoGiro(userId).pipe(
-            map(lastSpinTime => {
-              if (lastSpinTime !== null) {
-                // Calcular el próximo tiempo de giro sumando 24 horas al último tiempo de giro
-                return lastSpinTime.getTime() + (24 * 60 * 60 * 1000);
-              } else {
-                // Si el último tiempo de giro es null, devolver el tiempo actual
-                return new Date().getTime();
-              }
-            })
-          );
-        }
-      })
-    );
-  }
+
   getNameFromGoogle(): Observable<string | null> {
     // Obtén el nombre del usuario actual si ha iniciado sesión con Google
     const currentUser = this.auth.currentUser;
