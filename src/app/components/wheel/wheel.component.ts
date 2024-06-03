@@ -165,20 +165,33 @@ export class WheelComponent implements AfterViewInit, OnInit {
     const rotation = -1 * angle * index;
     return `${rotation}deg`;
   }
-
   showMessage(ultimoGiro: Timestamp | null) {
     if (ultimoGiro) {
       const now = Timestamp.now();
       const diff = now.seconds - ultimoGiro.seconds;
       const hoursPassed = diff / (60 * 60); // Convertir a horas
-      
-      if (hoursPassed < 24) {
-        this.message = `Debes esperar ${Math.ceil(24 - hoursPassed)} horas antes de girar nuevamente.`;
-        this.isButtonDisabled = true;
+      const remainingHours = Math.floor(24 - hoursPassed);
+      const remainingMinutes = Math.ceil((24 - hoursPassed - remainingHours) * 60);
+  
+      if (remainingHours === 0 && remainingMinutes === 0) {
+        this.message = `Debes esperar menos de un minuto antes de girar nuevamente.`;
+      } else if (remainingHours === 0 && remainingMinutes === 1) {
+        this.message = `Debes esperar 1 minuto antes de girar nuevamente.`;
+      } else if (remainingHours === 0) {
+        this.message = `Debes esperar ${remainingMinutes} minutos antes de girar nuevamente.`;
+      } else if (remainingMinutes === 0) {
+        this.message = `Debes esperar ${remainingHours} horas antes de girar nuevamente.`;
+      } else if (remainingHours === 1 && remainingMinutes === 1) {
+        this.message = `Debes esperar 1 hora y 1 minuto antes de girar nuevamente.`;
+      } else if (remainingHours === 1) {
+        this.message = `Debes esperar 1 hora y ${remainingMinutes} minutos antes de girar nuevamente.`;
+      } else if (remainingMinutes === 1) {
+        this.message = `Debes esperar ${remainingHours} horas y 1 minuto antes de girar nuevamente.`;
       } else {
-        this.message = "Puedes girar la ruleta";
-        this.isButtonDisabled = false;
+        this.message = `Debes esperar ${remainingHours} horas y ${remainingMinutes} minutos antes de girar nuevamente.`;
       }
+  
+      this.isButtonDisabled = true;
     } else {
       this.message = "Puedes girar la ruleta";
       this.isButtonDisabled = false;
@@ -186,4 +199,6 @@ export class WheelComponent implements AfterViewInit, OnInit {
     }
     this.showAlert = true;
   }
+  
+  
 }
