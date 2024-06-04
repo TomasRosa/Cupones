@@ -14,7 +14,7 @@
         <div class="wheel-segment" *ngFor="let segment of segments; let i = index"
           [style.backgroundColor]="getSegmentColor(i)" [style.transform]="getSegmentTransform(i)">
           <div class="segment-value">
-            <span class="text">{{ segment }}</span>
+             {{ segment }}
           </div>
         </div>
       </div>
@@ -24,7 +24,7 @@
 
   <!-- Contenedor para la alerta con margen superior -->
   <div class="alert-container" *ngIf="showAlert">
-    <section class="alert alert-success" role="alert">
+    <section class="alert" [ngClass]="{'alert-danger': isErrorMessage, 'alert-success': !isErrorMessage}" role="alert">
       {{ message }}
     </section>
   </div>

@@ -18,9 +18,8 @@ export class WheelComponent implements AfterViewInit, OnInit {
   isSpinning: boolean = false;
   message: string = '';
   showAlert: boolean = false;
-
+  isErrorMessage: boolean = false; // Nueva variable para el estado del mensaje
   isButtonDisabled: boolean = false;
-
   cantTickets$: Observable<number | null> | null = null;
 
   @ViewChild("wheel") wheel: ElementRef<HTMLDivElement> | undefined;
@@ -39,23 +38,24 @@ export class WheelComponent implements AfterViewInit, OnInit {
   ngOnInit(): void {
     combineLatest([this.auth.getUserId(), this.auth.getUltimoGiro()]).subscribe(([userId, ultimoGiro]) => {
       if (userId) {
-        console.log("oninit", ultimoGiro)
+        console.log("oninit", ultimoGiro);
         this.updateButtonState(ultimoGiro);
         this.showMessage(ultimoGiro);
       } else {
-        this.message = "No se pudo obtener el usuario.";
+        this.message = "Debes iniciar sesión para girar la ruleta.";
         this.showAlert = true;
+        this.isErrorMessage = true; // Mensaje de error
         this.isButtonDisabled = true;
       }
     });
   }
-  
+
   updateButtonState(ultimoGiro: Timestamp | null) {
     this.canSpinWheel(ultimoGiro).subscribe(canSpin => {
       this.isButtonDisabled = !canSpin;
     });
   }
-  
+
   canSpinWheel(ultimoGiro: Timestamp | null): Observable<boolean> {
     console.log("Ultimo giro en canSpinWheel: ", ultimoGiro);
     return of(ultimoGiro).pipe(
@@ -64,7 +64,6 @@ export class WheelComponent implements AfterViewInit, OnInit {
           const now = Timestamp.now();
           const diff = now.seconds - ultimoGiro.seconds;
           const hoursPassed = diff / (60 * 60); // Convertir a horas
-  
           return hoursPassed >= 24;
         } else {
           return true;
@@ -75,7 +74,7 @@ export class WheelComponent implements AfterViewInit, OnInit {
 
   spinWheel() {
     this.auth.getUltimoGiro().pipe(
-      switchMap(ultimoGiro => this.canSpinWheel(ultimoGiro))  // No es necesario convertir Date a Timestamp
+      switchMap(ultimoGiro => this.canSpinWheel(ultimoGiro))
     ).subscribe(canSpin => {
       if (!canSpin) {
         this.showMessage(null);
@@ -117,6 +116,7 @@ export class WheelComponent implements AfterViewInit, OnInit {
       const winningSegmentValue = this.segments[segmentIndex];
 
       this.message = `¡Ganaste ${winningSegmentValue} tickets!`;
+      this.isErrorMessage = false; // Mensaje de éxito
       this.showAlert = true;
       console.log("Message:", this.message);
 
@@ -165,18 +165,35 @@ export class WheelComponent implements AfterViewInit, OnInit {
     const rotation = -1 * angle * index;
     return `${rotation}deg`;
   }
+
   showMessage(ultimoGiro: Timestamp | null) {
     if (ultimoGiro) {
       const now = Timestamp.now();
       const diff = now.seconds - ultimoGiro.seconds;
       const hoursPassed = diff / (60 * 60); // Convertir a horas
-      const remainingHours = Math.floor(24 - hoursPassed);
-      const remainingMinutes = Math.ceil((24 - hoursPassed - remainingHours) * 60);
-  
+      const remainingTime = 24 - hoursPassed;
+
+      if (remainingTime <= 0) {
+        this.message = "Puedes girar la ruleta";
+        this.isErrorMessage = false; // Mensaje de éxito
+        this.isButtonDisabled = false;
+        this.showAlert = true;
+        return;
+      }
+
+      let remainingHours = Math.floor(remainingTime);
+      let remainingMinutes = Math.floor((remainingTime - remainingHours) * 60);
+
+      // Ajustar los minutos y horas para evitar el caso 23 horas y 60 minutos
+      if (remainingMinutes === 60) {
+        remainingHours += 1;
+        remainingMinutes = 0;
+      }
+
       if (remainingHours === 0 && remainingMinutes === 0) {
-        this.message = `Debes esperar menos de un minuto antes de girar nuevamente.`;
+        this.message = "Debes esperar menos de un minuto antes de girar nuevamente.";
       } else if (remainingHours === 0 && remainingMinutes === 1) {
-        this.message = `Debes esperar 1 minuto antes de girar nuevamente.`;
+        this.message = "Debes esperar 1 minuto antes de girar nuevamente.";
       } else if (remainingHours === 0) {
         this.message = `Debes esperar ${remainingMinutes} minutos antes de girar nuevamente.`;
       } else if (remainingMinutes === 0) {
@@ -190,15 +207,14 @@ export class WheelComponent implements AfterViewInit, OnInit {
       } else {
         this.message = `Debes esperar ${remainingHours} horas y ${remainingMinutes} minutos antes de girar nuevamente.`;
       }
-  
+
+      this.isErrorMessage = true; // Mensaje de error
       this.isButtonDisabled = true;
     } else {
       this.message = "Puedes girar la ruleta";
+      this.isErrorMessage = false; // Mensaje de éxito
       this.isButtonDisabled = false;
-      console.log("El campo 'ultimoGiro' es null");
     }
     this.showAlert = true;
   }
-  
-  
 }
