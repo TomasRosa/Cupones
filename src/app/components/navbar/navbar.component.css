@@ -110,3 +110,56 @@ body
   font-size: 1rem; /* Ajusta el tamaño del icono según sea necesario */
   margin-right: 5px; /* Ajusta el margen derecho para separarlo del contador */
 }
+/* Media query para iPhone SE */
+@media only screen and (max-width: 375px) and (max-height: 667px) {
+  /* Contenedor principal de la navbar */
+  .navbar .container-fluid {
+    width: 100vw; /* Ajustamos el ancho al 100% del viewport */
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  
+  /* Contenedor del logo */
+  .logo-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Centra verticalmente con respecto a la searchbar */
+    margin-bottom: 0.5rem;
+  }
+
+  /* Botón "Gira y Gana!" */
+  .navbar .row:first-child .col-md-2:first-child {
+    align-self: flex-start;
+    margin-left: 0;
+    margin-bottom: 0.5rem; /* Agrega margen inferior */
+  }
+
+  /* Texto "Gira y Gana!" */
+  .gira-gana-text {
+    position: absolute; /* Cambio a posición absoluta */
+    top: 24%; /* Alinea el texto arriba */
+    left: 10px; /* Alinea el texto a la izquierda con un pequeño margen */
+    margin: 0; /* Elimina cualquier margen */
+  }
+  
+  /* Estilo para la barra de búsqueda */
+  .search-bar {
+    width: 60%; /* Establecer el ancho al 60% */
+    margin-top: 0.5rem;
+    display: flex;
+    justify-content: center; /* Centra horizontalmente */
+  }
+
+  /* Estilo para el input de la barra de búsqueda */
+  .search-bar input {
+    width: 100%;
+  }
+  
+  /* Ocultar botones de categorías solo en dispositivos móviles */
+  .category-buttons {
+    display: none !important;
+  }
+}

@@ -7,12 +7,9 @@
         <button class="button-with-image navbar-brand" (click)="navigateTos('inicio')">
           <img src="./assets/images/gocupon-logo.png" alt="logo" />
         </button>
-        <button
-        class="btn btn-primary btn-sm"
-        (click)="openWheel()"
-      >
-        Gira y gana!
-      </button>
+        <button class="btn btn-primary btn-sm gira-gana-text" (click)="openWheel()">
+          Gira y gana!
+        </button>
       </div>
      
       <!-- Barra de búsqueda -->
@@ -46,67 +43,64 @@
         </div>
       </div>
       <!-- Botones de categorías -->
-      <div class="col-md-6 order-md-2">
-        <div class="row mt-2 category-buttons justify-content-center">
-          <div class="col-md-12">
-            <div class="d-flex justify-content-between">
-              <button
-                class="btn btn-primary btn-sm"
-                (click)="navigateTos('gastronomia')"
-              >
-                Gastronomía
-              </button>
-              <button
-                class="btn btn-primary btn-sm"
-                (click)="navigateTos('supermercado')"
-              >
-                Supermercado
-              </button>
-              <button
-                class="btn btn-primary btn-sm"
-                (click)="navigateTos('cine')"
-              >
-                Cine
-              </button>
-              <button
-                class="btn btn-primary btn-sm"
-                (click)="navigateTos('vehiculos')"
-              >
-                Vehículos
-              </button>
-              <button
-                class="btn btn-primary btn-sm"
-                (click)="navigateTos('teatro')"
-              >
-                Teatro
-              </button>
-              <button
-                class="btn btn-primary btn-sm"
-                (click)="navigateTos('escapadas')"
-              >
-                Escapadas y Hoteles
-              </button>
-              <button
-                class="btn btn-primary btn-sm"
-                (click)="navigateTos('salud')"
-              >
-                Salud
-              </button>
-              <button
-                class="btn btn-primary btn-sm"
-                (click)="navigateTos('estetica')"
-              >
-                Estética
-              </button>
-              <button
-                class="btn btn-primary btn-sm"
-                (click)="navigateTos('entretenimiento')"
-              >
-                Entretenimiento
-              </button>
-              <!-- Añadir el enlace "Gira y Gana" -->
-             
-            </div>
+      <div class="col-md-6 order-md-2 category-buttons justify-content-center">
+        <div class="row mt-2">
+          <div class="col-md-12 d-flex justify-content-between">
+            <button
+              class="btn btn-primary btn-sm"
+              (click)="navigateTos('gastronomia')"
+            >
+              Gastronomía
+            </button>
+            <button
+              class="btn btn-primary btn-sm"
+              (click)="navigateTos('supermercado')"
+            >
+              Supermercado
+            </button>
+            <button
+              class="btn btn-primary btn-sm"
+              (click)="navigateTos('cine')"
+            >
+              Cine
+            </button>
+            <button
+              class="btn btn-primary btn-sm"
+              (click)="navigateTos('vehiculos')"
+            >
+              Vehículos
+            </button>
+            <button
+              class="btn btn-primary btn-sm"
+              (click)="navigateTos('teatro')"
+            >
+              Teatro
+            </button>
+            <button
+              class="btn btn-primary btn-sm"
+              (click)="navigateTos('escapadas')"
+            >
+              Escapadas y Hoteles
+            </button>
+            <button
+              class="btn btn-primary btn-sm"
+              (click)="navigateTos('salud')"
+            >
+              Salud
+            </button>
+            <button
+              class="btn btn-primary btn-sm"
+              (click)="navigateTos('estetica')"
+            >
+              Estética
+            </button>
+            <button
+              class="btn btn-primary btn-sm"
+              (click)="navigateTos('entretenimiento')"
+            >
+              Entretenimiento
+            </button>
+            <!-- Añadir el enlace "Gira y Gana" -->
           </div>
         </div>
       </div>
