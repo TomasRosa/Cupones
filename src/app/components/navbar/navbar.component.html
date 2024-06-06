@@ -132,7 +132,7 @@
             <i class="bi bi-person"></i>
           </button>
           <!-- Menú Hamburguesa -->
-          <div class="menu bg-success " [ngClass]="{ 'show': isMenuOpen }">
+          <div class="menu bg-success" [ngClass]="{ 'show': isMenuOpen }">
             <p class="greeting mr-3">¡Hola {{ nombreUsuario$ | async }}!</p>
             <button class="btn btn-primary menu-item mb-2" (click)="navigateTos('mis-datos')">Mis datos</button>
             <button class="btn btn-primary menu-item mb-2" (click)="navigateTos('mis-cupones')">Mis cupones</button>
