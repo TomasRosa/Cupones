@@ -17,9 +17,11 @@ body
   object-fit: contain;
   transition: transform 0.3s ease;
 }
+
 .user-buttons {
   text-align: right;
 }
+
 .search-bar {
   position: relative; /* Para establecer un contexto de posición */
 }
@@ -58,6 +60,7 @@ body
   max-width: 50px; /* Ancho máximo de la imagen */
   height: auto; /* Altura automática para mantener la proporción */
 }
+
 .register-btn,
 .login-btn {
     width: auto;
@@ -65,12 +68,13 @@ body
     white-space: nowrap;
     overflow: visible;
     font-size: 14px;
-    margin-left: 5px; /* Ajusta el margen izquierdo según sea necesario */
-    margin-right: 5px; /* Ajusta el margen derecho según sea necesario */
+    margin-left: 5px; 
+    margin-right: 5px; 
 }
+
 .buttons-container {
-  display: flex; /* Mostrar los botones en línea */
-  margin-right: 300px; /* Ajustar el margen izquierdo del contenedor */
+  display: flex; 
+  margin-right: 300px; 
 }
 
 .profile-button,
@@ -78,18 +82,21 @@ body
   width: auto;
   max-width: none;
   white-space: nowrap;
-  margin-left: 5px; /* Ajustar el margen izquierdo de los botones */
-  margin-right: 20px; /* Ajustar el margen derecho de los botones */
+  margin-left: 5px; 
+  margin-right: 20px; 
   font-size: 20px;
 }
+
+
 .profile-button {
-  position: relative; /* Para que el menú se posicione correctamente con respecto al botón de perfil */
+  position: relative;  
 }
+
 .menu {
   display: none;
   flex-direction: column;
   position: absolute;
-  z-index: 1000; /* Asegura que el menú esté por encima del resto del contenido */
+  z-index: 1000;
   background-color: #fff;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -98,17 +105,19 @@ body
   top:100px;
   right: 123px;
 }
+
 .menu.show {
   display: flex;
 }
+
 .ticket-info {
   display: flex;
   align-items: center;
 }
 
 .ticket-icon {
-  font-size: 1rem; /* Ajusta el tamaño del icono según sea necesario */
-  margin-right: 5px; /* Ajusta el margen derecho para separarlo del contador */
+  font-size: 1rem; 
+  margin-right: 5px; 
 }
 
 @media only screen and (max-width: 375px) and (max-height: 667px) {
@@ -195,6 +204,7 @@ body
     border-radius: 5px; 
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
   }
+
   .buttons-container {
     position: absolute;
     right: 10px; 
