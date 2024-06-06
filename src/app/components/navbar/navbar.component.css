@@ -110,7 +110,6 @@ body
   font-size: 1rem; /* Ajusta el tamaño del icono según sea necesario */
   margin-right: 5px; /* Ajusta el margen derecho para separarlo del contador */
 }
-/* Media query para iPhone SE */
 @media only screen and (max-width: 375px) and (max-height: 667px) {
   /* Contenedor principal de la navbar */
   .navbar .container-fluid {
@@ -119,8 +118,9 @@ body
     margin-right: 0;
     padding-left: 0;
     padding-right: 0;
+    position: relative; /* Necesario para posicionar elementos absolutos dentro */
   }
-  
+
   /* Contenedor del logo */
   .logo-container {
     width: 100%;
@@ -128,6 +128,7 @@ body
     justify-content: center;
     align-items: center; /* Centra verticalmente con respecto a la searchbar */
     margin-bottom: 0.5rem;
+    position: relative; /* Para posicionar elementos absolutos */
   }
 
   /* Botón "Gira y Gana!" */
@@ -140,11 +141,11 @@ body
   /* Texto "Gira y Gana!" */
   .gira-gana-text {
     position: absolute; /* Cambio a posición absoluta */
-    top: 24%; /* Alinea el texto arriba */
+    top: 17%; /* Alinea el texto arriba */
     left: 10px; /* Alinea el texto a la izquierda con un pequeño margen */
     margin: 0; /* Elimina cualquier margen */
   }
-  
+
   /* Estilo para la barra de búsqueda */
   .search-bar {
     width: 60%; /* Establecer el ancho al 60% */
@@ -157,9 +158,73 @@ body
   .search-bar input {
     width: 100%;
   }
-  
+
   /* Ocultar botones de categorías solo en dispositivos móviles */
   .category-buttons {
     display: none !important;
   }
+  .profile-button
+  {
+    margin-right: -0.03rem;
+  }
+  /* Ajustes para el botón de perfil y el contenedor de tickets */
+  .profile-button,
+  .ticket-info {
+    font-size: 0.75rem; /* Ajustar tamaño de la fuente si es necesario */
+    padding: 0.25rem 0.5rem; /* Ajustar padding */
+  }
+
+  .ticket-info {
+    display: flex;
+    align-items: center;
+    margin-left: 0.25rem; /* Reducir margen izquierdo */
+  }
+
+  .ticket-icon {
+    font-size: 1rem; /* Ajustar tamaño del icono si es necesario */
+  }
+
+  .ticket-count {
+    font-size: 0.75rem; /* Ajustar tamaño de la fuente si es necesario */
+    margin-left: 0.01rem; /* Reducir espacio entre el icono y el texto */
+  }
+  .navbar-toggler-icon {
+    font-size: 1.5rem; /* Reducir el tamaño del icono */
+  }
+  
+  /* Ajustes para el menú desplegable */
+  .navbar-collapse {
+    position: absolute; /* Asegura que el menú desplegable tenga posición absoluta */
+    top: 100%; /* Posiciona el menú debajo del perfil button */
+    right: 0; /* Alinea el menú con el lado derecho de la pantalla */
+    background-color: white; /* Cambia el color de fondo del menú si es necesario */
+    padding: 0.5rem; /* Añade un poco de espacio interior al menú */
+    border: 1px solid #ccc; /* Añade un borde al menú */
+    border-radius: 5px; /* Redondea las esquinas del menú */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Agrega una sombra al menú */
+  }
+  /* Ajustes específicos para el contenedor de botones */
+  .buttons-container {
+    position: absolute;
+    right: 10px; /* Alinea los botones a la derecha */
+    top: 0;
+    bottom: 45%;
+    margin: auto 0; /* Centra verticalmente */
+    display: flex;
+    align-items: center;
+  }
+  .menu-divider-container {
+    position: absolute;
+    top: calc(17% + 1rem); /* Alinea con el botón "Gira y gana!" y agrega un poco de espacio */
+    left: 10px; /* Alinea con el borde izquierdo */
+    width: 2px; /* Ancho de las líneas */
+}
+
+/* Estilo para las líneas blancas horizontales */
+.menu-divider {
+    margin: 0.5rem 0; /* Espaciado entre las líneas */
+    border: none;
+    height: 1px; /* Altura de la línea */
+    background-color: white; /* Color de la línea */
+}
 }

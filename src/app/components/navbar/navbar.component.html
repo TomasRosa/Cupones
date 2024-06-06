@@ -10,8 +10,12 @@
         <button class="btn btn-primary btn-sm gira-gana-text" (click)="openWheel()">
           Gira y gana!
         </button>
+      <div class="menu-divider-container">
+          <hr class="menu-divider">
+          <hr class="menu-divider">
+          <hr class="menu-divider">
       </div>
-     
+    </div>
       <!-- Barra de búsqueda -->
       <div class="col-md-2 order-md-1 search-bar text-center">
         <input
@@ -134,7 +138,7 @@
           </button>
 
           <!-- Menú Hamburguesa -->
-          <div class="menu bg-success" [ngClass]="{ 'show': isMenuOpen }">
+          <div class="menu bg-success collapse navbar-collapse" [ngClass]="{ 'show': isMenuOpen }">
             <p class="greeting mr-3">¡Hola {{ nombreUsuario$ | async }}!</p>
             <button class="btn btn-primary menu-item mb-2" (click)="navigateTos('mis-datos')">Mis datos</button>
             <button class="btn btn-primary menu-item mb-2" (click)="navigateTos('mis-cupones')">Mis cupones</button>

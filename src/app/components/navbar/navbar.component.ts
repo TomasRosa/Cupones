@@ -36,7 +36,7 @@ export class NavbarComponent implements OnInit {
   terminoBusqueda: string = "";
   resultadosBusqueda: Lugar[] = [];
   mensajeLogout: string = "";
-
+  
   isUserLoggedIn$!: Observable<boolean>;
 
   isMenuOpen: boolean = false;
@@ -45,7 +45,10 @@ export class NavbarComponent implements OnInit {
   nombreUsuario$: Observable<string | null> | null = null;
   emailUsuario$: Observable<string | null> | null = null;
   cantTickets$: Observable<number | null> | null = null;
-
+  
+  toggleMenu(): void {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
   ngOnInit(): void {
     this.isUserLoggedIn$ = this.auth.isLoggedIn();
 
@@ -100,9 +103,7 @@ export class NavbarComponent implements OnInit {
   isLoggedIn(): Observable<boolean> {
     return this.auth.isLoggedIn();
   }
-  toggleMenu(): void {
-    this.isMenuOpen = !this.isMenuOpen;
-  }
+ 
   openPopup() {
     this.popUpService.open();
   }
