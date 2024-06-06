@@ -10,11 +10,6 @@
         <button class="btn btn-primary btn-sm gira-gana-text" (click)="openWheel()">
           Gira y gana!
         </button>
-      <div class="menu-divider-container">
-          <hr class="menu-divider">
-          <hr class="menu-divider">
-          <hr class="menu-divider">
-      </div>
     </div>
       <!-- Barra de búsqueda -->
       <div class="col-md-2 order-md-1 search-bar text-center">
@@ -131,14 +126,15 @@
         <div *ngIf="(isUserLoggedIn$ | async)" class="buttons-container">
           <!-- Botón de Perfil -->
           <button
-            class="btn btn-success btn-sm profile-button"
-            (click)="toggleMenu()"
-          >
-            <i class="bi bi-person"></i>
-          </button>
+          class="btn btn-success btn-sm profile-button"
+          (click)="toggleMenu()"
+        >
+          <i class="bi bi-person"></i>
+        </button>
+        
 
           <!-- Menú Hamburguesa -->
-          <div class="menu bg-success collapse navbar-collapse" [ngClass]="{ 'show': isMenuOpen }">
+          <div class="menu bg-success navbar-collapse" [ngClass]="{ 'show': isMenuOpen }">
             <p class="greeting mr-3">¡Hola {{ nombreUsuario$ | async }}!</p>
             <button class="btn btn-primary menu-item mb-2" (click)="navigateTos('mis-datos')">Mis datos</button>
             <button class="btn btn-primary menu-item mb-2" (click)="navigateTos('mis-cupones')">Mis cupones</button>

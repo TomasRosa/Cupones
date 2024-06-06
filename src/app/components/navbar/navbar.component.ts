@@ -47,12 +47,13 @@ export class NavbarComponent implements OnInit {
   cantTickets$: Observable<number | null> | null = null;
   
   toggleMenu(): void {
-    this.isMenuOpen = !this.isMenuOpen;
+    console.log("toggleMenu() llamado");
+    this.isMenuOpen = !this.isMenuOpen; // Cambia el estado de isMenuOpen
   }
+  
   ngOnInit(): void {
     this.isUserLoggedIn$ = this.auth.isLoggedIn();
-
-    
+    console.log(this.isMenuOpen);
     this.nombreUsuario$ = this.sharedMisDatos.nombreUsuario$;
 
     this.isUserLoggedIn$.pipe(
