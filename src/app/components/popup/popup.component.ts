@@ -154,6 +154,7 @@ export class PopupComponent
     closePopup()
     {
       this.popupService.close();
+      this.loginForm.reset();
     }
   
     navigateTos(route: string) {

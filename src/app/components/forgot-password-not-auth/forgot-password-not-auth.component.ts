@@ -26,7 +26,6 @@ export class ForgotPasswordNotAuthComponent {
     try {
       // Verificar si el correo electrónico existe en Firestore
       const exists = await this.firestore.checkEmailExists(this.email).toPromise();
-      console.log(exists);
       if (exists) {
         // Si el correo electrónico existe, enviar el correo electrónico de restablecimiento de contraseña
         await this.auth.sendPasswordResetEmail(this.email).toPromise();
