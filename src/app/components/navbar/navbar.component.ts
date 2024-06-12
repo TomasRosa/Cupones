@@ -61,7 +61,7 @@ export class NavbarComponent implements OnInit {
     const offcanvasCategoriesMenu = document.getElementById('offcanvasCategoriesMenu');
     if (offcanvasCategoriesMenu) {
       const bsOffcanvas = new bootstrap.Offcanvas(offcanvasCategoriesMenu);
-      this.isCategoriesMenuOpen ? bsOffcanvas.show() : bsOffcanvas.hide();
+      bsOffcanvas.show();
     }
   }
   ngOnInit(): void {
