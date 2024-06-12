@@ -41,6 +41,7 @@ export class NavbarComponent implements OnInit {
   isUserLoggedIn$!: Observable<boolean>;
 
   isMenuOpen: boolean = false;
+  isCategoriesMenuOpen: boolean = false;
 
   apellidoUsuario$!: Observable<string | null>;
   nombreUsuario$: Observable<string | null> | null = null;
@@ -55,7 +56,14 @@ export class NavbarComponent implements OnInit {
       this.isMenuOpen ? bsOffcanvas.show() : bsOffcanvas.hide();
     }
   }
-  
+  toggleCategoriesMenu() {
+    this.isCategoriesMenuOpen = !this.isCategoriesMenuOpen;
+    const offcanvasCategoriesMenu = document.getElementById('offcanvasCategoriesMenu');
+    if (offcanvasCategoriesMenu) {
+      const bsOffcanvas = new bootstrap.Offcanvas(offcanvasCategoriesMenu);
+      this.isCategoriesMenuOpen ? bsOffcanvas.show() : bsOffcanvas.hide();
+    }
+  }
   ngOnInit(): void {
     this.isUserLoggedIn$ = this.auth.isLoggedIn();
     console.log(this.isMenuOpen);
