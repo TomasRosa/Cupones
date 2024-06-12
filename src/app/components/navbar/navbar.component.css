@@ -23,7 +23,8 @@ body
 }
 
 .search-bar {
-  position: relative; /* Para establecer un contexto de posición */
+  position: relative;
+  width: 15%; /* Para establecer un contexto de posición */
 }
 .search-results {
   position: absolute; /* Cambiado a absolute para posicionar de forma absoluta en relación con el contenedor padre */
