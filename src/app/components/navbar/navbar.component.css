@@ -153,12 +153,11 @@ body
   }
 
   .search-bar {
-    width: 60%;
-    margin-top: 0.5rem;
+    width: auto; /* Cambiamos el ancho a auto */
+    margin-top: 0.5rem; /* Ajustamos el margen superior */
     display: flex;
-    justify-content: center; 
+    justify-content: center; /* Centramos horizontalmente */
   }
-
   .search-bar input {
     width: 100%;
   }
@@ -166,10 +165,11 @@ body
   .category-buttons {
     display: none !important;
   }
-  .profile-button
-  {
+  
+  .profile-button {
     margin-right: -0.03rem;
   }
+
   .profile-button,
   .ticket-info {
     font-size: 0.75rem; 
@@ -190,6 +190,7 @@ body
     font-size: 0.75rem; 
     margin-left: 0.01rem; 
   }
+
   .navbar-toggler-icon {
     font-size: 1.5rem; 
   }
@@ -213,18 +214,46 @@ body
     margin: auto 0; 
     display: flex;
     align-items: center;
-    
   }
+
   .menu {
-    /* Ajusta el posicionamiento del menú hamburguesa */
     position: absolute;
-    top: 100%; /* Posiciona el menú debajo de los botones */
+    top: 100%;
     right: 0;
-    width: 100%; /* Ocupa todo el ancho disponible */
+    width: 100%;
     background-color: white;
     padding: 0.5rem;
     border: 1px solid #ccc;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  .menu-button-container {
+    position: absolute; /* Establecer el posicionamiento absoluto */
+    top: 25px; /* Alinear en la parte superior del contenedor padre */
+    right: 0; /* Alinear a la derecha del contenedor padre */
+    margin-top: 2.1rem; /* Ajustar el margen superior según sea necesario */
+    margin-right: 300px; /* Ajustar el margen derecho según sea necesario */
+  }
+  .menu-button {
+    font-size: 0.9rem;
+  }
+
+  .offcanvas {
+    width: 250px;
+  }
+
+  .offcanvas-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .offcanvas-body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .offcanvas-body .btn {
+    margin-bottom: 10px;
   }
 }

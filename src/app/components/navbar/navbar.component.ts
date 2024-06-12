@@ -13,6 +13,7 @@ import { SharedTicketService } from "../../services/shared-ticket.service";
 import { SharedMisDatosService } from "../../services/shared-mis-datos.service";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { WheelComponent } from "../wheel/wheel.component";
+import * as bootstrap from 'bootstrap';
 
 @Component({
   selector: "app-navbar",
@@ -46,9 +47,13 @@ export class NavbarComponent implements OnInit {
   emailUsuario$: Observable<string | null> | null = null;
   cantTickets$: Observable<number | null> | null = null;
   
-  toggleMenu(): void {
-    console.log("toggleMenu() llamado");
-    this.isMenuOpen = !this.isMenuOpen; // Cambia el estado de isMenuOpen
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
+    const offcanvasMenu = document.getElementById('offcanvasMenu');
+    if (offcanvasMenu) {
+      const bsOffcanvas = new bootstrap.Offcanvas(offcanvasMenu);
+      this.isMenuOpen ? bsOffcanvas.show() : bsOffcanvas.hide();
+    }
   }
   
   ngOnInit(): void {

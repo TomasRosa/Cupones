@@ -11,8 +11,14 @@
           Gira y gana!
         </button>
       </div>
+      <!-- Botón de menú (visible solo en pantallas pequeñas) -->
+      <div class="d-md-none col-2 menu-button-container">
+        <button class="btn btn-outline-light menu-button" (click)="toggleMenu()">
+          <i class="bi bi-list"></i>
+        </button>
+      </div>
       <!-- Barra de búsqueda -->
-      <div class="col-md-2 order-md-1 search-bar text-center">
+      <div class="col-md-8 order-md-1 search-bar text-center">
         <input
           type="text"
           class="form-control text-center"
@@ -41,7 +47,25 @@
           </div>
         </div>
       </div>
-      <!-- Botones de categorías -->
+
+      <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="offcanvasMenuLabel">Categorías</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+          <button class="btn btn-primary btn-sm" (click)="navigateTos('gastronomia')">Gastronomía</button>
+          <button class="btn btn-primary btn-sm" (click)="navigateTos('supermercado')">Supermercado</button>
+          <button class="btn btn-primary btn-sm" (click)="navigateTos('cine')">Cine</button>
+          <button class="btn btn-primary btn-sm" (click)="navigateTos('vehiculos')">Vehículos</button>
+          <button class="btn btn-primary btn-sm" (click)="navigateTos('teatro')">Teatro</button>
+          <button class="btn btn-primary btn-sm" (click)="navigateTos('escapadas')">Escapadas y Hoteles</button>
+          <button class="btn btn-primary btn-sm" (click)="navigateTos('salud')">Salud</button>
+          <button class="btn btn-primary btn-sm" (click)="navigateTos('estetica')">Estética</button>
+          <button class="btn btn-primary btn-sm" (click)="navigateTos('entretenimiento')">Entretenimiento</button>
+        </div>
+      </div>
+      <!-- Botones de categorías (ocultos en pantallas pequeñas) -->
       <div class="col-md-6 order-md-2 category-buttons justify-content-center">
         <div class="row mt-2">
           <div class="col-md-12 d-flex justify-content-between">
@@ -99,7 +123,6 @@
             >
               Entretenimiento
             </button>
-            <!-- Añadir el enlace "Gira y Gana" -->
           </div>
         </div>
       </div>
