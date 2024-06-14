@@ -34,4 +34,40 @@
   th {
     background-color: #292b2c;
   }
-  
+  @media (max-width: 375px) {
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .checkboxes {
+        flex-direction: column;
+        gap: 5px;
+        margin-top: 10px;
+    }
+
+    table th, table td {
+        padding: 4px;
+        font-size: 12px;
+    }
+
+    table th:nth-child(1), table td:nth-child(1) { /* Nombre del cupón */
+        width: 25%;
+    }
+
+    table th:nth-child(2), table td:nth-child(2) { /* Categoría */
+        width: 25%;
+    }
+
+    table th:nth-child(3), table td:nth-child(3) { /* Fecha obtenido */
+        width: 20%;
+    }
+
+    table th:nth-child(4), table td:nth-child(4) { /* Fecha vencimiento */
+        width: 20%;
+    }
+
+    table th:nth-child(5), table td:nth-child(5) { /* Acción */
+        width: 10%;
+    }
+}

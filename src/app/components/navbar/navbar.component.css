@@ -10,6 +10,8 @@ body
 {
   margin: 0;
   padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 .button-with-image img {
   width: 100%;
@@ -77,7 +79,10 @@ body
   display: flex; 
   margin-right: 300px; 
 }
-
+.navbar .btn {
+  font-size: 0.8rem; /* Aumenta ligeramente el tamaño de la fuente */
+  letter-spacing: 0.5px; /* Ajusta el espaciado de letras */
+}
 .profile-button,
 .ticket-button {
   width: auto;
