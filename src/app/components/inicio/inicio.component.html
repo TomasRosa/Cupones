@@ -13,9 +13,7 @@
           <div class="content-container p-4">
             <div class="carousel slide" id="myCarousel" (slide.bs.carousel)="actualizarContenido($event)">
               <div class="carousel-inner">
-                <!-- Utiliza *ngFor para recorrer el arreglo imagenes y mostrar las imágenes del carrusel -->
                 <div class="carousel-item" *ngFor="let imagen of imagenes; let i = index" [class.active]="i === 0">
-                  <!-- Aquí establece la ruta de la imagen dinámicamente -->
                   <img class="d-block w-100" [src]="imagen.ruta" [alt]="'Imagen ' + (i + 1)">
                 </div>
               </div>
@@ -33,7 +31,6 @@
   </div>
   <div class="row mt-4">
     <h3 class="w-100 text-left mb-4">DESTACADOS</h3>
-    <!-- Utiliza ngFor para recorrer los últimos 5 lugares del arreglo lugares -->
     <div class="col-md-3 col-sm-6 col-12 mb-4" *ngFor="let lugar of imagenes.slice(-4)">
         <div class="card h-100">
             <img class="card-img-top img-fluid" [src]="lugar.ruta" [alt]="lugar.nombre">
@@ -59,5 +56,5 @@
             </div>
         </div>
     </div>
+  </div>
 </div>
-</div>                       

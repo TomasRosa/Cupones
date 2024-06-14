@@ -40,61 +40,33 @@ export class InicioComponent {
   @ViewChild('myCarousel') myCarousel!: NgbCarousel;
 
   public actualizarContenido(event: any) {
-    const direction = event.direction;
-    if (direction === 'left' || direction === 'right') {
-      this.currentIndex = this.getNewIndex(direction, event);
-      if (
-        !isNaN(this.currentIndex) &&
-        this.currentIndex >= 0 &&
-        this.currentIndex < this.imagenes.length
-      ) {
-        this.parrafoActual = this.imagenes[this.currentIndex].descripcion;
-        this.nombreActual = this.imagenes[this.currentIndex].nombre;
-        this.cdr.markForCheck();
-      } else {
-        console.error(
-          'Índice fuera de rango o no es un número válido:',
-          this.currentIndex
-        );
-      }
+    const newIndex = event.to;
+    this.currentIndex = newIndex;
+    if (newIndex >= 0 && newIndex < this.imagenes.length) {
+      this.parrafoActual = this.imagenes[newIndex].descripcion;
+      this.nombreActual = this.imagenes[newIndex].nombre;
+      this.cdr.markForCheck();
+    } else {
+      console.error('Índice fuera de rango:', newIndex);
     }
-  }
-  private getNewIndex(direction: string, event: any): number {
-    const items = this.imagenes.length;
-
-    if (direction === 'right') {
-      return this.currentIndex - 1 < 0 ? items - 1 : this.currentIndex - 1;
-    } else if (direction === 'left') {
-      // Si currentIndex es -1, significa que es la primera vez que cambias a la derecha
-      return this.currentIndex === -1
-        ? 1
-        : this.currentIndex + 1 >= items
-        ? 0
-        : this.currentIndex + 1;
-    }
-
-    return this.currentIndex;
   }
   navigateTos(route: string) {
     this.navigateTo.navigateTo(route);
   }
-  verOferta(nombre: string, descripcion: string, precio: number, ruta: string,latitud: number,longitud: number,id: number,nombreCategoria: string,idCategoria: number) {
-    
-    // Almacenar los detalles del producto en el servicio
+  verOferta(nombre: string, descripcion: string, precio: number, ruta: string, latitud: number, longitud: number, id: number, nombreCategoria: string, idCategoria: number) {
     const url = `/detalles/${id}`;
-    this.verDetalle.setDetallesProducto({ nombre, descripcion, precio, ruta,latitud,longitud,id,nombreCategoria,idCategoria});
+    this.verDetalle.setDetallesProducto({ nombre, descripcion, precio, ruta, latitud, longitud, id, nombreCategoria, idCategoria });
     this.navigateTos(url);
   }
   verOfertaCarousel(index: number) {
     if (index >= 0 && index < this.imagenes.length) {
       const cuponEnCarrusel = this.imagenes[index];
-      const { nombre, descripcion, precio, ruta, latitud, longitud,id,nombreCategoria,idCategoria } = cuponEnCarrusel;
+      const { nombre, descripcion, precio, ruta, latitud, longitud, id, nombreCategoria, idCategoria } = cuponEnCarrusel;
       const url = `/detalles/${id}`;
-      // Almacenar los detalles del producto en el servicio
-      this.verDetalle.setDetallesProducto({ nombre, descripcion, precio, ruta,latitud,longitud,id,nombreCategoria,idCategoria });
+      this.verDetalle.setDetallesProducto({ nombre, descripcion, precio, ruta, latitud, longitud, id, nombreCategoria, idCategoria });
       this.navigateTos(url);
     } else {
       console.error('Índice de imagen fuera de rango:', index);
     }
-  }  
+  }
 }
