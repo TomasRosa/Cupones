@@ -115,16 +115,19 @@ export class RegisterComponent {
             })
             .catch((error) => {
                 this.mensajeRegistro = "Ha ocurrido un error al registrarte.";
+                this.hideMessageAfterDelay2(2000);
                 console.error("Error al registrar usuario en Firestore:", error);
             });
         })
         .catch((error) => {
           if (error.code === "auth/email-already-in-use") {
             this.mensajeRegistro = "El correo electrónico ya está en uso.";
+            this.hideMessageAfterDelay2(2000);
           }
           else
           {
             this.mensajeRegistro = "Ha ocurrido un error al registrarte.";
+            this.hideMessageAfterDelay2(2000);
             console.error("Error al registrar usuario:", error);
           }
         });
@@ -198,4 +201,11 @@ export class RegisterComponent {
       this.navigateTos.navigateTo("/inicio"); // Restablecer el mensaje después del retraso
     }, delay);
   }
+  hideMessageAfterDelay2(delay: number)
+  {
+    setTimeout(() => {
+      this.mensajeRegistro = "";
+    }, delay);
+  }
+
 }

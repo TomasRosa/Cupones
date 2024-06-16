@@ -48,7 +48,7 @@
 
     table th, table td {
         padding: 4px;
-        font-size: 12px;
+        font-size: 8px;
     }
 
     table th:nth-child(1), table td:nth-child(1) { /* Nombre del cupón */
@@ -69,5 +69,8 @@
 
     table th:nth-child(5), table td:nth-child(5) { /* Acción */
         width: 10%;
+    }
+    .btn {
+      font-size: 8px;
     }
 }
