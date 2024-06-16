@@ -20,12 +20,14 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let cupon of cuponesDisponibles">
+        <tr *ngFor="let cupon of cuponesDisponibles" class="text-center align-middle">
           <td>{{ cupon.nombre }}</td>
           <td>{{ cupon.nombreCategoria }}</td>
           <td>{{ formatearFecha(cupon.fechaObtenido) }}</td>
           <td>{{ calcularFechaVencimiento(cupon.fechaObtenido) }}</td>
-          <td><button (click)="moverACuponesUtilizados(cupon)">Utilizado</button></td>
+          <td class="text-center align-middle">
+          <button (click)="moverACuponesUtilizados(cupon)" class="btn btn-success">Utilizado</button>
+        </td>
         </tr>
       </tbody>
     </table>

@@ -6,7 +6,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NavigateToService } from '../../services/navigate-to.service';
 import { PopupService } from '../../services/pop-up-service.service';
 import { AuthService } from '../../services/auth.service';
-import { Observable, Subscription, filter, take, of, switchMap } from 'rxjs';
+import { Observable, Subscription} from 'rxjs';
 import { FirestoreService } from '../../services/firestore.service';
 
 @Component({
@@ -37,16 +37,6 @@ export class PopupComponent
     
     ngOnInit(): void {
       this.isUserLoggedIn$ = this.auth.isLoggedIn();
-      console.log('PopupComponent - isLoggedIn$', this.isUserLoggedIn$);
-      
-      this.authSubscription = this.isUserLoggedIn$.subscribe(isLoggedIn => {
-        console.log('PopupComponent - isLoggedIn', isLoggedIn);
-        if (isLoggedIn) {
-          console.log('El usuario está logueado');
-        } else {
-          console.log('El usuario no está logueado');
-        }
-      });
     }
   
   ngOnDestroy(): void {
@@ -78,7 +68,6 @@ export class PopupComponent
               }, 1500);
             } else {
               // El usuario no está registrado en Firestore, mostrar mensaje de registro
-              console.log("El usuario no está registrado en Firestore");
               this.mensajeLogin = 'Debes registrarte con Google primero para iniciar sesión con Google. Por favor, hazlo.';
               setTimeout(() => {
                 this.mensajeLogin = '';
@@ -132,7 +121,7 @@ export class PopupComponent
           if (error.code === 'auth/network-request-failed') {
             this.mensajeLogin = 'No se puede conectar al servidor. Por favor, verifica tu conexión a Internet.';
           } else {
-            this.mensajeLogin = 'Ha ocurrido un error al intentar loguearte.';
+            this.mensajeLogin = 'Ese usuario no se encuentra en nuestra BDD.';
           }
           setTimeout(() => {
             this.mensajeLogin = '';
